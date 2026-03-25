@@ -51,25 +51,52 @@ export default function AIChatSupport() {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const chat = ai.chats.create({
-        model: "gemini-3-flash-preview",
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-        },
-        history: messages.map(m => ({
-          role: m.role,
-          parts: [{ text: m.text }]
-        }))
+      const apiKey = process.env.GEMINI_API_KEY || 
+                     (import.meta as any).env?.VITE_GEMINI_API_KEY || 
+                     (import.meta as any).env?.GEMINI_API_KEY;
+                     
+      if (!apiKey) {
+        throw new Error("Gemini API Key is not configured. Please add GEMINI_API_KEY to your environment variables.");
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
+      
+      // Build contents for multi-turn chat
+      const contents: any[] = [];
+
+      // Add history (skipping the initial bot greeting and ensuring it starts with 'user')
+      const firstUserIdx = messages.findIndex(m => m.role === 'user');
+      if (firstUserIdx !== -1) {
+        const historyMessages = messages.slice(firstUserIdx);
+        for (const m of historyMessages) {
+          contents.push({
+            role: m.role,
+            parts: [{ text: m.text }]
+          });
+        }
+      }
+
+      // Add the current user message
+      contents.push({
+        role: 'user',
+        parts: [{ text: userMessage }]
       });
 
-      const response = await chat.sendMessage({ message: userMessage });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: contents,
+        config: {
+          systemInstruction: SYSTEM_INSTRUCTION,
+        }
+      });
+
       const botText = response.text || "I'm sorry, I couldn't process that request.";
       
       setMessages(prev => [...prev, { role: 'model', text: botText }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Chat Error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: "Sorry, I'm having trouble connecting right now. Please try again later or contact support@standarddigitals.com." }]);
+      const errorMessage = error?.message || "Unknown connection error";
+      setMessages(prev => [...prev, { role: 'model', text: `Sorry, I'm having trouble connecting: ${errorMessage}. Please try again later or contact support@standarddigitals.com.` }]);
     } finally {
       setIsLoading(false);
     }
