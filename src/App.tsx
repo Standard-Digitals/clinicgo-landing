@@ -7,6 +7,7 @@ import About from './pages/About';
 import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 import Logo from './components/Logo';
+import AIChatSupport from './components/AIChatSupport';
 
 function ScrollToHash() {
   const { hash, pathname } = useLocation();
@@ -139,6 +140,7 @@ function App() {
           &copy; {new Date().getFullYear()} SD Booking. All rights reserved.
         </div>
       </footer>
+      <AIChatSupport />
     </div>
   );
 }
