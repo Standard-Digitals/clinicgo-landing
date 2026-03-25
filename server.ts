@@ -1,7 +1,6 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
-import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -13,37 +12,14 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Health check endpoint
+  // Health check
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", env: process.env.NODE_ENV });
   });
 
-  // API Route for Gemini
-  app.post("/api/chat", async (req, res) => {
-    console.log("Received chat request");
-    try {
-      const { contents, systemInstruction } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
-
-      if (!apiKey) {
-        console.error("GEMINI_API_KEY is missing");
-        return res.status(500).json({ error: "Gemini API Key is not configured on the server." });
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents,
-        config: {
-          systemInstruction,
-        },
-      });
-
-      res.json({ text: response.text });
-    } catch (error: any) {
-      console.error("Server-side AI Chat Error:", error);
-      res.status(500).json({ error: error?.message || "Internal server error" });
-    }
+  // API routes go here
+  app.get("/api/chat", (req, res) => {
+    res.status(410).json({ error: "AI Chat has been disabled. Please use the automated support options." });
   });
 
   // Vite middleware for development
