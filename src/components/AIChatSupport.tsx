@@ -51,12 +51,12 @@ export default function AIChatSupport() {
     setIsLoading(true);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY || 
-                     (import.meta as any).env?.VITE_GEMINI_API_KEY || 
-                     (import.meta as any).env?.GEMINI_API_KEY;
-                     
-      if (!apiKey) {
-        throw new Error("Gemini API Key is not configured. Please add GEMINI_API_KEY to your environment variables.");
+      // Use process.env.GEMINI_API_KEY directly as per guidelines.
+      // The platform handles injecting this key.
+      const apiKey = process.env.GEMINI_API_KEY;
+      
+      if (!apiKey || apiKey === "undefined") {
+        throw new Error("Gemini API Key is not configured. Please ensure it is set in the AI Studio settings.");
       }
 
       const ai = new GoogleGenAI({ apiKey });
