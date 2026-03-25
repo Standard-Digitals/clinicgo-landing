@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2, Bot, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI } from "@google/genai";
 
 interface Message {
   role: 'user' | 'model';
@@ -51,17 +50,6 @@ export default function AIChatSupport() {
     setIsLoading(true);
 
     try {
-      // Use process.env.GEMINI_API_KEY directly as per guidelines.
-      // The platform handles injecting this key.
-      const apiKey = process.env.GEMINI_API_KEY;
-      
-      if (!apiKey || apiKey === "undefined") {
-        throw new Error("Gemini API Key is not configured. Please ensure it is set in the AI Studio settings.");
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-      
-      // Build contents for multi-turn chat
       const contents: any[] = [];
 
       // Add history (skipping the initial bot greeting and ensuring it starts with 'user')
@@ -82,15 +70,24 @@ export default function AIChatSupport() {
         parts: [{ text: userMessage }]
       });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: contents,
-        config: {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents,
           systemInstruction: SYSTEM_INSTRUCTION,
-        }
+        }),
       });
 
-      const botText = response.text || "I'm sorry, I couldn't process that request.";
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to get response from AI");
+      }
+
+      const data = await response.json();
+      const botText = data.text || "I'm sorry, I couldn't process that request.";
       
       setMessages(prev => [...prev, { role: 'model', text: botText }]);
     } catch (error: any) {
