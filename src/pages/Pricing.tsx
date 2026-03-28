@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Check, Users, Zap, ShieldCheck, HelpCircle } from 'lucide-react';
 
 export default function Pricing() {
@@ -120,9 +121,9 @@ export default function Pricing() {
               )}
             </div>
 
-            <button className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 mb-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <Link to="/signup" className="block w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 mb-8 text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Get Started Now
-            </button>
+            </Link>
 
             <div className="flex-1">
               <p className="text-sm font-bold text-slate-900 mb-4">Everything in the plan:</p>
