@@ -3,6 +3,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import dotenv from "dotenv";
 import crypto from "crypto";
+import fs from "fs";
 
 dotenv.config();
 
@@ -34,9 +35,33 @@ interface Subscription {
   currentPeriodEnd: string;
 }
 
-const users: Map<string, User> = new Map();
-const subscriptions: Map<string, Subscription> = new Map();
-const licenses: Map<string, { userId: string; domain: string }> = new Map();
+const DATA_FILE = path.join(process.cwd(), "data.json");
+
+interface DataStore {
+  users: Record<string, User>;
+  subscriptions: Record<string, Subscription>;
+  licenses: Record<string, { userId: string; domain: string }>;
+}
+
+let data: DataStore = { users: {}, subscriptions: {}, licenses: {} };
+
+function loadData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const content = fs.readFileSync(DATA_FILE, "utf-8");
+      data = JSON.parse(content);
+      console.log("Loaded data from file:", Object.keys(data.users).length, "users");
+    }
+  } catch (e) {
+    console.log("No existing data file, starting fresh");
+  }
+}
+
+function saveData() {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
+loadData();
 
 function generateLicenseKey(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -76,7 +101,7 @@ async function startServer() {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    for (const user of users.values()) {
+    for (const user of Object.values(data.users)) {
       if (user.email === email) {
         return res.status(400).json({ message: "Email already exists" });
       }
@@ -96,9 +121,12 @@ async function startServer() {
       createdAt: new Date().toISOString(),
     };
 
-    users.set(id, user);
+    data.users[id] = user;
+    saveData();
 
     const token = Buffer.from(`${id}:${email}`).toString("base64");
+
+    console.log("Signup successful:", email);
 
     res.json({
       token,
@@ -122,7 +150,7 @@ async function startServer() {
     }
 
     let foundUser: User | undefined;
-    for (const user of users.values()) {
+    for (const user of Object.values(data.users)) {
       if (user.email === email && user.password === password) {
         foundUser = user;
         break;
@@ -152,19 +180,24 @@ async function startServer() {
 
   const authenticate = (req: express.Request): User | null => {
     const authHeader = req.headers.authorization;
+    console.log("Auth header received:", authHeader ? "yes" : "no");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("No auth header");
       return null;
     }
 
     const token = authHeader.substring(7);
     try {
       const decoded = Buffer.from(token, "base64").toString();
+      console.log("Decoded token:", decoded);
       const [id, email] = decoded.split(":");
-      const user = users.get(id);
+      const user = data.users[id];
+      console.log("User found:", user ? user.email : "NOT FOUND");
       if (user && user.email === email) {
         return user;
       }
-    } catch {
+    } catch (e) {
+      console.log("Token decode error:", e);
       return null;
     }
     return null;
@@ -199,7 +232,10 @@ async function startServer() {
       currentPeriodStart: trialEnds.toISOString(),
       currentPeriodEnd: trialEnds.toISOString(),
     };
-    subscriptions.set(subscriptionId, subscription);
+    data.subscriptions[subscriptionId] = subscription;
+    saveData();
+
+    console.log("Trial started for:", user.email);
 
     res.json({
       message: "Trial started",
@@ -250,9 +286,12 @@ async function startServer() {
     const licenseKey = generateLicenseKey();
     user.licenseKey = licenseKey;
     user.licensedDomains = [];
-    licenses.set(licenseKey, { userId: user.id, domain: "" });
+    data.licenses[licenseKey] = { userId: user.id, domain: "" };
 
     user.onboardingComplete = true;
+    saveData();
+
+    console.log("Subscription created for:", user.email, "License:", licenseKey);
 
     res.json({
       message: "Subscription created",
@@ -273,13 +312,14 @@ async function startServer() {
       return res.status(400).json({ message: "License key and domain required" });
     }
 
-    const license = licenses.get(licenseKey);
+    const license = data.licenses[licenseKey];
     if (!license || license.userId !== user.id) {
       return res.status(400).json({ message: "Invalid license key" });
     }
 
-    licenses.set(licenseKey, { userId: user.id, domain });
+    data.licenses[licenseKey] = { userId: user.id, domain };
     user.licensedDomains = [...(user.licensedDomains || []), domain];
+    saveData();
 
     res.json({
       message: "License activated",
@@ -294,7 +334,7 @@ async function startServer() {
       return res.status(400).json({ message: "License key and domain required" });
     }
 
-    const license = licenses.get(licenseKey);
+    const license = data.licenses[licenseKey];
     if (!license || license.domain !== domain) {
       return res.status(400).json({ valid: false, message: "Invalid or expired license" });
     }
@@ -314,6 +354,7 @@ async function startServer() {
     }
 
     user.plan = plan;
+    saveData();
 
     res.json({ message: "Plan changed", plan });
   });
@@ -325,6 +366,7 @@ async function startServer() {
     }
 
     user.subscriptionStatus = "canceled";
+    saveData();
 
     res.json({ message: "Subscription canceled" });
   });

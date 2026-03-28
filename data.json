@@ -1,0 +1,271 @@
+{
+  "users": {
+    "209a202425fed892551b53fc68a28f0e": {
+      "id": "209a202425fed892551b53fc68a28f0e",
+      "email": "persist@demo.com",
+      "password": "test1234",
+      "name": "Dr. Persist",
+      "plan": "monthly",
+      "subscriptionStatus": "active",
+      "licensedDomains": [],
+      "onboardingComplete": true,
+      "createdAt": "2026-03-28T15:51:42.668Z",
+      "trialEndsAt": "2026-04-11T16:16:03.867Z",
+      "subscriptionId": "64d0d413698e4f940450b2c3e0c93589",
+      "subscriptionEndsAt": "2026-04-28T16:17:47.822Z",
+      "licenseKey": "SDB-94BE-TL8W-4D6K"
+    },
+    "aa5366ec6ee4bc05251edf8351207ffd": {
+      "id": "aa5366ec6ee4bc05251edf8351207ffd",
+      "email": "ran@gmail.com",
+      "password": "test1234",
+      "name": "Dr. Persist",
+      "plan": "monthly",
+      "subscriptionStatus": "trialing",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-03-28T15:55:28.642Z",
+      "trialEndsAt": "2026-04-11T15:55:46.972Z"
+    },
+    "e46c370ad9ef84b60a1ee8ed02e321fd": {
+      "id": "e46c370ad9ef84b60a1ee8ed02e321fd",
+      "email": "flowtest@test.com",
+      "password": "test1234",
+      "name": "Dr. Flow Test",
+      "plan": "yearly",
+      "subscriptionStatus": "active",
+      "licenseKey": "SDB-Z42V-5464-42W7",
+      "licensedDomains": [],
+      "onboardingComplete": true,
+      "createdAt": "2026-03-28T16:13:11.797Z",
+      "trialEndsAt": "2026-04-11T16:13:11.890Z",
+      "subscriptionId": "fa645ea51a4aed708748fd1f6bf56436",
+      "subscriptionEndsAt": "2027-03-28T16:13:12.149Z"
+    },
+    "4efa67329ff8bdcec0c906390a19ea2a": {
+      "id": "4efa67329ff8bdcec0c906390a19ea2a",
+      "email": "final@test.com",
+      "password": "test1234",
+      "name": "Dr. Final",
+      "plan": "yearly",
+      "subscriptionStatus": "trialing",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-03-28T16:14:28.859Z",
+      "trialEndsAt": "2026-04-11T16:14:28.913Z"
+    },
+    "ef61ae20c1ecb782ae9d5d5db30f2b6d": {
+      "id": "ef61ae20c1ecb782ae9d5d5db30f2b6d",
+      "email": "honirod257@jsncos.com",
+      "password": "Master*900",
+      "name": "Test User",
+      "plan": "monthly",
+      "subscriptionStatus": "active",
+      "licenseKey": "SDB-JWF7-KXBY-0552",
+      "licensedDomains": [],
+      "onboardingComplete": true,
+      "createdAt": "2026-03-28T16:20:28.093Z",
+      "trialEndsAt": "2026-04-11T16:20:46.778Z",
+      "subscriptionId": "08f5d26ea08ef30cc102460aec4a63a1",
+      "subscriptionEndsAt": "2026-04-28T16:20:51.378Z"
+    },
+    "5b9cf31f3bc7c0722259bd80afa6da45": {
+      "id": "5b9cf31f3bc7c0722259bd80afa6da45",
+      "email": "ranjitkairi.dev@gmail.com",
+      "password": "Master*900",
+      "name": "Ranjit Kairi",
+      "plan": "monthly",
+      "subscriptionStatus": "trialing",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-03-28T16:23:31.698Z",
+      "trialEndsAt": "2026-04-11T16:23:36.097Z"
+    }
+  },
+  "subscriptions": {
+    "e8f61be303321a2717a2d9a74358b65f": {
+      "id": "e8f61be303321a2717a2d9a74358b65f",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:51:42.736Z",
+      "trialEnds": "2026-04-11T15:51:42.735Z",
+      "currentPeriodStart": "2026-04-11T15:51:42.735Z",
+      "currentPeriodEnd": "2026-04-11T15:51:42.735Z"
+    },
+    "c2145d49a077047b8f6f9e612530c4d1": {
+      "id": "c2145d49a077047b8f6f9e612530c4d1",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "yearly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:52:10.811Z",
+      "trialEnds": "2026-04-11T15:52:10.810Z",
+      "currentPeriodStart": "2026-04-11T15:52:10.810Z",
+      "currentPeriodEnd": "2026-04-11T15:52:10.810Z"
+    },
+    "22a284193c7849d0604ad6c6e34a27f5": {
+      "id": "22a284193c7849d0604ad6c6e34a27f5",
+      "userId": "aa5366ec6ee4bc05251edf8351207ffd",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:55:33.903Z",
+      "trialEnds": "2026-04-11T15:55:33.903Z",
+      "currentPeriodStart": "2026-04-11T15:55:33.903Z",
+      "currentPeriodEnd": "2026-04-11T15:55:33.903Z"
+    },
+    "b84553db9df679193273ee72eae1f353": {
+      "id": "b84553db9df679193273ee72eae1f353",
+      "userId": "aa5366ec6ee4bc05251edf8351207ffd",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:55:41.604Z",
+      "trialEnds": "2026-04-11T15:55:41.604Z",
+      "currentPeriodStart": "2026-04-11T15:55:41.604Z",
+      "currentPeriodEnd": "2026-04-11T15:55:41.604Z"
+    },
+    "9a9e4e59bc001bfd7d0ff03ac3366c10": {
+      "id": "9a9e4e59bc001bfd7d0ff03ac3366c10",
+      "userId": "aa5366ec6ee4bc05251edf8351207ffd",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:55:46.973Z",
+      "trialEnds": "2026-04-11T15:55:46.972Z",
+      "currentPeriodStart": "2026-04-11T15:55:46.972Z",
+      "currentPeriodEnd": "2026-04-11T15:55:46.972Z"
+    },
+    "a3c4b08ddbb4e076e25524d3c63760b6": {
+      "id": "a3c4b08ddbb4e076e25524d3c63760b6",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:56:49.078Z",
+      "trialEnds": "2026-04-11T15:56:49.065Z",
+      "currentPeriodStart": "2026-04-11T15:56:49.065Z",
+      "currentPeriodEnd": "2026-04-11T15:56:49.065Z"
+    },
+    "cdf104294ce4f56ba957251819ca7615": {
+      "id": "cdf104294ce4f56ba957251819ca7615",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:57:14.783Z",
+      "trialEnds": "2026-04-11T15:57:14.782Z",
+      "currentPeriodStart": "2026-04-11T15:57:14.782Z",
+      "currentPeriodEnd": "2026-04-11T15:57:14.782Z"
+    },
+    "ac5286ce6b43ca917d6ddff0009cf3ae": {
+      "id": "ac5286ce6b43ca917d6ddff0009cf3ae",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T15:58:23.696Z",
+      "trialEnds": "2026-04-11T15:58:23.677Z",
+      "currentPeriodStart": "2026-04-11T15:58:23.677Z",
+      "currentPeriodEnd": "2026-04-11T15:58:23.677Z"
+    },
+    "ebddbf7caa626d686265fff82d361cb4": {
+      "id": "ebddbf7caa626d686265fff82d361cb4",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:03:26.090Z",
+      "trialEnds": "2026-04-11T16:03:26.080Z",
+      "currentPeriodStart": "2026-04-11T16:03:26.080Z",
+      "currentPeriodEnd": "2026-04-11T16:03:26.080Z"
+    },
+    "2cf2ef3cb0a85d70e7d9be655a0a9320": {
+      "id": "2cf2ef3cb0a85d70e7d9be655a0a9320",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:03:31.158Z",
+      "trialEnds": "2026-04-11T16:03:31.157Z",
+      "currentPeriodStart": "2026-04-11T16:03:31.157Z",
+      "currentPeriodEnd": "2026-04-11T16:03:31.157Z"
+    },
+    "25236b297227a9a1ff13bee91ceebe8b": {
+      "id": "25236b297227a9a1ff13bee91ceebe8b",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:03:34.768Z",
+      "trialEnds": "2026-04-11T16:03:34.768Z",
+      "currentPeriodStart": "2026-04-11T16:03:34.768Z",
+      "currentPeriodEnd": "2026-04-11T16:03:34.768Z"
+    },
+    "837cf42b262291e8b6b1518c3c0b9bee": {
+      "id": "837cf42b262291e8b6b1518c3c0b9bee",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:03:39.662Z",
+      "trialEnds": "2026-04-11T16:03:39.662Z",
+      "currentPeriodStart": "2026-04-11T16:03:39.662Z",
+      "currentPeriodEnd": "2026-04-11T16:03:39.662Z"
+    },
+    "29bf283eadbadcf160daa9e4b78a2c2e": {
+      "id": "29bf283eadbadcf160daa9e4b78a2c2e",
+      "userId": "e46c370ad9ef84b60a1ee8ed02e321fd",
+      "plan": "yearly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:13:11.890Z",
+      "trialEnds": "2026-04-11T16:13:11.890Z",
+      "currentPeriodStart": "2026-04-11T16:13:11.890Z",
+      "currentPeriodEnd": "2026-04-11T16:13:11.890Z"
+    },
+    "55693a7c62b8461a463c5eb984b35890": {
+      "id": "55693a7c62b8461a463c5eb984b35890",
+      "userId": "4efa67329ff8bdcec0c906390a19ea2a",
+      "plan": "yearly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:14:28.914Z",
+      "trialEnds": "2026-04-11T16:14:28.913Z",
+      "currentPeriodStart": "2026-04-11T16:14:28.913Z",
+      "currentPeriodEnd": "2026-04-11T16:14:28.913Z"
+    },
+    "3849d6fdae487ecb26dafc47ff1d1969": {
+      "id": "3849d6fdae487ecb26dafc47ff1d1969",
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:16:03.875Z",
+      "trialEnds": "2026-04-11T16:16:03.867Z",
+      "currentPeriodStart": "2026-04-11T16:16:03.867Z",
+      "currentPeriodEnd": "2026-04-11T16:16:03.867Z"
+    },
+    "5dce6cfd0e04d310746eea1a384c9632": {
+      "id": "5dce6cfd0e04d310746eea1a384c9632",
+      "userId": "ef61ae20c1ecb782ae9d5d5db30f2b6d",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:20:46.778Z",
+      "trialEnds": "2026-04-11T16:20:46.778Z",
+      "currentPeriodStart": "2026-04-11T16:20:46.778Z",
+      "currentPeriodEnd": "2026-04-11T16:20:46.778Z"
+    },
+    "94a8148436431242cbcf6edddeb24a31": {
+      "id": "94a8148436431242cbcf6edddeb24a31",
+      "userId": "5b9cf31f3bc7c0722259bd80afa6da45",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:23:36.097Z",
+      "trialEnds": "2026-04-11T16:23:36.097Z",
+      "currentPeriodStart": "2026-04-11T16:23:36.097Z",
+      "currentPeriodEnd": "2026-04-11T16:23:36.097Z"
+    }
+  },
+  "licenses": {
+    "SDB-Z42V-5464-42W7": {
+      "userId": "e46c370ad9ef84b60a1ee8ed02e321fd",
+      "domain": ""
+    },
+    "SDB-94BE-TL8W-4D6K": {
+      "userId": "209a202425fed892551b53fc68a28f0e",
+      "domain": ""
+    },
+    "SDB-JWF7-KXBY-0552": {
+      "userId": "ef61ae20c1ecb782ae9d5d5db30f2b6d",
+      "domain": ""
+    }
+  }
+}
