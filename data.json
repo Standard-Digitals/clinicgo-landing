@@ -75,11 +75,14 @@
       "password": "Master*900",
       "name": "Ranjit Kairi",
       "plan": "monthly",
-      "subscriptionStatus": "trialing",
+      "subscriptionStatus": "active",
       "licensedDomains": [],
-      "onboardingComplete": false,
+      "onboardingComplete": true,
       "createdAt": "2026-03-28T16:23:31.698Z",
-      "trialEndsAt": "2026-04-11T16:23:36.097Z"
+      "trialEndsAt": "2026-04-11T16:37:05.645Z",
+      "subscriptionId": "c069560e307ce5eda0d7262cd5556640",
+      "subscriptionEndsAt": "2026-04-28T16:38:27.595Z",
+      "licenseKey": "SDB-NNQX-JEC2-VYLA"
     }
   },
   "subscriptions": {
@@ -252,6 +255,16 @@
       "trialEnds": "2026-04-11T16:23:36.097Z",
       "currentPeriodStart": "2026-04-11T16:23:36.097Z",
       "currentPeriodEnd": "2026-04-11T16:23:36.097Z"
+    },
+    "81999f8749f103b0d5b5094fc07c0ce0": {
+      "id": "81999f8749f103b0d5b5094fc07c0ce0",
+      "userId": "5b9cf31f3bc7c0722259bd80afa6da45",
+      "plan": "monthly",
+      "status": "trialing",
+      "trialStart": "2026-03-28T16:37:05.655Z",
+      "trialEnds": "2026-04-11T16:37:05.645Z",
+      "currentPeriodStart": "2026-04-11T16:37:05.645Z",
+      "currentPeriodEnd": "2026-04-11T16:37:05.645Z"
     }
   },
   "licenses": {
@@ -265,6 +278,10 @@
     },
     "SDB-JWF7-KXBY-0552": {
       "userId": "ef61ae20c1ecb782ae9d5d5db30f2b6d",
+      "domain": ""
+    },
+    "SDB-NNQX-JEC2-VYLA": {
+      "userId": "5b9cf31f3bc7c0722259bd80afa6da45",
       "domain": ""
     }
   }

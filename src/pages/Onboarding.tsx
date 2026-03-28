@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Check, CreditCard, Calendar, Users, Download, Copy, CheckCircle, AlertCircle, ArrowRight, ArrowLeft, X } from 'lucide-react';
+import { Check, CreditCard, Calendar, Users, Download, Copy, CheckCircle, AlertCircle, ArrowRight, ArrowLeft, X, CreditCard as CardIcon, Lock, Shield, Smartphone, Building, Wallet } from 'lucide-react';
 
 const steps = [
   { id: 1, title: 'Account', icon: Users },
@@ -331,94 +331,15 @@ export default function Onboarding() {
 
       case 4:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CreditCard className="w-8 h-8 text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Set Up Payment</h2>
-              <p className="text-slate-600">
-                {userData.plan === 'yearly' ? '₹490/year' : '₹49/month'} - Your card will be charged after the 14-day trial ends
-              </p>
-            </div>
-
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-semibold text-blue-900">Card Details</span>
-                <div className="flex gap-2">
-                  <div className="w-8 h-5 bg-white rounded border border-blue-200 flex items-center justify-center text-xs">VISA</div>
-                  <div className="w-8 h-5 bg-white rounded border border-blue-200 flex items-center justify-center text-xs">MC</div>
-                  <div className="w-8 h-5 bg-white rounded border border-blue-200 flex items-center justify-center text-xs">AMEX</div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-slate-600 mb-1">Card Number</label>
-                  <input
-                    type="text"
-                    placeholder="1234 5678 9012 3456"
-                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-slate-600 mb-1">Expiry Date</label>
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-600 mb-1">CVV</label>
-                    <input
-                      type="text"
-                      placeholder="123"
-                      className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-slate-600 mb-1">Cardholder Name</label>
-                  <input
-                    type="text"
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700">
-                <AlertCircle className="w-5 h-5" />
-                <span className="text-sm">{error}</span>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setCurrentStep(3)}
-                className="flex-1 py-4 border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
-              >
-                <ArrowLeft className="w-5 h-5" /> Back
-              </button>
-              <button
-                onClick={handleCardPayment}
-                disabled={loading}
-                className="flex-1 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading ? 'Processing...' : 'Pay Now'} <CreditCard className="w-5 h-5" />
-              </button>
-            </div>
-
-            <p className="text-xs text-center text-slate-500">
-              🔒 Your payment info is secure with Razorpay
-            </p>
-          </div>
+          <PaymentForm
+            plan={userData.plan}
+            onSuccess={() => handlePaymentSuccess('pay_card_' + Date.now())}
+            onBack={() => setCurrentStep(3)}
+            loading={loading}
+            setLoading={setLoading}
+            error={error}
+            setError={setError}
+          />
         );
 
       case 5:
@@ -488,6 +409,377 @@ export default function Onboarding() {
         return null;
     }
   };
+
+  interface CardFormData {
+    cardName: string;
+    cardNumber: string;
+    expiry: string;
+    cvv: string;
+  }
+
+  interface CardErrors {
+    cardName?: string;
+    cardNumber?: string;
+    expiry?: string;
+    cvv?: string;
+  }
+
+  function getCardType(number: string): string {
+    const clean = number.replace(/\s/g, '');
+    if (clean.startsWith('4')) return 'visa';
+    if (clean.startsWith('5')) return 'mastercard';
+    if (clean.startsWith('34') || clean.startsWith('37')) return 'amex';
+    if (clean.startsWith('6')) return 'rupay';
+    return '';
+  }
+
+  function PaymentForm({ plan, onSuccess, onBack, loading, setLoading, error, setError }: {
+    plan?: 'monthly' | 'yearly';
+    onSuccess: () => Promise<void>;
+    onBack: () => void;
+    loading: boolean;
+    setLoading: (v: boolean) => void;
+    error: string;
+    setError: (v: string) => void;
+  }) {
+    const [paymentMethod, setPaymentMethod] = useState<'card' | 'razorpay'>('card');
+    const [cardData, setCardData] = useState<CardFormData>({ cardName: '', cardNumber: '', expiry: '', cvv: '' });
+    const [errors, setErrors] = useState<CardErrors>({});
+    const [touched, setTouched] = useState<Record<string, boolean>>({});
+    const [showExpiryDropdown, setShowExpiryDropdown] = useState(false);
+
+    const amount = plan === 'yearly' ? 490 : 49;
+    const tax = Math.round(amount * 0.18);
+    const total = amount + tax;
+
+    const validateCardName = (name: string): string | undefined => {
+      if (!name.trim()) return 'Cardholder name is required';
+      if (name.trim().length < 3) return 'Name must be at least 3 characters';
+      if (!/^[a-zA-Z\s]+$/.test(name)) return 'Only letters and spaces allowed';
+      return undefined;
+    };
+
+    const validateCardNumber = (number: string): string | undefined => {
+      const clean = number.replace(/\s/g, '');
+      if (!clean) return 'Card number is required';
+      if (!/^\d+$/.test(clean)) return 'Only numbers allowed';
+      if (clean.length !== 16) return 'Card number must be 16 digits';
+      return undefined;
+    };
+
+    const validateExpiry = (exp: string): string | undefined => {
+      if (!exp) return 'Expiry date is required';
+      const match = exp.match(/^(\d{2})\/(\d{2})$/);
+      if (!match) return 'Use MM/YY format';
+      const month = parseInt(match[1]);
+      const year = parseInt('20' + match[2]);
+      if (month < 1 || month > 12) return 'Invalid month';
+      const now = new Date();
+      const expDate = new Date(year, month - 1);
+      if (expDate < now) return 'Card has expired';
+      return undefined;
+    };
+
+    const validateCvv = (cvv: string, cardType: string): string | undefined => {
+      if (!cvv) return 'CVV is required';
+      if (!/^\d+$/.test(cvv)) return 'Only numbers allowed';
+      const expected = cardType === 'amex' ? 4 : 3;
+      if (cvv.length !== expected) return `CVV must be ${expected} digits`;
+      return undefined;
+    };
+
+    const formatCardNumber = (value: string): string => {
+      const clean = value.replace(/\D/g, '').slice(0, 16);
+      const groups = clean.match(/.{1,4}/g);
+      return groups ? groups.join(' ') : '';
+    };
+
+    const formatExpiry = (value: string): string => {
+      const clean = value.replace(/\D/g, '').slice(0, 4);
+      if (clean.length >= 2) {
+        return clean.slice(0, 2) + '/' + clean.slice(2);
+      }
+      return clean;
+    };
+
+    const handleBlur = (field: string) => {
+      setTouched(prev => ({ ...prev, [field]: true }));
+      validateAndUpdate(field);
+    };
+
+    const validateAndUpdate = (field: string) => {
+      const newErrors: CardErrors = { ...errors };
+      if (field === 'cardName') newErrors.cardName = validateCardName(cardData.cardName);
+      if (field === 'cardNumber') newErrors.cardNumber = validateCardNumber(cardData.cardNumber);
+      if (field === 'expiry') newErrors.expiry = validateExpiry(cardData.expiry);
+      if (field === 'cvv') newErrors.cvv = validateCvv(cardData.cvv, getCardType(cardData.cardNumber));
+      setErrors(newErrors);
+    };
+
+    const isValid = (): boolean => {
+      return !validateCardName(cardData.cardName) &&
+             !validateCardNumber(cardData.cardNumber) &&
+             !validateExpiry(cardData.expiry) &&
+             !validateCvv(cardData.cvv, getCardType(cardData.cardNumber));
+    };
+
+    const handleSubmit = async () => {
+      const newErrors: CardErrors = {
+        cardName: validateCardName(cardData.cardName),
+        cardNumber: validateCardNumber(cardData.cardNumber),
+        expiry: validateExpiry(cardData.expiry),
+        cvv: validateCvv(cardData.cvv, getCardType(cardData.cardNumber)),
+      };
+      setErrors(newErrors);
+      setTouched({ cardName: true, cardNumber: true, expiry: true, cvv: true });
+
+      if (Object.values(newErrors).some(e => e)) return;
+
+      setLoading(true);
+      setError('');
+      try {
+        await onSuccess();
+      } catch (err: any) {
+        setError(err.message || 'Payment failed');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const cardType = getCardType(cardData.cardNumber);
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CreditCard className="w-8 h-8 text-blue-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Payment</h2>
+          <p className="text-slate-600">Your card will be charged after the 14-day trial ends</p>
+        </div>
+
+        <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setPaymentMethod('card')}
+            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+              paymentMethod === 'card' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <CardIcon className="w-4 h-4" /> Card Payment
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentMethod('razorpay')}
+            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+              paymentMethod === 'razorpay' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Smartphone className="w-4 h-4" /> Razorpay
+          </button>
+        </div>
+
+        {paymentMethod === 'card' ? (
+          <div className="space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-5">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-semibold text-slate-700">Card Details</span>
+                <div className="flex gap-2">
+                  {['visa', 'mastercard', 'amex'].map(type => (
+                    <div
+                      key={type}
+                      className={`w-8 h-5 rounded flex items-center justify-center text-[8px] font-bold uppercase ${
+                        cardType === type ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400'
+                      }`}
+                    >
+                      {type === 'visa' ? 'VISA' : type === 'mastercard' ? 'MC' : 'AMEX'}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Card Holder Name</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="JOHN DOE"
+                      value={cardData.cardName}
+                      onChange={(e) => setCardData({ ...cardData, cardName: e.target.value.toUpperCase() })}
+                      onBlur={() => handleBlur('cardName')}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase bg-slate-50 ${
+                        touched.cardName && errors.cardName ? 'border-red-500' : touched.cardName && !errors.cardName ? 'border-emerald-500' : 'border-slate-200'
+                      }`}
+                    />
+                    {touched.cardName && !errors.cardName && (
+                      <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-500" />
+                    )}
+                  </div>
+                  {touched.cardName && errors.cardName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.cardName}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Card Number</label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      placeholder="1234 5678 9012 3456"
+                      value={cardData.cardNumber}
+                      onChange={(e) => setCardData({ ...cardData, cardNumber: formatCardNumber(e.target.value) })}
+                      onBlur={() => handleBlur('cardNumber')}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        touched.cardNumber && errors.cardNumber ? 'border-red-500' : touched.cardNumber && !errors.cardNumber ? 'border-emerald-500' : 'border-slate-200'
+                      }`}
+                    />
+                    {touched.cardNumber && !errors.cardNumber && (
+                      <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-500" />
+                    )}
+                  </div>
+                  {touched.cardNumber && errors.cardNumber && (
+                    <p className="text-red-500 text-xs mt-1">{errors.cardNumber}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Expiry Date</label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        placeholder="MM/YY"
+                        value={cardData.expiry}
+                        onChange={(e) => setCardData({ ...cardData, expiry: formatExpiry(e.target.value) })}
+                        onBlur={() => handleBlur('expiry')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          touched.expiry && errors.expiry ? 'border-red-500' : touched.expiry && !errors.expiry ? 'border-emerald-500' : 'border-slate-200'
+                        }`}
+                      />
+                      {touched.expiry && !errors.expiry && (
+                        <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-500" />
+                      )}
+                    </div>
+                    {touched.expiry && errors.expiry && (
+                      <p className="text-red-500 text-xs mt-1">{errors.expiry}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      CVV
+                      <span className="relative group ml-1 inline-flex">
+                        <AlertCircle className="w-3 h-3 text-slate-400" />
+                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                          3 digits on back of card
+                        </span>
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        placeholder="•••"
+                        maxLength={cardType === 'amex' ? 4 : 3}
+                        value={cardData.cvv}
+                        onChange={(e) => setCardData({ ...cardData, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                        onBlur={() => handleBlur('cvv')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          touched.cvv && errors.cvv ? 'border-red-500' : touched.cvv && !errors.cvv ? 'border-emerald-500' : 'border-slate-200'
+                        }`}
+                      />
+                      {touched.cvv && !errors.cvv && (
+                        <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-500" />
+                      )}
+                    </div>
+                    {touched.cvv && errors.cvv && (
+                      <p className="text-red-500 text-xs mt-1">{errors.cvv}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-slate-600">Subtotal</span>
+                <span className="text-slate-900">₹{amount}</span>
+              </div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-slate-600">GST (18%)</span>
+                <span className="text-slate-900">₹{tax}</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg border-t border-slate-200 pt-2 mt-2">
+                <span>Total</span>
+                <span className="text-blue-600">₹{total}</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">Amount charged after 14-day trial</p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Smartphone className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Pay with Razorpay</h3>
+              <p className="text-sm text-slate-600 mb-6">Secure payment via UPI, Cards, Net Banking & Wallets</p>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Processing...' : 'Pay with Razorpay'}
+              </button>
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <div className="text-xs text-slate-500 flex items-center gap-1">
+                  <Building className="w-4 h-4" /> UPI
+                </div>
+                <div className="text-xs text-slate-500 flex items-center gap-1">
+                  <Wallet className="w-4 h-4" /> Wallets
+                </div>
+                <div className="text-xs text-slate-500 flex items-center gap-1">
+                  <CardIcon className="w-4 h-4" /> Cards
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700">
+            <AlertCircle className="w-5 h-5" />
+            <span className="text-sm">{error}</span>
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex-1 py-4 border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            <ArrowLeft className="w-5 h-5" /> Back
+          </button>
+          {paymentMethod === 'card' && (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading || !isValid()}
+              className="flex-1 py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {loading ? 'Processing...' : `Pay ₹${total}`} <Lock className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
+          <Shield className="w-3 h-3" />
+          <span>Secured by Razorpay • 256-bit SSL encryption</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 py-20 px-4">
