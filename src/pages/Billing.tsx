@@ -4,6 +4,7 @@ import {
   CreditCard, Calendar, ChevronLeft, Check, AlertCircle, Download, 
   Shield, Clock, X, Trash2
 } from 'lucide-react';
+import api from '../lib/api';
 
 interface SubscriptionData {
   plan?: 'monthly' | 'yearly';
@@ -46,14 +47,8 @@ export default function Billing() {
     setChangingPlan(true);
     setError('');
     try {
-      const res = await fetch('/api/subscription/change-plan', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ plan: newPlan }),
-      });
+      const token = localStorage.getItem('token');
+      const res = await api.changePlan(token!, newPlan);
       const data = await res.json();
       
       if (!res.ok) {
@@ -77,12 +72,8 @@ export default function Billing() {
     
     setChangingPlan(true);
     try {
-      const res = await fetch('/api/subscription/cancel', {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-      });
+      const token = localStorage.getItem('token');
+      const res = await api.cancelSubscription(token!);
       
       if (!res.ok) {
         throw new Error('Failed to cancel subscription');

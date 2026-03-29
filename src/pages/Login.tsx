@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import api from '../lib/api';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -20,11 +21,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, password: formData.password }),
-      });
+      const res = await api.login({ email: formData.email, password: formData.password });
       const data = await res.json();
       
       if (!res.ok) {

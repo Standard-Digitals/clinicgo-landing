@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react';
+import api from '../lib/api';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -30,11 +31,7 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password }),
-      });
+      const res = await api.signup({ name: formData.name, email: formData.email, password: formData.password });
       const data = await res.json();
       
       if (!res.ok) {

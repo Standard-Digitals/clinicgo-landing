@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Download as DownloadIcon, Copy, Check, Globe, AlertCircle, FileCode } from 'lucide-react';
+import api from '../lib/api';
 
 export default function Download() {
   const navigate = useNavigate();
@@ -17,11 +18,8 @@ export default function Download() {
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/plugin/download', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const token = localStorage.getItem('token');
+      const res = await api.downloadPlugin(token!);
       
       if (res.ok) {
         const blob = await res.blob();

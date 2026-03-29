@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Check, CreditCard, Calendar, Users, Download, Copy, CheckCircle, AlertCircle, ArrowRight, ArrowLeft, X, CreditCard as CardIcon, Lock, Shield, Smartphone, Building, Wallet } from 'lucide-react';
+import api from '../lib/api';
 
 const steps = [
   { id: 1, title: 'Account', icon: Users },
@@ -64,14 +65,7 @@ export default function Onboarding() {
         throw new Error('No token found. Please sign up again.');
       }
 
-      const res = await fetch('/api/subscription/start-trial', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ plan: userData.plan }),
-      });
+      const res = await api.startTrial(token, userData.plan);
       const data = await res.json();
       console.log('Trial response:', data);
       
@@ -95,14 +89,8 @@ export default function Onboarding() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/razorpay/create-order', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ plan: userData.plan }),
-      });
+      const token = localStorage.getItem('token');
+      const res = await api.razorpayCreateOrder(token!, userData.plan);
       const data = await res.json();
       
       if (!res.ok) {
@@ -133,17 +121,8 @@ export default function Onboarding() {
   const handlePaymentSuccess = async (paymentId: string) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/subscription/create', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ 
-          plan: userData.plan,
-          paymentId,
-        }),
-      });
+      const token = localStorage.getItem('token');
+      const res = await api.createSubscription(token!, userData.plan, paymentId);
       const data = await res.json();
       
       if (!res.ok) {
