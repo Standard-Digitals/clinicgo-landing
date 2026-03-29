@@ -90,6 +90,16 @@ async function startServer() {
 
   app.use(express.json());
 
+  app.use("/api", (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(200);
+    }
+    next();
+  });
+
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", env: process.env.NODE_ENV });
   });
@@ -385,6 +395,14 @@ async function startServer() {
     res.send(buffer);
   });
 
+  app.use("/api/*", (req, res) => {
+    res.status(404).json({ 
+      message: "API endpoint not found",
+      path: req.path,
+      method: req.method
+    });
+  });
+
   if (process.env.NODE_ENV !== "production") {
     console.log("Starting in development mode with Vite middleware");
     const vite = await createViteServer({
@@ -395,7 +413,11 @@ async function startServer() {
   } else {
     console.log("Starting in production mode");
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
+    
+    app.use(express.static(distPath, { index: false }));
+    
+    app.use("/api", express.json());
+    
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });

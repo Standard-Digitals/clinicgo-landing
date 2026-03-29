@@ -83,6 +83,15 @@
       "subscriptionId": "c069560e307ce5eda0d7262cd5556640",
       "subscriptionEndsAt": "2026-04-28T16:38:27.595Z",
       "licenseKey": "SDB-NNQX-JEC2-VYLA"
+    },
+    "ea0a3eefac460d52c9fe6675d503c7ef": {
+      "id": "ea0a3eefac460d52c9fe6675d503c7ef",
+      "email": "prodtest@test.com",
+      "password": "test1234",
+      "name": "Dr. Prod Test",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-03-29T16:14:41.840Z"
     }
   },
   "subscriptions": {
