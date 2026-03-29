@@ -1,32 +1,22 @@
-const { loadData, response } = require('./shared');
+const fs = require('fs');
+const path = require('path');
 
-exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return response(200, { ok: true });
-  }
+const DATA_FILE = path.join(__dirname, '..', 'data.json');
 
-  if (event.httpMethod !== 'GET') {
-    return response(405, { message: 'Method not allowed' });
-  }
+function loadData() { try { if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')); } catch (e) {} return { users: {}, subscriptions: {}, licenses: {} }; }
+function jsonResponse(status, body) { return { statusCode: status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) }; }
 
+exports.handler = async function(event) {
+  if (event.httpMethod === 'OPTIONS') return jsonResponse(200, { ok: true });
+  if (event.httpMethod !== 'GET') return jsonResponse(405, { message: 'Method not allowed' });
   try {
     const params = event.queryStringParameters || {};
     const { licenseKey, domain } = params;
-
-    if (!licenseKey || !domain) {
-      return response(400, { message: 'License key and domain required' });
-    }
-
+    if (!licenseKey || !domain) return jsonResponse(400, { message: 'License key and domain required' });
     const data = loadData();
-    const license = data.licenses[licenseKey];
-
-    if (!license || license.domain !== domain) {
-      return response(400, { valid: false, message: 'Invalid or expired license' });
-    }
-
-    return response(200, { valid: true, message: 'License is valid' });
-  } catch (e) {
-    console.error('License verify error:', e);
-    return response(500, { message: 'Internal server error' });
-  }
+    const licenses = data.licenses || {};
+    const lic = licenses[licenseKey];
+    if (!lic || lic.domain !== domain) return jsonResponse(400, { valid: false, message: 'Invalid or expired license' });
+    return jsonResponse(200, { valid: true, message: 'License is valid' });
+  } catch (e) { return jsonResponse(500, { message: 'Internal server error' }); }
 };

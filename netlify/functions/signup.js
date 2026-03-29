@@ -1,26 +1,65 @@
-const { loadData, saveData, generateId, response } = require('./shared');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-exports.handler = async (event) => {
+const DATA_FILE = path.join(__dirname, '..', 'data.json');
+
+function loadData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    }
+  } catch (e) {
+    console.log('Starting fresh');
+  }
+  return { users: {}, subscriptions: {}, licenses: {} };
+}
+
+function saveData(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
+function generateId() {
+  return crypto.randomBytes(16).toString('hex');
+}
+
+function jsonResponse(status, body) {
+  return {
+    statusCode: status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    },
+    body: JSON.stringify(body)
+  };
+}
+
+exports.handler = async function(event) {
+  console.log('Event:', JSON.stringify(event));
+  
   if (event.httpMethod === 'OPTIONS') {
-    return response(200, { ok: true });
+    return jsonResponse(200, { ok: true });
   }
 
   if (event.httpMethod !== 'POST') {
-    return response(405, { message: 'Method not allowed' });
+    return jsonResponse(405, { message: 'Method not allowed' });
   }
 
   try {
-    const { name, email, password } = JSON.parse(event.body);
+    const body = JSON.parse(event.body || '{}');
+    const { name, email, password } = body;
 
     if (!name || !email || !password) {
-      return response(400, { message: 'All fields are required' });
+      return jsonResponse(400, { message: 'All fields are required' });
     }
 
     const data = loadData();
 
-    for (const user of Object.values(data.users)) {
+    for (const user of Object.values(data.users || {})) {
       if (user.email === email) {
-        return response(400, { message: 'Email already exists' });
+        return jsonResponse(400, { message: 'Email already exists' });
       }
     }
 
@@ -38,12 +77,13 @@ exports.handler = async (event) => {
       createdAt: new Date().toISOString()
     };
 
+    data.users = data.users || {};
     data.users[id] = user;
     saveData(data);
 
     const token = Buffer.from(`${id}:${email}`).toString('base64');
 
-    return response(200, {
+    return jsonResponse(200, {
       token,
       user: {
         id: user.id,
@@ -57,6 +97,6 @@ exports.handler = async (event) => {
     });
   } catch (e) {
     console.error('Signup error:', e);
-    return response(500, { message: 'Internal server error' });
+    return jsonResponse(500, { message: 'Internal server error' });
   }
 };
