@@ -1,26 +1,6 @@
-const fs = require('fs');
-const path = require('path');
 const crypto = require('crypto');
 
-const DATA_FILE = path.join(process.cwd(), 'data.json');
-console.log('Data file path:', DATA_FILE);
-
-function loadData() {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      console.log('Loading existing data');
-      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    }
-  } catch (e) {
-    console.log('Load error:', e.message);
-  }
-  console.log('Starting fresh data');
-  return { users: {}, subscriptions: {}, licenses: {} };
-}
-
-function saveData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
+const users = {};
 
 function generateId() {
   return crypto.randomBytes(16).toString('hex');
@@ -40,7 +20,7 @@ function jsonResponse(status, body) {
 }
 
 exports.handler = async function(event) {
-  console.log('Event:', JSON.stringify(event));
+  console.log('Signup handler called');
   
   if (event.httpMethod === 'OPTIONS') {
     return jsonResponse(200, { ok: true });
@@ -58,9 +38,7 @@ exports.handler = async function(event) {
       return jsonResponse(400, { message: 'All fields are required' });
     }
 
-    const data = loadData();
-
-    for (const user of Object.values(data.users || {})) {
+    for (const user of Object.values(users)) {
       if (user.email === email) {
         return jsonResponse(400, { message: 'Email already exists' });
       }
@@ -80,9 +58,8 @@ exports.handler = async function(event) {
       createdAt: new Date().toISOString()
     };
 
-    data.users = data.users || {};
-    data.users[id] = user;
-    saveData(data);
+    users[id] = user;
+    console.log('User created:', id);
 
     const token = Buffer.from(`${id}:${email}`).toString('base64');
 
@@ -100,6 +77,6 @@ exports.handler = async function(event) {
     });
   } catch (e) {
     console.error('Signup error:', e);
-    return jsonResponse(500, { message: 'Internal server error' });
+    return jsonResponse(500, { message: 'Internal server error: ' + e.message });
   }
 };
