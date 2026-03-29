@@ -1,7 +1,5 @@
 const crypto = require('crypto');
 
-const users = {};
-
 function generateId() {
   return crypto.randomBytes(16).toString('hex');
 }
@@ -38,30 +36,27 @@ exports.handler = async function(event) {
       return jsonResponse(400, { message: 'All fields are required' });
     }
 
-    for (const user of Object.values(users)) {
-      if (user.email === email) {
-        return jsonResponse(400, { message: 'Email already exists' });
-      }
-    }
-
     const id = generateId();
+    
+    // Create user data object
     const user = {
       id,
       email,
-      password,
+      password, // In production, hash this!
       name,
       plan: undefined,
       subscriptionStatus: undefined,
       licenseKey: undefined,
       licensedDomains: [],
       onboardingComplete: false,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      trialEndsAt: undefined,
+      subscriptionId: undefined,
+      subscriptionEndsAt: undefined
     };
 
-    users[id] = user;
-    console.log('User created:', id);
-
-    const token = Buffer.from(`${id}:${email}`).toString('base64');
+    // Encode user data directly in token (base64 encoded JSON)
+    const token = Buffer.from(JSON.stringify(user)).toString('base64');
 
     return jsonResponse(200, {
       token,

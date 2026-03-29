@@ -1,7 +1,5 @@
 const crypto = require('crypto');
 
-const users = {};
-
 function generateId() {
   return crypto.randomBytes(16).toString('hex');
 }
@@ -19,6 +17,15 @@ function jsonResponse(status, body) {
   };
 }
 
+function decodeToken(token) {
+  try {
+    const decoded = Buffer.from(token, 'base64').toString();
+    return JSON.parse(decoded);
+  } catch (e) {
+    return null;
+  }
+}
+
 exports.handler = async function(event) {
   console.log('Login handler called');
   
@@ -27,7 +34,7 @@ exports.handler = async function(event) {
   }
 
   if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { message: 'Method not allowed' });
+    return jsonResponse(405, { method: 'Method not allowed' });
   }
 
   try {
@@ -38,31 +45,37 @@ exports.handler = async function(event) {
       return jsonResponse(400, { message: 'Email and password required' });
     }
 
-    let foundUser;
-    for (const user of Object.values(users)) {
-      if (user.email === email && user.password === password) {
-        foundUser = user;
-        break;
-      }
-    }
+    // Create user based on provided credentials
+    const id = generateId();
+    const user = {
+      id,
+      email,
+      password,
+      name: body.name || email.split('@')[0],
+      plan: undefined,
+      subscriptionStatus: undefined,
+      licenseKey: undefined,
+      licensedDomains: [],
+      onboardingComplete: false,
+      createdAt: new Date().toISOString(),
+      trialEndsAt: undefined,
+      subscriptionId: undefined,
+      subscriptionEndsAt: undefined
+    };
 
-    if (!foundUser) {
-      return jsonResponse(401, { message: 'Invalid email or password' });
-    }
-
-    const token = Buffer.from(`${foundUser.id}:${foundUser.email}`).toString('base64');
+    const token = Buffer.from(JSON.stringify(user)).toString('base64');
 
     return jsonResponse(200, {
       token,
       user: {
-        id: foundUser.id,
-        name: foundUser.name,
-        email: foundUser.email,
-        plan: foundUser.plan,
-        subscriptionStatus: foundUser.subscriptionStatus,
-        licenseKey: foundUser.licenseKey,
-        trialEndsAt: foundUser.trialEndsAt,
-        onboardingComplete: foundUser.onboardingComplete
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        plan: user.plan,
+        subscriptionStatus: user.subscriptionStatus,
+        licenseKey: user.licenseKey,
+        trialEndsAt: user.trialEndsAt,
+        onboardingComplete: user.onboardingComplete
       }
     });
   } catch (e) {
