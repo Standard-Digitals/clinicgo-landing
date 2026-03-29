@@ -2,16 +2,19 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const DATA_FILE = path.join(__dirname, '..', 'data.json');
+const DATA_FILE = path.join(process.cwd(), 'data.json');
+console.log('Data file path:', DATA_FILE);
 
 function loadData() {
   try {
     if (fs.existsSync(DATA_FILE)) {
+      console.log('Loading existing data');
       return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
     }
   } catch (e) {
-    console.log('Starting fresh');
+    console.log('Load error:', e.message);
   }
+  console.log('Starting fresh data');
   return { users: {}, subscriptions: {}, licenses: {} };
 }
 

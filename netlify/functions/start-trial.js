@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const DATA_FILE = path.join(__dirname, '..', 'data.json');
+const DATA_FILE = path.join(process.cwd(), 'data.json');
 
 function loadData() {
   try {

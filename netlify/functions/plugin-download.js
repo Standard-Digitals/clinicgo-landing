@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_FILE = path.join(__dirname, '..', 'data.json');
+const DATA_FILE = path.join(process.cwd(), 'data.json');
 
 function loadData() { try { if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')); } catch (e) {} return { users: {}, subscriptions: {}, licenses: {} }; }
 function authenticate(authHeader, data) { if (!authHeader || !authHeader.startsWith('Bearer ')) return null; try { const parts = Buffer.from(authHeader.substring(7), 'base64').toString().split(':'); return (data.users || {})[parts[0]] || null; } catch (e) { return null; } }
