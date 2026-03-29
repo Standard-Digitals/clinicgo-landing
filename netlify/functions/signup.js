@@ -57,6 +57,8 @@ exports.handler = async function(event) {
 
     // Encode user data directly in token (base64 encoded JSON)
     const token = Buffer.from(JSON.stringify(user)).toString('base64');
+    console.log('Created token:', token);
+    console.log('Token length:', token.length);
 
     return jsonResponse(200, {
       token,

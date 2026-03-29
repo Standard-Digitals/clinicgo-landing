@@ -40,7 +40,8 @@ exports.handler = async function(event) {
     }
     
     const token = authHeader.substring(7);
-    console.log('Token:', token);
+    console.log('Token (first 100 chars):', token.substring(0, 100));
+    console.log('Token length:', token.length);
     
     const user = decodeToken(token);
     console.log('Decoded user:', user);
