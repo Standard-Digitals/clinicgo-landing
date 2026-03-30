@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import BookingWidget from '../components/BookingWidget';
 import { CalendarDays, Settings, Blocks, ChevronRight, Download, CheckCircle2, Clock, Users, Zap, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+function AnimatedCounter({ end, duration = 2000, suffix = '', prefix = '' }: { end: number; duration?: number; suffix?: string; prefix?: string }) {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let startTime: number;
+    let animationFrame: number;
+    
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+    
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration]);
+  
+  return <span>{prefix}{count.toLocaleString()}{suffix}</span>;
+}
 
 export default function Home() {
   return (
@@ -34,24 +58,30 @@ export default function Home() {
               Try Live Demo <ChevronRight className="w-4 h-4" />
             </Link>
             <a 
-              href="#" 
+              href="/signup" 
               className="inline-flex justify-center items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-slate-700 font-medium rounded-xl border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2"
             >
               <Download className="w-4 h-4" /> Download Plugin
             </a>
           </div>
-          
+          {/* Plugin stats */}
           <div className="pt-6 sm:pt-8 flex flex-wrap justify-center lg:justify-start items-center gap-6 sm:gap-8 border-t border-slate-200">
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900">10k+</div>
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                <AnimatedCounter end={10000} suffix="+" prefix="" />
+              </div>
               <div className="text-xs sm:text-sm text-slate-500 mt-1">Active Installs</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900">4.9/5</div>
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                <AnimatedCounter end={5} suffix="/5" prefix="⭐ " />
+              </div>
               <div className="text-xs sm:text-sm text-slate-500 mt-1">User Rating</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-slate-900">100%</div>
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900">
+                <AnimatedCounter end={100} suffix="%" />
+              </div>
               <div className="text-xs sm:text-sm text-slate-500 mt-1">WP Compatible</div>
             </div>
           </div>
