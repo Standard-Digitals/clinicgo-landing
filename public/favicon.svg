@@ -1,0 +1,28 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="favicon-gradient" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="64" height="64" rx="16" fill="url(#favicon-gradient)"/>
+  
+  <!-- Stethoscope Icon (Simplified) -->
+  <g transform="translate(32, 32)">
+    <!-- Left earpiece -->
+    <circle cx="-10" cy="-14" r="4" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Right earpiece -->
+    <circle cx="10" cy="-14" r="4" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Connecting tube -->
+    <path d="M -6 -10 Q -8 -2 -8 6 Q -8 14 0 18 Q 8 14 8 6 Q 8 -2 6 -10" 
+          fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Diaphragm -->
+    <circle cx="0" cy="20" r="6" fill="none" stroke="white" stroke-width="2.5"/>
+    <circle cx="0" cy="20" r="3.5" fill="white" opacity="0.4"/>
+  </g>
+</svg>

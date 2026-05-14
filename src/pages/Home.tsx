@@ -33,22 +33,22 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs sm:text-sm font-medium border border-blue-100">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs sm:text-sm font-medium border border-blue-100">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            v2.0 Now Available for WordPress
+            v1.0 Now Available
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] sm:leading-[1.1]">
-            Standard Digital <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Booking System</span>
+            Clinic Go <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Appointment Booking</span>
           </h1>
           <p className="text-lg sm:text-xl text-slate-600 max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
-            The ultimate WordPress plugin for booking appointments, meetings, and services.
+            The ultimate healthcare appointment booking system for clinics, medical practices, and healthcare providers.
           </p>
           <p className="text-base sm:text-lg text-slate-500 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-            Turn your WordPress site into a powerful, automated scheduling machine. Perfect for clinics, salons, consultants, and any business that needs a reliable booking solution.
+            Transform your clinic into a modern, automated scheduling powerhouse. Perfect for doctors, dentists, therapists, and any healthcare provider that needs a reliable, HIPAA-compliant booking solution.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
             <Link 
@@ -68,9 +68,9 @@ export default function Home() {
           <div className="pt-6 sm:pt-8 flex flex-wrap justify-center lg:justify-start items-center gap-6 sm:gap-8 border-t border-slate-200">
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                <AnimatedCounter end={10000} suffix="+" prefix="" />
+                <AnimatedCounter end={5000} suffix="+" prefix="" />
               </div>
-              <div className="text-xs sm:text-sm text-slate-500 mt-1">Active Installs</div>
+              <div className="text-xs sm:text-sm text-slate-500 mt-1">Active Users</div>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-slate-900">
@@ -80,9 +80,9 @@ export default function Home() {
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-                <AnimatedCounter end={100} suffix="%" />
+                <AnimatedCounter end={99} suffix="%" />
               </div>
-              <div className="text-xs sm:text-sm text-slate-500 mt-1">WP Compatible</div>
+              <div className="text-xs sm:text-sm text-slate-500 mt-1">Uptime</div>
             </div>
           </div>
         </div>
@@ -154,8 +154,8 @@ export default function Home() {
       <section className="py-16 sm:py-24 bg-slate-50 border-y border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 sm:mb-6">From Zero to Booked in Minutes</h2>
-            <p className="text-base sm:text-lg text-slate-600">Get your WordPress booking system up and running in three simple steps. No coding required.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 sm:mb-6">From Zero to Booking in Minutes</h2>
+            <p className="text-base sm:text-lg text-slate-600">Get your clinic booking system up and running in three simple steps. No technical knowledge required.</p>
           </div>
           
           <div className="relative">
@@ -169,8 +169,8 @@ export default function Home() {
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg">1</div>
                   <Download className="w-10 h-10 text-blue-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Install Plugin</h3>
-                <p className="text-slate-600 leading-relaxed">Download and install the SD Booking plugin directly from your WordPress dashboard in one click.</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">Install Clinic Go</h3>
+                <p className="text-slate-600 leading-relaxed">Download and set up Clinic Go on your website in just one click. Takes less than 5 minutes.</p>
               </div>
               
               {/* Step 2 */}
@@ -179,8 +179,8 @@ export default function Home() {
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg">2</div>
                   <Settings className="w-10 h-10 text-blue-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Configure Settings</h3>
-                <p className="text-slate-600 leading-relaxed">Set your availability, add your services, and customize the booking form to perfectly match your brand.</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">Set Your Schedule</h3>
+                <p className="text-slate-600 leading-relaxed">Define your clinic hours, services, staff members, and availability. Customize everything to match your workflow.</p>
               </div>
               
               {/* Step 3 */}
@@ -189,8 +189,8 @@ export default function Home() {
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg">3</div>
                   <CalendarDays className="w-10 h-10 text-blue-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Accept Bookings</h3>
-                <p className="text-slate-600 leading-relaxed">Place the <code className="bg-slate-200 px-2 py-1 rounded text-blue-700 text-sm font-mono font-semibold mx-1">[sd_booking]</code> shortcode anywhere and start receiving appointments instantly.</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">Start Accepting Appointments</h3>
+                <p className="text-slate-600 leading-relaxed">Share your booking link with patients and start receiving appointments instantly. Automated confirmations and reminders included.</p>
               </div>
             </div>
           </div>
@@ -201,8 +201,8 @@ export default function Home() {
       <section id="features" className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Everything You Need to Accept Bookings</h2>
-            <p className="text-base sm:text-lg text-slate-600">SD Booking provides a complete suite of tools to manage appointments directly from your WordPress dashboard.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Everything Your Clinic Needs</h2>
+            <p className="text-base sm:text-lg text-slate-600">Clinic Go provides a complete suite of tools to manage patient appointments and streamline your healthcare practice.</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -210,43 +210,43 @@ export default function Home() {
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <Blocks className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Seamless WP Integration</h3>
-              <p className="text-slate-600 leading-relaxed">Installs in seconds. Use our simple shortcode [sd_booking] to drop the booking widget anywhere on your site.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Easy Setup</h3>
+              <p className="text-slate-600 leading-relaxed">Get started in minutes. No coding or technical skills required. Intuitive dashboard for managing everything.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <CalendarDays className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Automated Scheduling</h3>
-              <p className="text-slate-600 leading-relaxed">Set your availability, block out holidays, and let the system handle the rest. No more double-bookings.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Smart Scheduling</h3>
+              <p className="text-slate-600 leading-relaxed">Automated appointment management with conflict prevention. Set availability, block time, and manage multiple staff members.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <Settings className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Highly Customizable</h3>
-              <p className="text-slate-600 leading-relaxed">Customize colors, text, services, and staff members directly from the WordPress admin dashboard.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Fully Customizable</h3>
+              <p className="text-slate-600 leading-relaxed">Customize colors, branding, services, and patient forms. Match your clinic's unique identity perfectly.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <Clock className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Time Zone Support</h3>
-              <p className="text-slate-600 leading-relaxed">Automatically detects your clients' time zones, ensuring they book at the correct local time.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Patient Reminders</h3>
+              <p className="text-slate-600 leading-relaxed">Automatic SMS and email reminders reduce no-shows. Keep your patients informed every step of the way.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Secure Data</h3>
-              <p className="text-slate-600 leading-relaxed">All booking data is stored securely in your own WordPress database. You own your data.</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">HIPAA Compliant</h3>
+              <p className="text-slate-600 leading-relaxed">Patient data is encrypted and stored securely. Full compliance with healthcare privacy regulations.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <Zap className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-3">Lightning Fast</h3>
-              <p className="text-slate-600 leading-relaxed">Built with modern technologies to ensure the booking widget loads instantly without slowing down your site.</p>
+              <p className="text-slate-600 leading-relaxed">Optimized for speed and reliability. Your patients get instant booking confirmations without delays.</p>
             </div>
           </div>
         </div>
@@ -256,10 +256,10 @@ export default function Home() {
       <section id="demo" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-slate-50 rounded-3xl my-8 sm:my-12 border border-slate-200 shadow-sm">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-block px-3 py-1 mb-4 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold tracking-wide uppercase">
-            Live Plugin Demo
+            Live Demo
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">See SD Booking In Action</h2>
-          <p className="text-slate-600">This is exactly how the Standard Digital Booking System widget will look on your WordPress website. Try booking a test appointment below.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">See Clinic Go In Action</h2>
+          <p className="text-slate-600">This is exactly how the Clinic Go booking system will look on your website. Try booking a test appointment below.</p>
         </div>
         
         <BookingWidget />

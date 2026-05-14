@@ -63,15 +63,15 @@ export default function Download() {
         </Link>
 
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Download Plugin</h1>
-        <p className="text-slate-600 mb-6">Get the SD Booking plugin for your WordPress site</p>
+        <p className="text-slate-600 mb-6">Get the Clinic Go plugin for your website</p>
 
         <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 mb-6">
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <DownloadIcon className="w-10 h-10 text-blue-600" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">SD Booking Plugin</h2>
-            <p className="text-slate-600">Version 1.0.0 • WordPress 5.0+</p>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">Clinic Go Plugin</h2>
+            <p className="text-slate-600">Version 1.0.0 • Web-based</p>
           </div>
 
           <div className="space-y-4">
@@ -81,7 +81,7 @@ export default function Download() {
               className="w-full py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <DownloadIcon className="w-5 h-5" />
-              {loading ? 'Preparing Download...' : 'Download Plugin ZIP'}
+              {loading ? 'Preparing Download...' : 'Download Clinic Go'}
             </button>
 
             <a
@@ -91,7 +91,7 @@ export default function Download() {
               className="w-full py-4 border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               <FileCode className="w-5 h-5" />
-              Install from WordPress Directory
+              Install from Web
             </a>
           </div>
         </div>
@@ -121,20 +121,11 @@ export default function Download() {
           <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
             <AlertCircle className="w-5 h-5" /> Installation Note
           </h3>
-          <ul className="space-y-2 text-sm text-blue-800">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-600">1.</span>
-              Download and install the plugin from your WordPress admin
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-600">2.</span>
-              Go to SD Booking → License and enter your license key
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-600">3.</span>
-              Activate your license to unlock all features
-            </li>
-          </ul>
+          <ol className="list-decimal list-inside space-y-2 text-blue-800">
+            <li>Download and install Clinic Go on your server</li>
+            <li>Go to Clinic Go → License and enter your license key</li>
+            <li>Activate your license to unlock all features</li>
+          </ol>
         </div>
 
         <Link

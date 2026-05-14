@@ -171,7 +171,7 @@ function App() {
               <div className="mb-6">
                 <Logo light={true} iconSize="w-7 h-7" textSize="text-xl" />
               </div>
-              <p className="max-w-sm mb-6 text-sm md:text-base leading-relaxed">The most powerful and customizable WordPress booking plugin for businesses of all sizes.</p>
+              <p className="max-w-sm mb-6 text-sm md:text-base leading-relaxed">The most powerful and customizable healthcare appointment booking system for clinics and medical practices.</p>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
@@ -195,7 +195,7 @@ function App() {
             </div>
           </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-sm text-center text-slate-500">
-            &copy; {new Date().getFullYear()} SD Booking. All rights reserved.
+            &copy; {new Date().getFullYear()} Clinic Go. All rights reserved.
           </div>
         </footer>
       )}

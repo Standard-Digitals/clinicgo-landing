@@ -20,23 +20,15 @@ export default function SetupGuide() {
 
   const sections: Step[] = [
     {
-      title: 'Install the Plugin',
+      title: 'Install Clinic Go',
       content: (
         <div className="space-y-4">
-          <h4 className="font-semibold text-slate-900">Method 1: Upload ZIP File</h4>
+          <h4 className="font-semibold text-slate-900">Installation Steps</h4>
           <ol className="list-decimal list-inside space-y-2 text-slate-600 ml-2">
-            <li>Go to your WordPress admin dashboard → Plugins → Add New</li>
-            <li>Click "Upload Plugin" button at the top</li>
-            <li>Choose the sd-booking.zip file you downloaded</li>
-            <li>Click "Install Now" and then "Activate"</li>
-          </ol>
-
-          <h4 className="font-semibold text-slate-900 mt-6">Method 2: WordPress Directory</h4>
-          <ol className="list-decimal list-inside space-y-2 text-slate-600 ml-2">
-            <li>Go to Plugins → Add New</li>
-            <li>Search for "SD Booking" in the search box</li>
-            <li>Click "Install Now" on SD Booking plugin</li>
-            <li>Click "Activate"</li>
+            <li>Download the Clinic Go package from your account</li>
+            <li>Extract the ZIP file to your server</li>
+            <li>Run the installation script</li>
+            <li>Follow the setup wizard</li>
           </ol>
         </div>
       ),
@@ -46,7 +38,7 @@ export default function SetupGuide() {
       content: (
         <div className="space-y-4">
           <ol className="list-decimal list-inside space-y-2 text-slate-600">
-            <li>Go to SD Booking → License in your WordPress admin</li>
+            <li>Go to Clinic Go → License in your admin panel</li>
             <li>Enter your license key (get it from your <Link to="/account" className="text-blue-600 hover:underline">account dashboard</Link>)</li>
             <li>Click "Activate License"</li>
             <li>You'll see a success message when activated</li>
@@ -64,7 +56,7 @@ export default function SetupGuide() {
       content: (
         <div className="space-y-4">
           <ol className="list-decimal list-inside space-y-2 text-slate-600">
-            <li>Go to SD Booking → Doctors in your admin</li>
+            <li>Go to Clinic Go → Doctors in your admin</li>
             <li>Click "Add New Doctor"</li>
             <li>Fill in the doctor details:
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
@@ -85,7 +77,7 @@ export default function SetupGuide() {
       content: (
         <div className="space-y-4">
           <ol className="list-decimal list-inside space-y-2 text-slate-600">
-            <li>Go to SD Booking → Calendars</li>
+            <li>Go to Clinic Go → Calendars</li>
             <li>Click "Add New Calendar"</li>
             <li>Configure calendar settings:
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
@@ -105,25 +97,14 @@ export default function SetupGuide() {
       title: 'Add Booking Form to Website',
       content: (
         <div className="space-y-4">
-          <h4 className="font-semibold text-slate-900">Method 1: Shortcode</h4>
+          <h4 className="font-semibold text-slate-900">Method 1: Embed Code</h4>
           <div className="bg-slate-900 rounded-lg p-4">
-            <code className="text-emerald-400 font-mono text-sm">[sd_booking]</code>
+            <code className="text-emerald-400 font-mono text-sm">&lt;clinic-go-booking&gt;&lt;/clinic-go-booking&gt;</code>
           </div>
-          <p className="text-slate-600">Place this shortcode on any page or post to show the booking form.</p>
+          <p className="text-slate-600">Place this code on any page to show the booking form.</p>
 
-          <h4 className="font-semibold text-slate-900 mt-6">Method 2: Widget</h4>
-          <ol className="list-decimal list-inside space-y-2 text-slate-600 ml-2">
-            <li>Go to Appearance → Widgets</li>
-            <li>Find "SD Booking Widget"</li>
-            <li>Add it to a sidebar</li>
-            <li>Configure which calendar to show</li>
-          </ol>
-
-          <h4 className="font-semibold text-slate-900 mt-6">Method 3: Page Template</h4>
-          <ol className="list-decimal list-inside space-y-2 text-slate-600 ml-2">
-            <li>Create a new page</li>
-            <li>Use the SD Booking page template (if theme supports)</li>
-          </ol>
+          <h4 className="font-semibold text-slate-900 mt-6">Method 2: Direct Link</h4>
+          <p className="text-slate-600">Share your booking page URL directly with patients.</p>
         </div>
       ),
     },
@@ -132,11 +113,11 @@ export default function SetupGuide() {
       content: (
         <div className="space-y-4">
           <ol className="list-decimal list-inside space-y-2 text-slate-600">
-            <li>Go to SD Booking → Settings → Notifications</li>
+            <li>Go to Clinic Go → Settings → Notifications</li>
             <li>Configure email notifications:
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
                 <li><strong>Admin notifications:</strong> Get email when booking is made</li>
-                <li><strong>Customer notifications:</strong> Confirmation email to patient</li>
+                <li><strong>Patient notifications:</strong> Confirmation email to patient</li>
                 <li><strong>Reminder emails:</strong> Send reminder before appointment</li>
               </ul>
             </li>
@@ -151,7 +132,7 @@ export default function SetupGuide() {
       content: (
         <div className="space-y-4">
           <ol className="list-decimal list-inside space-y-2 text-slate-600">
-            <li>Go to SD Booking → Settings → Form</li>
+            <li>Go to Clinic Go → Settings → Form</li>
             <li>Customize form fields:
               <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
                 <li>Patient name (required)</li>
@@ -214,7 +195,7 @@ export default function SetupGuide() {
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-slate-900 mb-4">Setup Guide</h1>
           <p className="text-slate-600 max-w-xl mx-auto">
-            Follow these steps to install and configure SD Booking on your WordPress website.
+            Follow these steps to install and configure Clinic Go on your website.
           </p>
         </div>
 

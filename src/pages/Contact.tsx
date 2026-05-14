@@ -117,7 +117,7 @@ export default function Contact() {
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Touch</span>
           </h1>
           <p className="text-lg sm:text-xl text-slate-600 leading-relaxed">
-            Have questions about SD Booking? Our team is here to help. Send us a message and we'll respond as soon as possible.
+            Have questions about Clinic Go? Our team is here to help. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
       </section>

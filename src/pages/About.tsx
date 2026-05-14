@@ -7,9 +7,9 @@ export default function About() {
       {/* Hero Section */}
       <section className="bg-blue-600 text-white py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About SD Booking</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Clinic Go</h1>
           <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
-            We are the team behind the Standard Digital Booking System, building the most reliable scheduling infrastructure for WordPress.
+            We are the team behind Clinic Go, building the most reliable healthcare appointment booking system for clinics and medical practices.
           </p>
         </div>
       </section>
@@ -19,10 +19,10 @@ export default function About() {
         <div>
           <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Mission</h2>
           <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-            We believe that accepting bookings on your website shouldn't require a degree in computer science. SD Booking was created to give WordPress site owners an enterprise-grade scheduling tool that installs in seconds.
+            We believe that accepting patient appointments shouldn't be complicated. Clinic Go was created to give healthcare providers an enterprise-grade scheduling tool that installs in seconds.
           </p>
           <p className="text-lg text-slate-600 leading-relaxed">
-            Whether you run a medical clinic, a hair salon, or a consulting business, our plugin adapts to your needs, saving you hours of administrative work every week.
+            Whether you run a medical clinic, dental practice, therapy center, or any healthcare facility, our platform adapts to your needs, saving you hours of administrative work every week.
           </p>
         </div>
         <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-xl bg-slate-100 flex items-center justify-center border border-slate-200">
@@ -59,9 +59,9 @@ export default function About() {
       {/* Team Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Meet the Minds Behind SD Booking</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Meet the Minds Behind Clinic Go</h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Our dedicated team of experts is committed to driving innovation and delivering exceptional solutions for your business.
+            Our dedicated team of experts is committed to driving innovation and delivering exceptional healthcare solutions for your clinic.
           </p>
         </div>
         
