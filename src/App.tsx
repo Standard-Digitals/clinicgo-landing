@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, User, LogIn } from 'lucide-react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import About from './pages/About';
@@ -13,8 +12,10 @@ import Account from './pages/Account';
 import Billing from './pages/Billing';
 import Download from './pages/Download';
 import SetupGuide from './pages/SetupGuide';
-import Logo from './components/Logo';
+
 import AIChatSupport from './components/AIChatSupport';
+import { PremiumNav } from './components/PremiumNav';
+import { PremiumFooter } from './components/PremiumFooter';
 
 function ScrollToHash() {
   const { hash, pathname } = useLocation();
@@ -36,118 +37,14 @@ function ScrollToHash() {
 }
 
 function App() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const location = useLocation();
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, [location.pathname]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-  };
-
   const isAuthPage = ['/signup', '/login', '/onboarding', '/account', '/billing', '/download', '/setup-guide'].includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-200 flex flex-col">
-      {!isAuthPage && (
-        <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg">
-              <Logo iconSize="w-8 h-8" textSize="text-xl" />
-            </Link>
-            
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-              <Link to="/#features" className="hover:text-blue-600 transition-colors focus:outline-none focus:text-blue-600">Features</Link>
-              <Link to="/#demo" className="hover:text-blue-600 transition-colors focus:outline-none focus:text-blue-600">Live Demo</Link>
-              <Link to="/pricing" className="hover:text-blue-600 transition-colors focus:outline-none focus:text-blue-600">Pricing</Link>
-              <Link to="/about" className="hover:text-blue-600 transition-colors focus:outline-none focus:text-blue-600">About Us</Link>
-              <Link to="/contact" className="hover:text-blue-600 transition-colors focus:outline-none focus:text-blue-600">Contact</Link>
-            </div>
-            
-            <div className="hidden md:flex items-center gap-3">
-              {isLoggedIn ? (
-                <>
-                  <Link 
-                    to="/account" 
-                    className="px-4 py-2 text-slate-700 font-medium hover:text-blue-600 transition-colors"
-                  >
-                    My Account
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="px-4 py-2 text-red-600 font-medium hover:text-red-700 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link 
-                    to="/login" 
-                    className="px-4 py-2 text-slate-700 font-medium hover:text-blue-600 transition-colors flex items-center gap-2"
-                  >
-                    <LogIn className="w-4 h-4" /> Sign In
-                  </Link>
-                  <Link 
-                    to="/signup" 
-                    className="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-sm shadow-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </div>
+    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-200 flex flex-col">
+      <PremiumNav />
 
-            <button 
-              className="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-
-          {isMobileMenuOpen && (
-            <div className="md:hidden bg-white border-b border-slate-200 shadow-lg absolute top-16 left-0 right-0 py-4 px-4 flex flex-col gap-4">
-              <Link to="/#features" className="block px-4 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Features</Link>
-              <Link to="/#demo" className="block px-4 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Live Demo</Link>
-              <Link to="/pricing" className="block px-4 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Pricing</Link>
-              <Link to="/about" className="block px-4 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">About Us</Link>
-              <Link to="/contact" className="block px-4 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Contact</Link>
-              <div className="pt-4 border-t border-slate-100 mt-2 flex flex-col gap-2">
-                {isLoggedIn ? (
-                  <>
-                    <Link to="/account" className="block w-full text-center px-5 py-3 bg-blue-600 text-white text-base font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
-                      My Account
-                    </Link>
-                    <button onClick={handleLogout} className="block w-full text-center px-5 py-3 border-2 border-red-200 text-red-600 text-base font-medium rounded-xl hover:bg-red-50 transition-colors">
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" className="block w-full text-center px-5 py-3 border-2 border-slate-200 text-slate-700 text-base font-medium rounded-xl hover:border-slate-300 transition-colors">
-                      Sign In
-                    </Link>
-                    <Link to="/signup" className="block w-full text-center px-5 py-3 bg-blue-600 text-white text-base font-medium rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
-                      Get Started
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </nav>
-      )}
-
-      <div className={`flex-1 ${!isAuthPage ? 'mt-16' : ''}`}>
+      <div className={`flex-1 ${!isAuthPage ? 'pt-16' : ''}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -164,41 +61,7 @@ function App() {
         </Routes>
       </div>
 
-      {!isAuthPage && (
-        <footer className="bg-slate-900 text-slate-400 py-12 md:py-16 border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            <div className="col-span-1 sm:col-span-2">
-              <div className="mb-6">
-                <Logo light={true} iconSize="w-7 h-7" textSize="text-xl" />
-              </div>
-              <p className="max-w-sm mb-6 text-sm md:text-base leading-relaxed">The most powerful and customizable healthcare appointment booking system for clinics and medical practices.</p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
-              <ul className="space-y-3">
-                <li><Link to="/" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Home</Link></li>
-                <li><Link to="/#features" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Features</Link></li>
-                <li><Link to="/#demo" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Live Demo</Link></li>
-                <li><Link to="/pricing" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Pricing</Link></li>
-                <li><Link to="/about" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-lg">Legal & Contact</h4>
-              <ul className="space-y-3">
-                <li><Link to="/privacy" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">Privacy Policy</Link></li>
-                <li className="text-slate-400">Plot No13, Silver Creek-1, Old Thana Road, Zirakpur, PIN-140603</li>
-                <li><a href="mailto:support@standarddigitals.com" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">support@standarddigitals.com</a></li>
-                <li><a href="tel:+919056347061" className="hover:text-white hover:underline transition-all focus:outline-none focus:text-white">+91 9056347061</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-sm text-center text-slate-500">
-            &copy; {new Date().getFullYear()} Clinic Go. All rights reserved.
-          </div>
-        </footer>
-      )}
+      {!isAuthPage && <PremiumFooter />}
       {!isAuthPage && <AIChatSupport />}
     </div>
   );
