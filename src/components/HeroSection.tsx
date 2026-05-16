@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, CheckCircle2, Zap, Calendar, Users, TrendingUp, MessageSquare, Star, Sparkles } from 'lucide-react';
+import { ArrowRight, Play, CheckCircle2, Zap, Calendar, Users, TrendingUp, MessageSquare, Star, Sparkles, Shield, Server, Lock } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 
@@ -78,6 +78,36 @@ export const HeroSection = () => {
                 Elementor Compatible
               </Badge>
             </div>
+
+            {/* Security Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-border"
+            >
+              <div className="text-center lg:text-left">
+                <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
+                  <Shield className="w-4 h-4 text-blue-600" />
+                  <span className="text-2xl font-bold text-foreground">100%</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Self-Hosted</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
+                  <Server className="w-4 h-4 text-cyan-600" />
+                  <span className="text-2xl font-bold text-foreground">Zero</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Data on Our Servers</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <div className="flex items-center gap-2 justify-center lg:justify-start mb-1">
+                  <Lock className="w-4 h-4 text-green-600" />
+                  <span className="text-2xl font-bold text-foreground">Full</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Data Ownership</p>
+              </div>
+            </motion.div>
           </motion.div>
 
           <motion.div

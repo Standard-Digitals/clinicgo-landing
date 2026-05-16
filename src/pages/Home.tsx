@@ -25,6 +25,7 @@ import { HeroSection } from '../components/HeroSection';
 import { Marquee } from '../components/ui/marquee';
 import { StaggerTestimonials } from '../components/StaggerTestimonials';
 import { FaqSection } from '../components/FaqSection';
+import { SecuritySection } from '../components/SecuritySection';
 
 // Types
 interface Feature {
@@ -451,6 +452,7 @@ const ClinicGoWebsite: React.FC = () => {
             <HeroSection />
             <TrustedBySection />
             <FeaturesSection />
+            <SecuritySection />
             <DashboardShowcase />
             <HowItWorksSection />
             <BenefitsSection />
