@@ -48,7 +48,8 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
-            <span className="text-2xl font-bold text-blue-600">ClinicGo</span>
+            {/* ClinicGo logo */}
+            <img src="/logo.png" alt="ClinicGo" className="w-42" />
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
           <p className="text-slate-600">Sign in to manage your subscription</p>
