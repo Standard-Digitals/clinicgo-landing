@@ -83,7 +83,7 @@ export const PremiumFooter = () => {
                 <Logo />
               </div>
               <p className="text-slate-400 mb-6 leading-relaxed">
-                Enterprise-grade healthcare SaaS platform trusted by 10,000+ healthcare professionals worldwide.
+                Smart clinic management platform designed to simplify appointments, patient records, billing, staff operations, and healthcare workflows — all from one powerful dashboard.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
