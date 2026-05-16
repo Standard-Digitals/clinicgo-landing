@@ -16,7 +16,7 @@ const OPTIONS = {
 
 const RESPONSES: Record<string, { text: string; options?: string[] }> = {
   'Plugin Features': {
-    text: 'SD Booking offers powerful features to automate your scheduling:\n\n• Customizable booking forms\n• Real-time calendar synchronization\n• Automated email/SMS notifications\n• Secure payment integrations (Stripe/PayPal)\n• Multi-service and multi-staff support',
+    text: 'ClinicGo offers powerful features to automate your scheduling:\n\n• Customizable booking forms\n• Real-time calendar synchronization\n• Automated email/SMS notifications\n• Secure payment integrations (Stripe/PayPal)\n• Multi-service and multi-staff support',
     options: OPTIONS.FEATURES
   },
   'Pricing Plans': {
@@ -24,7 +24,7 @@ const RESPONSES: Record<string, { text: string; options?: string[] }> = {
     options: OPTIONS.PRICING
   },
   'Installation Guide': {
-    text: 'Installing SD Booking is easy:\n\n1. Download the plugin .zip file\n2. Go to your WordPress Dashboard > Plugins > Add New\n3. Upload the .zip file and click Install Now\n4. Activate the plugin and follow the setup wizard.',
+    text: 'Installing ClinicGo is easy:\n\n1. Download the plugin .zip file\n2. Go to your WordPress Dashboard > Plugins > Add New\n3. Upload the .zip file and click Install Now\n4. Activate the plugin and follow the setup wizard.',
     options: ['Back to Main Menu']
   },
   'Contact Support': {
@@ -66,7 +66,7 @@ export default function AIChatSupport() {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'bot', 
-      text: 'Hi! I am your SD Booking assistant. How can I help you today?',
+      text: 'Hi! I am your ClinicGo assistant. How can I help you today?',
       options: OPTIONS.INITIAL
     }
   ]);
@@ -121,7 +121,7 @@ export default function AIChatSupport() {
                 <Bot className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-semibold">SD Booking Support</h3>
+                <h3 className="font-semibold">ClinicGo Support</h3>
                 <p className="text-xs text-blue-100">Automated Assistant</p>
               </div>
             </div>

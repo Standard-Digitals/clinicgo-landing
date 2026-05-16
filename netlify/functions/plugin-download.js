@@ -13,7 +13,7 @@ exports.handler = async function(event) {
     if (!authHeader || !authHeader.startsWith('Bearer ')) return jsonResponse(401, { message: 'Unauthorized' });
     const user = decodeToken(authHeader.substring(7));
     if (!user) return jsonResponse(401, { message: 'Invalid token' });
-    const content = 'SD Booking Plugin ZIP placeholder';
-    return { statusCode: 200, headers: { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename=sd-booking.zip', 'Access-Control-Allow-Origin': '*' }, body: Buffer.from(content).toString('base64') };
+    const content = 'ClinicGo Plugin ZIP placeholder';
+    return { statusCode: 200, headers: { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename=clinic-go.zip', 'Access-Control-Allow-Origin': '*' }, body: Buffer.from(content).toString('base64') };
   } catch (e) { return jsonResponse(500, { message: 'Error: ' + e.message }); }
 };

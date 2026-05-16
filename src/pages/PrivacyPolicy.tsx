@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Introduction</h2>
             <p>
-              Welcome to SD Booking. We respect your privacy and are committed to protecting your personal data. 
+              Welcome to ClinicGo. We respect your privacy and are committed to protecting your personal data. 
               This privacy policy will inform you as to how we look after your personal data when you visit our 
               website and tell you about your privacy rights and how the law protects you.
             </p>
@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
             <p>
               If you have any questions about this privacy policy or our privacy practices, please contact us at:
               <br /><br />
-              <strong>SD Booking</strong><br />
+              <strong>ClinicGo</strong><br />
               Email: support@standarddigitals.com<br />
               Phone: +91 9056347061<br />
               Address: Plot No13, Silver Creek-1, Old Thana Road, Zirakpur, PIN-140603

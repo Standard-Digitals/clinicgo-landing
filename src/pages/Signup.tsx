@@ -53,7 +53,7 @@ export default function Signup() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
-            <span className="text-2xl font-bold text-blue-600">SD Booking</span>
+            <span className="text-2xl font-bold text-blue-600">ClinicGo</span>
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Create your account</h1>
           <p className="text-slate-600">Start your 14-day free trial today</p>
