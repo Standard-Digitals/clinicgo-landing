@@ -21,7 +21,7 @@ export const PremiumFooter = () => {
       title: 'Company',
       links: [
         { label: 'About', href: '/about' },
-        { label: 'Blog', href: '/blog' },
+        { label: 'Blog', href: '#' },
         { label: 'Careers', href: '#' },
         { label: 'Contact', href: '/contact' }
       ]

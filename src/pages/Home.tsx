@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calendar, 
   Users, 
   Building2, 
-  FileText, 
   Package, 
   MessageSquare, 
-  Mail, 
   CreditCard, 
-  Clock, 
   ArrowRight, 
   Zap,
-  TrendingUp,
-  Heart,
   Globe,
-  Smartphone,
-  Layers,
+  Play,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -38,43 +32,14 @@ interface Feature {
 // Trusted By Section
 const TrustedBySection: React.FC = () => {
   const logos = [
-  // International
-  'Mayo Clinic',
-  'Cleveland Clinic',
-  'Johns Hopkins Medicine',
-  'Mount Sinai Health System',
-  'Cedars-Sinai',
-  'Mass General Brigham',
-  'Kaiser Permanente',
-  'UCLA Health',
-  'NewYork-Presbyterian',
-  'Houston Methodist',
-  'Stanford Health Care',
-  'NHS',
-  'Bupa',
-  'Cigna Healthcare',
-  'UnitedHealthcare',
-
-  // Indian
-  'Apollo Hospitals',
-  'Fortis Healthcare',
-  'Manipal Hospitals',
-  'Max Healthcare',
-  'Narayana Health',
-  'Medanta',
-  'AIIMS',
-  'Care Hospitals',
-  'Aster Hospitals',
-  'Yashoda Hospitals',
-  'KIMS Hospitals',
-  'BLK-Max Super Speciality Hospital',
-  'Artemis Hospitals',
-  'Ruby Hall Clinic',
-  'Rainbow Children’s Hospital'
-];
+    'Mayo Clinic', 'Cleveland Clinic', 'Johns Hopkins Medicine',
+    'Kaiser Permanente', 'Apollo Hospitals', 'Fortis Healthcare',
+    'Manipal Hospitals', 'Max Healthcare', 'Narayana Health',
+    'Medanta', 'AIIMS', 'Aster Hospitals',
+  ];
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-12 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -101,69 +66,39 @@ const TrustedBySection: React.FC = () => {
   );
 };
 
-// Features Section
+// Features Section — reduced to 6 key features with visual layout
 const FeaturesSection: React.FC = () => {
   const features: Feature[] = [
     {
       icon: <Calendar className="w-6 h-6" />,
-      title: 'Online Appointment Booking',
-      description: 'Let patients book appointments 24/7 with an intuitive booking system'
+      title: 'Online Booking',
+      description: '24/7 appointment booking for patients'
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      title: 'Google Calendar Integration',
-      description: 'Sync appointments automatically with Google Calendar for seamless scheduling'
+      title: 'Google Calendar Sync',
+      description: 'Auto-sync with Google Calendar'
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: 'Patient Management',
-      description: 'Maintain comprehensive patient records and medical history in one place'
-    },
-    {
-      icon: <Building2 className="w-6 h-6" />,
-      title: 'Staff Management',
-      description: 'Manage doctors, nurses, and staff with role-based access control'
-    },
-    {
-      icon: <Layers className="w-6 h-6" />,
-      title: 'Department Organization',
-      description: 'Organize your clinic by departments and specializations'
-    },
-    {
-      icon: <Heart className="w-6 h-6" />,
-      title: 'Service Management',
-      description: 'Define and manage all medical services and procedures offered'
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: 'Invoice Generation',
-      description: 'Create professional invoices and track payments automatically'
-    },
-    {
-      icon: <Package className="w-6 h-6" />,
-      title: 'Inventory Management',
-      description: 'Track medical supplies, medicines, and equipment inventory'
-    },
-    {
-      icon: <MessageSquare className="w-6 h-6" />,
-      title: 'WhatsApp Notifications',
-      description: 'Send automated appointment reminders via WhatsApp'
-    },
-    {
-      icon: <Mail className="w-6 h-6" />,
-      title: 'Email Notifications',
-      description: 'Automated email confirmations and reminders for appointments'
+      title: 'Patient Records',
+      description: 'Complete medical history in one place'
     },
     {
       icon: <CreditCard className="w-6 h-6" />,
-      title: 'Payment Tracking',
-      description: 'Monitor payments, pending dues, and financial reports'
+      title: 'Billing & Invoices',
+      description: 'Auto-generate invoices & track payments'
     },
     {
-      icon: <Smartphone className="w-6 h-6" />,
-      title: 'Elementor Widget Support',
-      description: 'Beautiful booking widgets for your Elementor-powered website'
-    }
+      icon: <MessageSquare className="w-6 h-6" />,
+      title: 'WhatsApp & Email Alerts',
+      description: 'Automated reminders to reduce no-shows'
+    },
+    {
+      icon: <Building2 className="w-6 h-6" />,
+      title: 'Multi-Department',
+      description: 'Organize by departments & specializations'
+    },
   ];
 
   return (
@@ -177,40 +112,108 @@ const FeaturesSection: React.FC = () => {
         >
           <Badge variant='outline' className="mb-4">Features</Badge>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            Everything You Need to Run a{' '}
+            Everything for a{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Modern Clinic
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Powerful features designed specifically for healthcare professionals
-          </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ y: -5 }}
-            >
-              <Card className="h-full border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mb-4">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Feature illustration */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="rounded-3xl overflow-hidden border border-border shadow-2xl">
+              <img
+                src="/images/dashboard.png"
+                alt="ClinicGo Dashboard"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+            {/* Floating accent */}
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-cyan-400/20 rounded-full blur-2xl" />
+            <div className="absolute -top-6 -left-6 w-24 h-24 bg-gradient-to-br from-purple-500/20 to-pink-400/20 rounded-full blur-2xl" />
+          </motion.div>
+
+          {/* Right: Feature list */}
+          <div className="grid sm:grid-cols-2 gap-5">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+                whileHover={{ y: -4 }}
+              >
+                <Card className="h-full border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg">
+                  <CardHeader className="pb-2">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mb-3">
+                      {feature.icon}
+                    </div>
+                    <CardTitle className="text-base">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <CardDescription className="text-sm">{feature.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
+      </div>
+    </section>
+  );
+};
+
+// Video Showcase Section
+const VideoShowcase: React.FC = () => {
+  return (
+    <section className="py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <Badge variant='outline' className="mb-4">See It In Action</Badge>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+            Watch How{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              ClinicGo Works
+            </span>
+          </h2>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl aspect-video bg-gradient-to-br from-blue-900 to-cyan-900 flex items-center justify-center group cursor-pointer">
+            {/* Video thumbnail / placeholder */}
+            <img
+              src="/images/practice.png"
+              alt="ClinicGo Demo"
+              className="absolute inset-0 w-full h-full object-cover opacity-60"
+            />
+            {/* Play button overlay */}
+            <div className="relative z-10 w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+              <Play className="w-8 h-8 text-blue-600 ml-1" />
+            </div>
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </div>
+          <p className="text-center text-muted-foreground mt-4 text-sm">
+            2-minute overview of the complete clinic management workflow
+          </p>
+        </motion.div>
       </div>
     </section>
   );
@@ -219,7 +222,7 @@ const FeaturesSection: React.FC = () => {
 // Dashboard Showcase
 const DashboardShowcase: React.FC = () => {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-gradient-to-b from-blue-50/30 to-background dark:from-blue-950/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -234,9 +237,6 @@ const DashboardShowcase: React.FC = () => {
               Clinics
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            A modern clinic management dashboard built for smooth operations and better patient management.
-          </p>
         </motion.div>
 
         <motion.div
@@ -247,23 +247,23 @@ const DashboardShowcase: React.FC = () => {
         >
           <div className="grid grid-cols-2 gap-4">
             {[
-              { src: "/images/practice.png", alt: "Practice Dashboard" },
-              { src: "/images/inventory.png", alt: "Inventory Dashboard" },
               { src: "/images/my-clinic.png", alt: "My Clinic Dashboard" },
+              { src: "/images/practice.png", alt: "Practice Dashboard" },
               { src: "/images/invoice.png", alt: "Invoice Dashboard" },
+              { src: "/images/inventory.png", alt: "Inventory Dashboard" },
             ].map((img, index) => (
               <div
-  key={index}
-  className="group rounded-3xl p-[1px] bg-gradient-to-br from-blue-500 via-cyan-400 to-green-400 hover:shadow-[0_0_40px_rgba(59,130,246,0.5)] transition-all duration-500"
->
-  <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-4">
-    <img
-      src={img.src}
-      alt={img.alt}
-      className=" border border-border object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
-    />
-  </div>
-</div>
+                key={index}
+                className="group border border-border  rounded-3xl hover:shadow-[0_0_40px_rgba(59,130,246,0.5)] transition-all duration-500"
+              >
+                <div className=" rounded-3xl p-4 ">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
+                  />
+                </div>
+              </div>
             ))}
           </div>
         </motion.div>
@@ -272,96 +272,30 @@ const DashboardShowcase: React.FC = () => {
   );
 };
 
-// How It Works Section
+// How It Works Section — visual-first with inline SVG illustrations
 const HowItWorksSection: React.FC = () => {
   const steps = [
     {
       number: '01',
       title: 'Install Plugin',
-      description: 'Download and install ClinicGo from WordPress plugin directory in seconds',
-      icon: <Package className="w-8 h-8" />
+      description: 'One-click install from WordPress directory',
+      icon: <Package className="w-8 h-8" />,
+      color: 'from-blue-500 to-indigo-500',
     },
     {
       number: '02',
-      title: 'Configure Clinic',
-      description: 'Set up your clinic details, doctors, services, and departments easily',
-      icon: <Building2 className="w-8 h-8" />
+      title: 'Configure',
+      description: 'Set up doctors, services & departments',
+      icon: <Building2 className="w-8 h-8" />,
+      color: 'from-cyan-500 to-teal-500',
     },
     {
       number: '03',
-      title: 'Start Managing',
-      description: 'Begin accepting appointments and managing your clinic operations',
-      icon: <Zap className="w-8 h-8" />
+      title: 'Go Live',
+      description: 'Start accepting appointments instantly',
+      icon: <Zap className="w-8 h-8" />,
+      color: 'from-green-500 to-emerald-500',
     }
-  ];
-
-  return (
-    <section className="py-24 bg-gradient-to-b from-blue-50/30 to-background dark:from-blue-950/10">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <Badge variant='outline' className="mb-4">How It Works</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            Get Started in{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              3 Simple Steps
-            </span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Setup your clinic management system in minutes, not hours
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-8 relative">
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="relative"
-            >
-              <Card className="h-full hover:shadow-xl transition-shadow duration-300">
-                <CardHeader>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mb-4">
-                    {step.icon}
-                  </div>
-                  <div className="text-6xl font-bold text-blue-100 dark:text-blue-900/30 mb-2">
-                    {step.number}
-                  </div>
-                  <CardTitle className="text-2xl">{step.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">{step.description}</CardDescription>
-                </CardContent>
-              </Card>
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                  <ArrowRight className="w-8 h-8 text-blue-500" />
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Benefits Section
-const BenefitsSection: React.FC = () => {
-  const benefits = [
-    { icon: <Clock className="w-6 h-6" />, title: 'Save Time', description: 'Automate repetitive tasks and focus on patient care' },
-    { icon: <Zap className="w-6 h-6" />, title: 'Reduce Manual Work', description: 'Eliminate paperwork with digital records' },
-    { icon: <Heart className="w-6 h-6" />, title: 'Improve Patient Experience', description: 'Easy booking and faster service delivery' },
-    { icon: <TrendingUp className="w-6 h-6" />, title: 'Increase Efficiency', description: 'Streamline operations and boost productivity' },
-    { icon: <MessageSquare className="w-6 h-6" />, title: 'Automate Reminders', description: 'Reduce no-shows with automated notifications' },
-    { icon: <Users className="w-6 h-6" />, title: 'Better Coordination', description: 'Improve communication between staff members' }
   ];
 
   return (
@@ -373,39 +307,46 @@ const BenefitsSection: React.FC = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <Badge variant='outline' className="mb-4">Benefits</Badge>
+          <Badge variant='outline' className="mb-4">How It Works</Badge>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            Transform Your{' '}
+            Ready in{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              Healthcare Practice
+              3 Steps
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Experience the advantages of modern clinic management
-          </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {benefits.map((benefit, index) => (
+        <div className="grid lg:grid-cols-3 gap-8 relative">
+          {steps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
+              transition={{ delay: index * 0.2 }}
+              className="relative"
             >
-              <Card className="h-full text-center hover:shadow-xl transition-all duration-300 border-border hover:border-blue-500/50">
-                <CardHeader>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mx-auto mb-4">
-                    {benefit.icon}
+              <Card className="h-full hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                {/* Visual top bar */}
+                <div className={`h-2 bg-gradient-to-r ${step.color}`} />
+                <CardHeader className="text-center pt-8">
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center text-white mx-auto mb-4 shadow-lg`}>
+                    {step.icon}
                   </div>
-                  <CardTitle className="text-xl">{benefit.title}</CardTitle>
+                  <div className="text-5xl font-bold text-muted-foreground/20 mb-1">
+                    {step.number}
+                  </div>
+                  <CardTitle className="text-xl">{step.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription>{benefit.description}</CardDescription>
+                <CardContent className="text-center">
+                  <CardDescription className="text-base">{step.description}</CardDescription>
                 </CardContent>
               </Card>
+              {index < steps.length - 1 && (
+                <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                  <ArrowRight className="w-8 h-8 text-blue-500" />
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
@@ -432,9 +373,6 @@ const TestimonialsSection: React.FC = () => {
               Healthcare Professionals
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            See what doctors and clinic managers say about ClinicGo
-          </p>
         </motion.div>
 
         <StaggerTestimonials />
@@ -445,21 +383,18 @@ const TestimonialsSection: React.FC = () => {
 
 // Main Component
 const ClinicGoWebsite: React.FC = () => {
-
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <>
-            <HeroSection />
-            <TrustedBySection />
-            <FeaturesSection />
-            <SecuritySection />
-            <DashboardShowcase />
-            <HowItWorksSection />
-            <BenefitsSection />
-            <TestimonialsSection />
-            <FaqSection />
-            <CTASection />
-          </>
+      <HeroSection />
+      <TrustedBySection />
+      <FeaturesSection />
+      <VideoShowcase />
+      <SecuritySection />
+      <DashboardShowcase />
+      <HowItWorksSection />
+      <TestimonialsSection />
+      <FaqSection />
+      <CTASection />
     </div>
   );
 };
