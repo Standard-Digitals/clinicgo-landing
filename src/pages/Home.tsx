@@ -201,7 +201,7 @@ const VideoShowcase: React.FC = () => {
             <img
               src="/images/practice.png"
               alt="ClinicGo Demo"
-              className="absolute inset-0 w-full h-full object-cover opacity-60"
+              className="absolute inset-0 w-full h-full object-cover opacity-20"
             />
             {/* Play button overlay */}
             <div className="relative z-10 w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
@@ -381,6 +381,51 @@ const TestimonialsSection: React.FC = () => {
   );
 };
 
+// Global Timezone Section — marquee style like TrustedBySection
+const GlobalTimezoneSection: React.FC = () => {
+  const timezones = [
+    '🇺🇸 New York • UTC-5',
+    '🇬🇧 London • UTC+0',
+    '🇩🇪 Berlin • UTC+1',
+    '🇦🇪 Dubai • UTC+4',
+    '🇮🇳 Mumbai • UTC+5:30',
+    '🇸🇬 Singapore • UTC+8',
+    '🇯🇵 Tokyo • UTC+9',
+    '🇦🇺 Sydney • UTC+11',
+    '🇧🇷 São Paulo • UTC-3',
+    '🇨🇦 Toronto • UTC-5',
+    '🇿🇦 Cape Town • UTC+2',
+    '🇰🇷 Seoul • UTC+9',
+  ];
+
+  return (
+    <section className="py-12 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8"
+        >
+          <p className="text-sm font-medium text-muted-foreground">AVAILABLE IN EVERY TIMEZONE • 24/7 GLOBAL SUPPORT</p>
+        </motion.div>
+        <Marquee duration={50} pauseOnHover fade fadeAmount={15}>
+          {timezones.map((tz, index) => (
+            <div
+              key={index}
+              className="mx-10 flex items-center justify-center px-6 py-3 rounded-lg border border-border bg-card"
+            >
+              <span className="text-xl font-semibold text-muted-foreground whitespace-nowrap">
+                {tz}
+              </span>
+            </div>
+          ))}
+        </Marquee>
+      </div>
+    </section>
+  );
+};
+
 // Main Component
 const ClinicGoWebsite: React.FC = () => {
   return (
@@ -391,6 +436,7 @@ const ClinicGoWebsite: React.FC = () => {
       <VideoShowcase />
       <SecuritySection />
       <DashboardShowcase />
+      <GlobalTimezoneSection />
       <HowItWorksSection />
       <TestimonialsSection />
       <FaqSection />
