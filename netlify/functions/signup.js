@@ -1,48 +1,34 @@
-const crypto = require('crypto');
-
-function generateId() {
-  return crypto.randomBytes(16).toString('hex');
-}
-
-function jsonResponse(status, body) {
-  return {
-    statusCode: status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    },
-    body: JSON.stringify(body)
-  };
-}
+const { loadData, saveData, generateId, hashPassword, createToken, findUserByEmail, response } = require('./shared');
 
 exports.handler = async function(event) {
-  console.log('Signup handler called');
-  
-  if (event.httpMethod === 'OPTIONS') {
-    return jsonResponse(200, { ok: true });
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { message: 'Method not allowed' });
-  }
+  if (event.httpMethod === 'OPTIONS') return response(200, { ok: true });
+  if (event.httpMethod !== 'POST') return response(405, { message: 'Method not allowed' });
 
   try {
-    const body = JSON.parse(event.body || '{}');
-    const { name, email, password } = body;
+    const { name, email, password } = JSON.parse(event.body || '{}');
 
     if (!name || !email || !password) {
-      return jsonResponse(400, { message: 'All fields are required' });
+      return response(400, { message: 'All fields are required' });
+    }
+
+    if (password.length < 8) {
+      return response(400, { message: 'Password must be at least 8 characters' });
+    }
+
+    const data = loadData();
+
+    // Check duplicate email
+    if (findUserByEmail(data, email)) {
+      return response(400, { message: 'Email already registered' });
     }
 
     const id = generateId();
-    
-    // Create user data object
+    const hashedPassword = await hashPassword(password);
+
     const user = {
       id,
       email,
-      password, // In production, hash this!
+      password: hashedPassword,
       name,
       plan: undefined,
       subscriptionStatus: undefined,
@@ -55,12 +41,12 @@ exports.handler = async function(event) {
       subscriptionEndsAt: undefined
     };
 
-    // Encode user data directly in token (base64 encoded JSON)
-    const token = Buffer.from(JSON.stringify(user)).toString('base64');
-    console.log('Created token:', token);
-    console.log('Token length:', token.length);
+    data.users[id] = user;
+    saveData(data);
 
-    return jsonResponse(200, {
+    const token = createToken(id, email);
+
+    return response(200, {
       token,
       user: {
         id: user.id,
@@ -74,6 +60,6 @@ exports.handler = async function(event) {
     });
   } catch (e) {
     console.error('Signup error:', e);
-    return jsonResponse(500, { message: 'Internal server error: ' + e.message });
+    return response(500, { message: 'Internal server error' });
   }
 };

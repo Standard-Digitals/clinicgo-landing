@@ -4,6 +4,7 @@ import path from "path";
 import dotenv from "dotenv";
 import crypto from "crypto";
 import fs from "fs";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ interface Subscription {
 }
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
+const TOKEN_SECRET = process.env.TOKEN_SECRET || 'clinicgo-secret-key-change-in-production';
 
 interface DataStore {
   users: Record<string, User>;
@@ -84,6 +86,25 @@ function generateId(): string {
   return crypto.randomBytes(16).toString("hex");
 }
 
+function createToken(userId: string, email: string): string {
+  const payload = JSON.stringify({ id: userId, email, iat: Date.now() });
+  const signature = crypto.createHmac('sha256', TOKEN_SECRET).update(payload).digest('hex');
+  return Buffer.from(payload).toString('base64') + '.' + signature;
+}
+
+function verifyToken(token: string): { id: string; email: string } | null {
+  try {
+    const [payloadB64, signature] = token.split('.');
+    if (!payloadB64 || !signature) return null;
+    const payload = Buffer.from(payloadB64, 'base64').toString();
+    const expectedSig = crypto.createHmac('sha256', TOKEN_SECRET).update(payload).digest('hex');
+    if (signature !== expectedSig) return null;
+    return JSON.parse(payload);
+  } catch (e) {
+    return null;
+  }
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3003;
@@ -104,24 +125,29 @@ async function startServer() {
     res.json({ status: "ok", env: process.env.NODE_ENV });
   });
 
-  app.post("/api/auth/signup", (req, res) => {
+  app.post("/api/auth/signup", async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    if (password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters" });
+    }
+
     for (const user of Object.values(data.users)) {
       if (user.email === email) {
-        return res.status(400).json({ message: "Email already exists" });
+        return res.status(400).json({ message: "Email already registered" });
       }
     }
 
     const id = generateId();
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user: User = {
       id,
       email,
-      password,
+      password: hashedPassword,
       name,
       plan: undefined,
       subscriptionStatus: undefined,
@@ -134,7 +160,7 @@ async function startServer() {
     data.users[id] = user;
     saveData();
 
-    const token = Buffer.from(`${id}:${email}`).toString("base64");
+    const token = createToken(id, email);
 
     console.log("Signup successful:", email);
 
@@ -152,7 +178,7 @@ async function startServer() {
     });
   });
 
-  app.post("/api/auth/login", (req, res) => {
+  app.post("/api/auth/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -161,7 +187,7 @@ async function startServer() {
 
     let foundUser: User | undefined;
     for (const user of Object.values(data.users)) {
-      if (user.email === email && user.password === password) {
+      if (user.email === email) {
         foundUser = user;
         break;
       }
@@ -171,7 +197,12 @@ async function startServer() {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const token = Buffer.from(`${foundUser.id}:${foundUser.email}`).toString("base64");
+    const isValid = await bcrypt.compare(password, foundUser.password);
+    if (!isValid) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = createToken(foundUser.id, foundUser.email);
 
     res.json({
       token,
@@ -190,26 +221,14 @@ async function startServer() {
 
   const authenticate = (req: express.Request): User | null => {
     const authHeader = req.headers.authorization;
-    console.log("Auth header received:", authHeader ? "yes" : "no");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("No auth header");
-      return null;
-    }
+    if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
 
     const token = authHeader.substring(7);
-    try {
-      const decoded = Buffer.from(token, "base64").toString();
-      console.log("Decoded token:", decoded);
-      const [id, email] = decoded.split(":");
-      const user = data.users[id];
-      console.log("User found:", user ? user.email : "NOT FOUND");
-      if (user && user.email === email) {
-        return user;
-      }
-    } catch (e) {
-      console.log("Token decode error:", e);
-      return null;
-    }
+    const decoded = verifyToken(token);
+    if (!decoded) return null;
+
+    const user = data.users[decoded.id];
+    if (user && user.email === decoded.email) return user;
     return null;
   };
 
@@ -393,6 +412,49 @@ async function startServer() {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader("Content-Disposition", "attachment; filename=sd-booking.zip");
     res.send(buffer);
+  });
+
+  // Map Netlify function paths to API routes for local dev
+  app.post("/.netlify/functions/signup", (req, res) => {
+    (req as any).url = "/api/auth/signup";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/login", (req, res) => {
+    (req as any).url = "/api/auth/login";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/start-trial", (req, res) => {
+    (req as any).url = "/api/subscription/start-trial";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/create-subscription", (req, res) => {
+    (req as any).url = "/api/subscription/create";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/razorpay-create-order", (req, res) => {
+    (req as any).url = "/api/razorpay/create-order";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/change-plan", (req, res) => {
+    (req as any).url = "/api/subscription/change-plan";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/cancel-subscription", (req, res) => {
+    (req as any).url = "/api/subscription/cancel";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/license-activate", (req, res) => {
+    (req as any).url = "/api/license/activate";
+    app(req, res);
+  });
+  app.get("/.netlify/functions/license-verify", (req, res) => {
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.substring(req.originalUrl.indexOf('?')) : '';
+    (req as any).url = "/api/license/verify" + qs;
+    app(req, res);
+  });
+  app.get("/.netlify/functions/plugin-download", (req, res) => {
+    (req as any).url = "/api/plugin/download";
+    app(req, res);
   });
 
   app.use("/api/*", (req, res) => {

@@ -1,71 +1,31 @@
-const crypto = require('crypto');
-
-function generateId() {
-  return crypto.randomBytes(16).toString('hex');
-}
-
-function jsonResponse(status, body) {
-  return {
-    statusCode: status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    },
-    body: JSON.stringify(body)
-  };
-}
-
-function decodeToken(token) {
-  try {
-    const decoded = Buffer.from(token, 'base64').toString();
-    return JSON.parse(decoded);
-  } catch (e) {
-    return null;
-  }
-}
+const { loadData, comparePassword, createToken, findUserByEmail, response } = require('./shared');
 
 exports.handler = async function(event) {
-  console.log('Login handler called');
-  
-  if (event.httpMethod === 'OPTIONS') {
-    return jsonResponse(200, { ok: true });
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { method: 'Method not allowed' });
-  }
+  if (event.httpMethod === 'OPTIONS') return response(200, { ok: true });
+  if (event.httpMethod !== 'POST') return response(405, { message: 'Method not allowed' });
 
   try {
-    const body = JSON.parse(event.body || '{}');
-    const { email, password } = body;
+    const { email, password } = JSON.parse(event.body || '{}');
 
     if (!email || !password) {
-      return jsonResponse(400, { message: 'Email and password required' });
+      return response(400, { message: 'Email and password required' });
     }
 
-    // Create user based on provided credentials
-    const id = generateId();
-    const user = {
-      id,
-      email,
-      password,
-      name: body.name || email.split('@')[0],
-      plan: undefined,
-      subscriptionStatus: undefined,
-      licenseKey: undefined,
-      licensedDomains: [],
-      onboardingComplete: false,
-      createdAt: new Date().toISOString(),
-      trialEndsAt: undefined,
-      subscriptionId: undefined,
-      subscriptionEndsAt: undefined
-    };
+    const data = loadData();
+    const user = findUserByEmail(data, email);
 
-    const token = Buffer.from(JSON.stringify(user)).toString('base64');
+    if (!user) {
+      return response(401, { message: 'Invalid email or password' });
+    }
 
-    return jsonResponse(200, {
+    const isValid = await comparePassword(password, user.password);
+    if (!isValid) {
+      return response(401, { message: 'Invalid email or password' });
+    }
+
+    const token = createToken(user.id, user.email);
+
+    return response(200, {
       token,
       user: {
         id: user.id,
@@ -80,6 +40,6 @@ exports.handler = async function(event) {
     });
   } catch (e) {
     console.error('Login error:', e);
-    return jsonResponse(500, { message: 'Internal server error: ' + e.message });
+    return response(500, { message: 'Internal server error' });
   }
 };

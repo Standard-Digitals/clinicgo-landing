@@ -248,8 +248,8 @@ const DashboardShowcase: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             {[
               { src: "/images/practice.png", alt: "Practice Dashboard" },
-              { src: "/images/my-clinic.png", alt: "My Clinic Dashboard" },
               { src: "/images/inventory.png", alt: "Inventory Dashboard" },
+              { src: "/images/my-clinic.png", alt: "My Clinic Dashboard" },
               { src: "/images/invoice.png", alt: "Invoice Dashboard" },
             ].map((img, index) => (
               <div
@@ -260,7 +260,7 @@ const DashboardShowcase: React.FC = () => {
     <img
       src={img.src}
       alt={img.alt}
-      className="w-full h-full border border-border object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
+      className=" border border-border object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
     />
   </div>
 </div>
