@@ -17,7 +17,7 @@ import { Badge } from '../components/ui/badge';
 import { CTASection } from '../components/CTASection';
 import { HeroSection } from '../components/HeroSection';
 import { Marquee } from '../components/ui/marquee';
-import { StaggerTestimonials } from '../components/StaggerTestimonials';
+import { TestimonialsColumn } from '../components/ui/testimonials-columns-1';
 import { FaqSection } from '../components/FaqSection';
 import { SecuritySection } from '../components/SecuritySection';
 
@@ -356,26 +356,111 @@ const HowItWorksSection: React.FC = () => {
 };
 
 // Testimonials Section
+const testimonials = [
+  {
+  text: "Clinic Go transformed how we manage appointments, patient records, and clinic workflows. Everything feels faster, cleaner, and more professional now.",
+  image: "/images/client/varunbj.png",
+  name: "Dr. Varun Bajaj",
+  role: "Founder, Vibrant Looks Medspa",
+  country: "🇨🇦",
+},
+
+{
+  text: "The automated booking and follow-up system helped us reduce manual work significantly while improving the patient experience.",
+  image: "https://randomuser.me/api/portraits/women/44.jpg",
+  name: "Anisha",
+  role: "Senior Nurse Injector",
+  country: "🇨🇦",
+},
+
+{
+  text: "From consultations to billing and treatment management, Clinic Go gives our healthcare team everything in one beautifully designed dashboard.",
+  image: "/images/client/arunkr.png",
+  name: "Dr. Arun Kumar",
+  role: "Ayurvedic Specialist",
+  country: "🇮🇳",
+},
+
+{
+  text: "The inventory and invoice modules are incredibly useful for our daily operations. The interface feels modern, premium, and easy to manage.",
+  image: "https://randomuser.me/api/portraits/men/54.jpg",
+  name: "Michael Carter",
+  role: "Clinic Operations Manager",
+  country: "🇺🇸",
+},
+
+{
+  text: "Managing multiple staff members with role-based access is now effortless. Clinic Go helped us organize our entire clinic system.",
+  image: "https://randomuser.me/api/portraits/women/63.jpg",
+  name: "Dr. Emily Johnson",
+  role: "Dermatologist",
+  country: "🇦🇺",
+},
+
+{
+  text: "The clean dashboard and real-time appointment tracking made a huge difference for our front desk and support staff.",
+  image: "https://randomuser.me/api/portraits/women/8.jpg",
+  name: "Dr. Sarah Mitchell",
+  role: "Clinic Director",
+  country: "🇬🇧",
+},
+  {
+  text: "Clinic Go transformed how we manage appointments, patient records, and clinic workflows. Everything feels faster, cleaner, and more professional now.",
+  image: "/images/client/varunbj.png",
+  name: "Dr. Varun Bajaj",
+  role: "Founder, Vibrant Looks Medspa",
+  country: "🇨🇦",
+},
+
+{
+  text: "The automated booking and follow-up system helped us reduce manual work significantly while improving the patient experience.",
+  image: "https://randomuser.me/api/portraits/women/44.jpg",
+  name: "Anisha",
+  role: "Senior Nurse Injector",
+  country: "🇨🇦",
+},
+
+{
+  text: "From consultations to billing and treatment management, Clinic Go gives our healthcare team everything in one beautifully designed dashboard.",
+  image: "/images/client/arunkr.png",
+  name: "Dr. Arun Kumar",
+  role: "Ayurvedic Specialist",
+  country: "🇮🇳",
+},
+];
+
+const firstColumn = testimonials.slice(0, 3);
+const secondColumn = testimonials.slice(3, 6);
+const thirdColumn = testimonials.slice(6, 9);
+
 const TestimonialsSection: React.FC = () => {
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10 my-20 relative">
+      <div className="container z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
         >
           <Badge variant='outline' className="mb-4">Testimonials</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter mt-2 text-center">
             Loved by{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Healthcare Professionals
             </span>
           </h2>
+          <p className="text-center mt-5 opacity-75">
+            See what clinics and doctors have to say about ClinicGo.
+          </p>
         </motion.div>
 
-        <StaggerTestimonials />
+        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+          <TestimonialsColumn testimonials={firstColumn} duration={15} />
+          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
+          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+        </div>
       </div>
     </section>
   );

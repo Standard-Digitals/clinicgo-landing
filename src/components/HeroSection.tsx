@@ -67,7 +67,7 @@ export const HeroSection = () => {
             className="relative"
           >
             <div className="relative bg-white dark:bg-gradient-to-r from-blue-600 via-cyan-500 to-green-500 rounded-2xl shadow-2xl p-2">
-              <img src="/images/dashboard.png" alt="Dashboard" className="w-full h-auto rounded-2xl" />
+              <img src="/images/dashboard-in.png" alt="Dashboard" className="w-full h-auto rounded-2xl" />
             </div>
 
             <motion.div

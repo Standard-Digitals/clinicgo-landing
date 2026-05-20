@@ -7,6 +7,7 @@ interface Testimonial {
   image: string;
   name: string;
   role: string;
+  country?: string;
 }
 
 export const TestimonialsColumn = (props: {
@@ -31,7 +32,7 @@ export const TestimonialsColumn = (props: {
         {[
           ...new Array(2).fill(0).map((_, index) => (
             <React.Fragment key={index}>
-              {props.testimonials.map(({ text, image, name, role }, i) => (
+              {props.testimonials.map(({ text, image, name, role, country }, i) => (
                 <div className="p-10 rounded-3xl border shadow-lg shadow-primary/10 max-w-xs w-full" key={i}>
                   <div>{text}</div>
                   <div className="flex items-center gap-2 mt-5">
@@ -43,7 +44,10 @@ export const TestimonialsColumn = (props: {
                       className="h-10 w-10 rounded-full"
                     />
                     <div className="flex flex-col">
-                      <div className="font-medium tracking-tight leading-5">{name}</div>
+                      <div className="font-medium tracking-tight leading-5">
+                        {country && <span className="mr-1">{country}</span>}
+                        {name}
+                      </div>
                       <div className="leading-5 opacity-60 tracking-tight">{role}</div>
                     </div>
                   </div>
