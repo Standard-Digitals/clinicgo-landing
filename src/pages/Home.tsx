@@ -108,7 +108,7 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
+    <section className="py-24 h-screen bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -293,7 +293,7 @@ const HowItWorksSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-background h-[80vh]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -535,28 +535,56 @@ const DashboardShowcase: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col xl:flex-row gap-6 border border-border rounded-3xl p-6 bg-card"
+                className="relative rounded-3xl p-[2px] overflow-hidden"
               >
-                {/* Dashboard Image */}
-                <div className="flex-1 min-w-0">
-                  <img
-                    src={active.image}
-                    alt={active.title}
-                    className="w-full rounded-2xl object-cover shadow-sm"
+                {/* Animated border progress */}
+                <div className="absolute inset-0 rounded-3xl border border-border" />
+                <svg
+                  key={`border-${active.id}-${activeTab}`}
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  preserveAspectRatio="none"
+                >
+                  <rect
+                    x="1" y="1"
+                    width="calc(100% - 2px)" height="calc(100% - 2px)"
+                    rx="24" ry="24"
+                    fill="none"
+                    stroke="url(#borderGradient)"
+                    strokeWidth="2.5"
+                    strokeDasharray="5000"
+                    strokeDashoffset="5000"
+                    className="animate-[borderDraw_5s_linear_forwards]"
                   />
-                </div>
+                  <defs>
+                    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="100%" stopColor="#06b6d4" />
+                    </linearGradient>
+                  </defs>
+                </svg>
 
-                {/* Features */}
-                <div className="xl:w-80 shrink-0 flex flex-col justify-center p-4">
-                  <h3 className="text-2xl font-bold mb-6 border-b pb-3 border-border">{active.title} Dashboard</h3>
-                  <ul className="space-y-4">
-                    {active.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-base text-foreground">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex flex-col xl:flex-row gap-6 rounded-3xl p-6 bg-card">
+                  {/* Dashboard Image */}
+                  <div className="flex-1 min-w-0">
+                    <img
+                      src={active.image}
+                      alt={active.title}
+                      className="w-full rounded-2xl object-cover shadow-sm"
+                    />
+                  </div>
+
+                  {/* Features */}
+                  <div className="xl:w-80 shrink-0 flex flex-col justify-center p-4">
+                    <h3 className="text-2xl font-bold mb-6 border-b pb-3 border-border">{active.title} Dashboard</h3>
+                    <ul className="space-y-4">
+                      {active.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-3 text-base text-foreground">
+                          <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
