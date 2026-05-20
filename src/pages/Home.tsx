@@ -225,6 +225,141 @@ const VideoShowcase: React.FC = () => {
   );
 };
 
+
+// How It Works Section — visual-first with inline SVG illustrations
+const STEP_DURATION = 3000;
+
+const howItWorksSteps = [
+  {
+    title: 'Install Plugin',
+    description: 'One-click install from WordPress directory',
+    icon: <Package className="w-7 h-7" />,
+    gradient: 'from-blue-500 to-indigo-500',
+    stroke: '#6366f1',
+  },
+  {
+    title: 'Configure',
+    description: 'Set up doctors, services & departments',
+    icon: <Building2 className="w-7 h-7" />,
+    gradient: 'from-cyan-500 to-teal-500',
+    stroke: '#14b8a6',
+  },
+  {
+    title: 'Go Live',
+    description: 'Start accepting appointments instantly',
+    icon: <Zap className="w-7 h-7" />,
+    gradient: 'from-green-500 to-emerald-500',
+    stroke: '#10b981',
+  },
+];
+
+const CircleProgress: React.FC<{ active: boolean; completed: boolean; stroke: string }> = ({ active, completed, stroke }) => {
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r={radius} fill="none" stroke="currentColor" strokeWidth="4" className="text-muted-foreground/10" />
+      <circle
+        cx="60" cy="60" r={radius} fill="none"
+        stroke={stroke}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={completed ? 0 : active ? 0 : circumference}
+        className={active && !completed ? 'animate-[circleProgress_3s_linear_forwards]' : 'transition-all duration-500'}
+      />
+    </svg>
+  );
+};
+
+const HowItWorksSection: React.FC = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStep((prev) => {
+        const next = (prev + 1) % howItWorksSteps.length;
+        if (next === 0) {
+          setCompletedSteps([]);
+        } else {
+          setCompletedSteps((c) => [...c, prev]);
+        }
+        return next;
+      });
+    }, STEP_DURATION);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-20"
+        >
+          <Badge variant='outline' className="mb-4">How It Works</Badge>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+            Ready in{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              3 Steps
+            </span>
+          </h2>
+        </motion.div>
+
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
+          {howItWorksSteps.map((step, index) => {
+            const isActive = activeStep === index;
+            const isCompleted = completedSteps.includes(index);
+
+            return (
+              <React.Fragment key={index}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="flex flex-col items-center text-center"
+                >
+                  {/* Circle */}
+                  <div className={`relative w-28 h-28 lg:w-32 lg:h-32 flex items-center justify-center transition-transform duration-500 ${isActive ? 'scale-110' : ''}`}>
+                    <CircleProgress active={isActive} completed={isCompleted} stroke={step.stroke} />
+                    <div className={`w-16 h-16 lg:w-18 lg:h-18 rounded-full bg-gradient-to-br ${step.gradient} flex items-center justify-center text-white shadow-lg transition-shadow duration-500 ${isActive ? 'shadow-xl shadow-blue-500/20' : ''}`}>
+                      {step.icon}
+                    </div>
+                  </div>
+
+                  {/* Text */}
+                  <h3 className={`mt-5 text-lg font-bold transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {step.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground max-w-[180px]">
+                    {step.description}
+                  </p>
+                </motion.div>
+
+                {/* Connector line */}
+                {index < howItWorksSteps.length - 1 && (
+                  <div className="hidden lg:block w-20 h-0.5 bg-gradient-to-r from-muted-foreground/20 to-muted-foreground/20 relative">
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${step.gradient} transition-transform duration-700 origin-left ${
+                        isCompleted ? 'scale-x-100' : 'scale-x-0'
+                      }`}
+                    />
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Dashboard Showcase
 const dashboardTabs = [
   {
@@ -453,88 +588,7 @@ const DashboardShowcase: React.FC = () => {
   );
 };
 
-// How It Works Section — visual-first with inline SVG illustrations
-const HowItWorksSection: React.FC = () => {
-  const steps = [
-    {
-      number: '01',
-      title: 'Install Plugin',
-      description: 'One-click install from WordPress directory',
-      icon: <Package className="w-8 h-8" />,
-      color: 'from-blue-500 to-indigo-500',
-    },
-    {
-      number: '02',
-      title: 'Configure',
-      description: 'Set up doctors, services & departments',
-      icon: <Building2 className="w-8 h-8" />,
-      color: 'from-cyan-500 to-teal-500',
-    },
-    {
-      number: '03',
-      title: 'Go Live',
-      description: 'Start accepting appointments instantly',
-      icon: <Zap className="w-8 h-8" />,
-      color: 'from-green-500 to-emerald-500',
-    }
-  ];
 
-  return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <Badge variant='outline' className="mb-4">How It Works</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            Ready in{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              3 Steps
-            </span>
-          </h2>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-8 relative">
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="relative"
-            >
-              <Card className="h-full hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                {/* Visual top bar */}
-                <div className={`h-2 bg-gradient-to-r ${step.color}`} />
-                <CardHeader className="text-center pt-8">
-                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center text-white mx-auto mb-4 shadow-lg`}>
-                    {step.icon}
-                  </div>
-                  <div className="text-5xl font-bold text-muted-foreground/20 mb-1">
-                    {step.number}
-                  </div>
-                  <CardTitle className="text-xl">{step.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <CardDescription className="text-base">{step.description}</CardDescription>
-                </CardContent>
-              </Card>
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                  <ArrowRight className="w-8 h-8 text-blue-500" />
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // Testimonials Section
 const testimonials = [
@@ -700,11 +754,11 @@ const ClinicGoWebsite: React.FC = () => {
       <TrustedBySection />
       <FeaturesSection />
       <VideoShowcase />
+      <HowItWorksSection />
       <SecuritySection />
       <DashboardShowcase />
-      <GlobalTimezoneSection />
-      <HowItWorksSection />
       <TestimonialsSection />
+      <GlobalTimezoneSection />
       <FaqSection />
       <CTASection />
     </div>
