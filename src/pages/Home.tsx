@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
   Users, 
@@ -11,6 +11,12 @@ import {
   Zap,
   Globe,
   Play,
+  LayoutDashboard,
+  Stethoscope,
+  FileText,
+  Boxes,
+  CheckCircle2,
+  PinIcon,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -220,7 +226,130 @@ const VideoShowcase: React.FC = () => {
 };
 
 // Dashboard Showcase
+const dashboardTabs = [
+  {
+    id: 'my-clinic',
+    title: 'My Clinic',
+    icon: <LayoutDashboard className="w-5 h-5" />,
+    image: '/images/my-clinic.png',
+    features: [
+      'Manage Departments, Staff & Services',
+      'View Total Bookings & Pending Appointments',
+      'Quick Actions for instant management',
+      'Recent Bookings with status tracking',
+      'Package management system',
+    ],
+  },
+  {
+    id: 'practice',
+    title: 'Practice',
+    icon: <Stethoscope className="w-5 h-5" />,
+    image: '/images/practice.png',
+    features: [
+      'Patient management & records',
+      'Booking & appointment tracking',
+      'Fee collection & revenue overview',
+      'Follow-up scheduling system',
+      'Detailed booking history with amounts',
+    ],
+  },
+  {
+    id: 'invoices',
+    title: 'Invoices',
+    icon: <FileText className="w-5 h-5" />,
+    image: '/images/invoice.png',
+    features: [
+      'Create & manage invoices',
+      'Track paid, pending & overdue invoices',
+      'Partial payment support',
+      'Total revenue at a glance',
+      'Recent invoices with quick actions',
+    ],
+  },
+  {
+    id: 'inventory',
+    title: 'Inventory',
+    icon: <Boxes className="w-5 h-5" />,
+    image: '/images/inventory.png',
+    features: [
+      'Item, category & brand management',
+      'Low stock alerts & notifications',
+      'Supplier management system',
+      'Expiring soon tracking',
+      'Total inventory value overview',
+    ],
+  },
+  {
+    id: 'integrations',
+    title: 'Integrations',
+    icon: <PinIcon className="w-5 h-5" />,
+    image: '/images/integrations.png',
+    features: [
+      'Google Calendar integration',
+      'WhatsApp integration',
+      'Email marketing integration',
+      'Social media integration',
+      'Patient feedback integration',
+    ],
+  },
+  {
+    id: 'payments',
+    title: 'Payments',
+    icon: <CheckCircle2 className="w-5 h-5" />,
+    image: '/images/payments.png',
+    features: [
+      'Secure payment processing',
+      'Multiple payment methods',
+      'Payment tracking & history',
+      'Payment reminders & notifications',
+      'Payment integration with third-party services',
+    ],
+  },
+  {
+    id: 'bulk-expo-import',
+    title: 'Bulk Expo Import',
+    icon: <Zap className="w-5 h-5" />,
+    image: '/images/bulk-expo-import.png',
+    features: [
+      'Efficient import of patient data',
+      'Simplified workflow for bulk actions',
+      'Real-time updates on import status',
+      'Supports multiple file formats',
+      'Data validation and cleanup',
+    ],
+  },
+  {
+    id: 'staff-login',
+    title: 'Staff Login',
+    icon: <Globe className="w-5 h-5" />,
+    image: '/images/staff-login.png',
+    features: [
+      'Secure login for staff members',
+      'Role-based access control',
+      'Password reset & recovery',
+      'Audit trail for login activities',
+    ],
+  }
+];
+
+const AUTOPLAY_INTERVAL = 5000;
+
 const DashboardShowcase: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const next = useCallback(() => {
+    setActiveTab((prev) => (prev + 1) % dashboardTabs.length);
+  }, []);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = setInterval(next, AUTOPLAY_INTERVAL);
+    return () => clearInterval(timer);
+  }, [paused, next]);
+
+  const active = dashboardTabs[activeTab];
+
   return (
     <section className="py-24 bg-gradient-to-b from-blue-50/30 to-background dark:from-blue-950/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,34 +368,86 @@ const DashboardShowcase: React.FC = () => {
           </h2>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative"
+        <div
+          className="flex flex-col lg:flex-row gap-6"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { src: "/images/my-clinic.png", alt: "My Clinic Dashboard" },
-              { src: "/images/practice.png", alt: "Practice Dashboard" },
-              { src: "/images/invoice.png", alt: "Invoice Dashboard" },
-              { src: "/images/inventory.png", alt: "Inventory Dashboard" },
-            ].map((img, index) => (
-              <div
-                key={index}
-                className="group border border-border  rounded-3xl hover:shadow-[0_0_40px_rgba(59,130,246,0.5)] transition-all duration-500"
+          {/* Left Tabs */}
+          <div className="flex lg:flex-col gap-2 lg:w-56 shrink-0">
+            {dashboardTabs.map((tab, index) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(index)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-300 w-full ${
+                  activeTab === index
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                    : 'bg-card border border-border hover:bg-muted text-foreground'
+                }`}
               >
-                <div className=" rounded-3xl p-4 ">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
-                  />
-                </div>
-              </div>
+                {tab.icon}
+                <span className="font-medium text-sm lg:text-base">{tab.title}</span>
+              </button>
             ))}
           </div>
-        </motion.div>
+
+          {/* Right Content */}
+          <div className="flex-1 min-w-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col xl:flex-row gap-6 border border-border rounded-3xl p-6 bg-card"
+              >
+                {/* Dashboard Image */}
+                <div className="flex-1 min-w-0">
+                  <img
+                    src={active.image}
+                    alt={active.title}
+                    className="w-full rounded-2xl object-cover shadow-sm"
+                  />
+                </div>
+
+                {/* Features */}
+                <div className="xl:w-80 shrink-0 flex flex-col justify-center p-4">
+                  <h3 className="text-2xl font-bold mb-6 border-b pb-3 border-border">{active.title} Dashboard</h3>
+                  <ul className="space-y-4">
+                    {active.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3 text-base text-foreground">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Bottom thumbnail indicators */}
+            <div className="flex gap-3 mt-6 justify-center">
+              {dashboardTabs.map((tab, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(index)}
+                  className={`rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                    activeTab === index
+                      ? 'border-blue-600 shadow-lg scale-105'
+                      : 'border-border opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={tab.image}
+                    alt={tab.title}
+                    className="w-24 h-16 object-cover object-left-top"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
