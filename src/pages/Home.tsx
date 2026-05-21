@@ -176,6 +176,355 @@ const FeaturesSection: React.FC = () => {
   );
 };
 
+// Patient Booking Experience Section — Interactive Demo UI
+const bookingSteps = [
+  { label: 'Department', num: 1 },
+  { label: 'Service', num: 2 },
+  { label: 'Doctor', num: 3 },
+  { label: 'Calendar', num: 4 },
+  { label: 'Time Slot', num: 5 },
+  { label: 'Details', num: 6 },
+  { label: 'Payment', num: 7 },
+  { label: 'Confirm', num: 8 },
+];
+
+const PatientBookingSection: React.FC = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [selectedDept, setSelectedDept] = useState('All Services');
+  const [selectedService, setSelectedService] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [selectedDate, setSelectedDate] = useState('18');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [paused, setPaused] = useState(false);
+
+  // Auto-cycle through steps
+  useEffect(() => {
+    if (paused) return;
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % bookingSteps.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [paused]);
+
+  const unavailableDates = [1, 8, 15, 22, 29]; // Sundays
+
+  const departments = ['All Services', 'Ayurvedic Consultation', 'Health Packages', 'Panchakarma Treatment'];
+  const services = ['General Checkup', 'Shirodhara Therapy', 'Detox Program', 'Stress Management'];
+  const doctors = [
+    { name: 'Dr. Arun Kumar', spec: 'Ayurvedic Specialist', avatar: '👨‍⚕️' },
+    { name: 'Dr. Priya Sharma', spec: 'Panchakarma Expert', avatar: '👩‍⚕️' },
+    { name: 'Dr. Rajesh Verma', spec: 'General Physician', avatar: '👨‍⚕️' },
+  ];
+  const timeSlots = ['09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM'];
+
+  const renderStepContent = (): React.ReactNode => {
+    switch (activeStep) {
+      case 0:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Select a Department</h3>
+            <p className="text-sm text-muted-foreground mb-4">Choose the department you'd like to book from</p>
+            <div className="grid grid-cols-2 gap-3">
+              {departments.map((dept) => (
+                <button
+                  key={dept}
+                  onClick={() => setSelectedDept(dept)}
+                  className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                    selectedDept === dept
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-cyan-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
+                  }`}
+                >
+                  {dept}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Select a Service</h3>
+            <p className="text-sm text-muted-foreground mb-4">Choose your preferred service</p>
+            <div className="space-y-2">
+              {services.map((svc) => (
+                <button
+                  key={svc}
+                  onClick={() => setSelectedService(svc)}
+                  className={`w-full p-3 rounded-xl border text-sm font-medium text-left transition-all duration-200 ${
+                    selectedService === svc
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-cyan-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
+                  }`}
+                >
+                  {svc}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Choose a Doctor</h3>
+            <p className="text-sm text-muted-foreground mb-4">Select your preferred doctor</p>
+            <div className="space-y-3">
+              {doctors.map((doc) => (
+                <button
+                  key={doc.name}
+                  onClick={() => setSelectedDoctor(doc.name)}
+                  className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-all duration-200 ${
+                    selectedDoctor === doc.name
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
+                      : 'border-border bg-card hover:border-blue-300'
+                  }`}
+                >
+                  <span className="text-2xl">{doc.avatar}</span>
+                  <div>
+                    <p className="font-semibold text-sm text-foreground">{doc.name}</p>
+                    <p className="text-xs text-muted-foreground">{doc.spec}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-foreground">Select Date</h3>
+                <p className="text-sm text-muted-foreground">Pick an available date</p>
+              </div>
+              <span className="text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-full">June 2026</span>
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-center mb-2">
+              {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
+                <span key={d} className="text-muted-foreground font-semibold py-1.5 uppercase tracking-wide text-[10px]">{d}</span>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
+                const isUnavailable = unavailableDates.includes(day);
+                const isSelected = selectedDate === String(day);
+                const isToday = day === 12;
+                return (
+                  <button
+                    key={day}
+                    onClick={() => !isUnavailable && setSelectedDate(String(day))}
+                    disabled={isUnavailable}
+                    className={`py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                      isSelected
+                        ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md shadow-blue-500/30 scale-110'
+                        : isUnavailable
+                        ? 'text-muted-foreground/30 cursor-not-allowed line-through'
+                        : isToday
+                        ? 'ring-2 ring-cyan-400/50 text-blue-600 font-bold hover:bg-blue-50 dark:hover:bg-blue-950/30'
+                        : 'text-foreground hover:bg-blue-50 dark:hover:bg-blue-950/20 hover:text-blue-600'
+                    }`}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Select Time Slot</h3>
+            <p className="text-sm text-muted-foreground mb-4">Choose a convenient time</p>
+            <div className="grid grid-cols-3 gap-3">
+              {timeSlots.map((time) => (
+                <button
+                  key={time}
+                  onClick={() => setSelectedTime(time)}
+                  className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                    selectedTime === time
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-cyan-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
+                  }`}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 5:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Patient Details</h3>
+            <p className="text-sm text-muted-foreground mb-4">Fill in your information</p>
+            <div className="space-y-3">
+              <input className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm" placeholder="Full Name" defaultValue="Rahul Sharma" readOnly />
+              <input className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm" placeholder="Phone Number" defaultValue="+91 98765 43210" readOnly />
+              <input className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm" placeholder="Email" defaultValue="rahul@email.com" readOnly />
+            </div>
+          </div>
+        );
+      case 6:
+        return (
+          <div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Payment</h3>
+            <p className="text-sm text-muted-foreground mb-4">Choose payment method</p>
+            <div className="space-y-3">
+              <div className="p-4 rounded-xl border border-blue-500 bg-blue-50 dark:bg-blue-950/30">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="font-semibold text-sm text-foreground">Pay Online</p>
+                    <p className="text-xs text-muted-foreground">UPI, Card, Net Banking</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 rounded-xl border border-border bg-card">
+                <div className="flex items-center gap-3">
+                  <Building2 className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-semibold text-sm text-foreground">Pay at Clinic</p>
+                    <p className="text-xs text-muted-foreground">Cash or Card at reception</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 7:
+        return (
+          <div className="text-center py-4">
+            <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-950/30 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground mb-1">Booking Confirmed!</h3>
+            <p className="text-sm text-muted-foreground mb-4">Your appointment has been booked successfully</p>
+            <div className="bg-muted/50 rounded-xl p-4 text-left text-sm space-y-1">
+              <p className="text-muted-foreground">Doctor: <span className="text-foreground font-medium">Dr. Arun Kumar</span></p>
+              <p className="text-muted-foreground">Date: <span className="text-foreground font-medium">25 May, 2026</span></p>
+              <p className="text-muted-foreground">Time: <span className="text-foreground font-medium">10:00 AM</span></p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <section className="py-24 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge variant='outline' className="mb-4">Patient Experience</Badge>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+            Seamless Booking for{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              Your Patients
+            </span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            A beautiful, step-by-step booking widget that your patients will love. Embed it on any website in minutes.
+          </p>
+        </motion.div>
+
+        {/* Demo Booking Widget */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-2xl mx-auto relative"
+        >
+          {/* Floating accents */}
+          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-gradient-to-br from-blue-500/15 to-cyan-400/15 rounded-full blur-3xl" />
+          <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-600/15 to-cyan-400/15 rounded-full blur-3xl" />
+
+          <div
+            className="relative rounded-3xl border border-border shadow-2xl bg-card overflow-hidden"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
+            {/* Header Tabs */}
+            <div className="flex">
+              <div className="flex-1 py-3.5 text-center text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-center gap-2">
+                <span className="bg-white/20 text-[10px] px-1.5 py-0.5 rounded font-bold">NEW</span>
+                New Booking
+              </div>
+              <div className="flex-1 py-3.5 text-center text-sm font-medium bg-muted/50 text-muted-foreground flex items-center justify-center gap-2">
+                <Users className="w-4 h-4" />
+                Existing Patient
+              </div>
+            </div>
+
+            {/* Step Indicators */}
+            <div className="px-6 pt-6 pb-4">
+              <div className="flex items-center justify-between relative">
+                {/* Connecting line */}
+                <div className="absolute top-4 left-4 right-4 h-0.5 bg-muted rounded-full" />
+                <div
+                  className="absolute top-4 left-4 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-700 ease-out"
+                  style={{ width: `${(activeStep / (bookingSteps.length - 1)) * 100}%`, maxWidth: 'calc(100% - 32px)' }}
+                />
+                {bookingSteps.map((step, i) => (
+                  <div key={i} className="flex flex-col items-center gap-1.5 relative z-10">
+                    <div
+                      onClick={() => setActiveStep(i)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer transition-all duration-300 ${
+                        i === activeStep
+                          ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white scale-110 shadow-lg shadow-blue-500/40 ring-4 ring-blue-100 dark:ring-blue-900/30'
+                          : i < activeStep
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-background border-2 border-muted-foreground/20 text-muted-foreground'
+                      }`}
+                    >
+                      {i < activeStep ? <CheckCircle2 className="w-4 h-4" /> : step.num}
+                    </div>
+                    <span className={`text-[10px] font-semibold hidden sm:block transition-colors duration-300 ${
+                      i === activeStep ? 'text-blue-600 dark:text-cyan-400' : i < activeStep ? 'text-blue-500' : 'text-muted-foreground'
+                    }`}>
+                      {step.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Step Content */}
+            <div className="px-6 pb-4 min-h-[300px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStep}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  {renderStepContent()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Footer Button */}
+            <div className="px-6 pb-6">
+              <button
+                onClick={() => setActiveStep((prev) => (prev + 1) % bookingSteps.length)}
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98]"
+              >
+                {activeStep === 7 ? 'Book Another →' : 'Next →'}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Video Showcase Section
 const VideoShowcase: React.FC = () => {
   return (
@@ -781,6 +1130,7 @@ const ClinicGoWebsite: React.FC = () => {
       <HeroSection />
       <TrustedBySection />
       <FeaturesSection />
+      <PatientBookingSection />
       <VideoShowcase />
       <HowItWorksSection />
       <SecuritySection />
