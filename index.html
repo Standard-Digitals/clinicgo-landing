@@ -13,6 +13,15 @@
     <meta name="theme-color" content="#2563eb" />
   </head>
   <body>
+    <!-- Netlify Forms hidden form for SPA detection -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="name" />
+      <input name="email" />
+      <input name="clinic" />
+      <input name="pluginInterest" />
+      <textarea name="message"></textarea>
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

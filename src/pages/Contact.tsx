@@ -14,16 +14,33 @@ export default function Contact() {
     pluginInterest: 'general',
     message: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Thank you! We\'ll get back to you soon.');
-    setFormData({ name: '', email: '', clinic: '', pluginInterest: 'general', message: '' });
+    setLoading(true);
+    setStatus('idle');
+    try {
+      const form = new FormData();
+      form.append('form-name', 'contact');
+      Object.entries(formData).forEach(([key, val]) => form.append(key, val));
+      const res = await fetch('/', { method: 'POST', body: form });
+      if (res.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', clinic: '', pluginInterest: 'general', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,7 +117,9 @@ export default function Contact() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2">
               <Card className="border-border shadow-xl">
                 <CardContent className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form name="contact" onSubmit={handleSubmit} data-netlify="true" netlify-honeypot="bot-field" className="space-y-6">
+                    <input type="hidden" name="form-name" value="contact" />
+                    <p className="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
                     <div>
                       <label className="block text-sm font-bold text-foreground mb-2">Your Name</label>
                       <input
@@ -174,10 +193,17 @@ export default function Contact() {
 
                     <button
                       type="submit"
-                      className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold rounded-xl transition-all shadow-lg"
+                      disabled={loading}
+                      className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold rounded-xl transition-all shadow-lg disabled:opacity-50"
                     >
-                      Send Message
+                      {loading ? 'Sending...' : 'Send Message'}
                     </button>
+                    {status === 'success' && (
+                      <p className="text-emerald-600 text-sm font-medium text-center">✓ Message sent successfully! We'll get back to you soon.</p>
+                    )}
+                    {status === 'error' && (
+                      <p className="text-red-600 text-sm font-medium text-center">Failed to send. Please try again or email us directly.</p>
+                    )}
                   </form>
                 </CardContent>
               </Card>
