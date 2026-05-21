@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, MessageSquare, Clock, Users, Zap, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Mail, Phone, MapPin, MessageSquare, Clock, Users, Zap } from 'lucide-react';
+import { Badge } from '../components/ui/badge';
+import { Card, CardContent } from '../components/ui/card';
 import { CTASection } from '../components/CTASection';
 import { FaqSection } from '../components/FaqSection';
 
@@ -25,187 +27,183 @@ export default function Contact() {
   };
 
   return (
-    <main className="bg-white pt-20">
+    <main className="bg-background pt-20">
       {/* HERO */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-20"></div>
-        </div>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-50 via-cyan-50 to-green-50 dark:from-blue-950/20 dark:via-cyan-950/20 dark:to-green-950/20" />
+        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
 
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-6">
-            Get in Touch
-          </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Have questions about our plugins? Need help choosing the right tools? Our expert team is here to help.
-          </p>
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <Badge variant="outline" className="mb-4">Contact</Badge>
+            <h1 className="text-5xl sm:text-6xl font-bold text-foreground mb-6">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Have questions about our plugins? Need help choosing the right tools? Our expert team is here to help.
+            </p>
+          </motion.div>
         </div>
       </section>
 
       {/* CONTACT METHODS */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              {
-                icon: Mail,
-                title: 'Email Support',
-                desc: 'Get detailed responses to your questions',
-                contact: 'support@clinicgo.com',
-                time: 'Response within 24 hours'
-              },
-              {
-                icon: Phone,
-                title: 'Phone Support',
-                desc: 'Talk to our experts directly',
-                contact: '+91 9056347061',
-                time: 'Mon-Fri, 9 AM - 6 PM IST'
-              },
-              {
-                icon: MessageSquare,
-                title: 'Live Chat',
-                desc: 'Instant answers to your questions',
-                contact: 'Available on website',
-                time: 'Mon-Fri, 10 AM - 5 PM IST'
-              }
+              { icon: Mail, title: 'Email Support', desc: 'Get detailed responses to your questions', contact: 'support@clinicgo.com', time: 'Response within 24 hours' },
+              { icon: Phone, title: 'Phone Support', desc: 'Talk to our experts directly', contact: '+91 9056347061', time: 'Mon-Fri, 9 AM - 6 PM IST' },
+              { icon: MessageSquare, title: 'Live Chat', desc: 'Instant answers to your questions', contact: 'Available on website', time: 'Mon-Fri, 10 AM - 5 PM IST' }
             ].map((method, i) => {
               const Icon = method.icon;
               return (
-                <div key={i} className="bg-white rounded-xl p-8 border border-slate-200 hover:shadow-lg transition-all">
-                  <Icon className="w-12 h-12 text-blue-600 mb-4" />
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{method.title}</h3>
-                  <p className="text-slate-600 mb-4">{method.desc}</p>
-                  <p className="font-semibold text-slate-900 mb-2">{method.contact}</p>
-                  <p className="text-sm text-slate-600">{method.time}</p>
-                </div>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
+                  <Card className="h-full border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg">
+                    <CardContent className="p-8">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mb-4">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground mb-2">{method.title}</h3>
+                      <p className="text-muted-foreground mb-4">{method.desc}</p>
+                      <p className="font-semibold text-foreground mb-2">{method.contact}</p>
+                      <p className="text-sm text-muted-foreground">{method.time}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200 text-center">
-            <MapPin className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-            <h3 className="font-bold text-slate-900 mb-2">Our Office</h3>
-            <p className="text-slate-600">Plot No 13, Silver Creek-1, Old Thana Road, Zirakpur, PIN-140603</p>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <Card className="border-border bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30">
+              <CardContent className="p-8 text-center">
+                <MapPin className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+                <h3 className="font-bold text-foreground mb-2">Our Office</h3>
+                <p className="text-muted-foreground">Plot No 13, Silver Creek-1, Old Thana Road, Zirakpur, PIN-140603</p>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </section>
 
       {/* CONTACT FORM */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Tell Us About Your Clinic
-            </h2>
-            <p className="text-xl text-slate-600">We'll recommend the perfect plugins for your needs</p>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">Write to Us</Badge>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Tell Us About Your Clinic</h2>
+            <p className="text-xl text-muted-foreground">We'll recommend the perfect plugins for your needs</p>
+          </motion.div>
 
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Form */}
-            <div className="lg:col-span-2">
-              <form onSubmit={handleSubmit} className="bg-white rounded-xl p-8 border border-slate-200 shadow-lg">
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-2">Your Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Dr. John Doe"
-                    />
-                  </div>
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2">
+              <Card className="border-border shadow-xl">
+                <CardContent className="p-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-2">Your Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Dr. John Doe"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-2">Email Address</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="you@clinic.com"
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-2">Email Address</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="you@clinic.com"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-2">Clinic Name</label>
-                    <input
-                      type="text"
-                      name="clinic"
-                      value={formData.clinic}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Your Clinic Name"
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-2">Clinic Name</label>
+                      <input
+                        type="text"
+                        name="clinic"
+                        value={formData.clinic}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Your Clinic Name"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-2">Plugin Interest</label>
-                    <select
-                      name="pluginInterest"
-                      value={formData.pluginInterest}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-2">Plugin Interest</label>
+                      <select
+                        name="pluginInterest"
+                        value={formData.pluginInterest}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="general">General Inquiry</option>
+                        <option value="scheduling">Smart Scheduler</option>
+                        <option value="notifications">SMS Reminder Pro</option>
+                        <option value="analytics">Analytics Dashboard</option>
+                        <option value="payments">Payment Gateway</option>
+                        <option value="patient">Patient Portal</option>
+                        <option value="integration">Calendar Sync</option>
+                        <option value="bundle">Plugin Bundle</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-foreground mb-2">Message</label>
+                      <textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        rows={5}
+                        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Tell us about your clinic and what you're looking for..."
+                      ></textarea>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold rounded-xl transition-all shadow-lg"
                     >
-                      <option value="general">General Inquiry</option>
-                      <option value="scheduling">Smart Scheduler</option>
-                      <option value="notifications">SMS Reminder Pro</option>
-                      <option value="analytics">Analytics Dashboard</option>
-                      <option value="payments">Payment Gateway</option>
-                      <option value="patient">Patient Portal</option>
-                      <option value="integration">Calendar Sync</option>
-                      <option value="bundle">Plugin Bundle</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-slate-900 mb-2">Message</label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Tell us about your clinic and what you're looking for..."
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-md"
-                  >
-                    Send Message
-                  </button>
-                </div>
-              </form>
-            </div>
+                      Send Message
+                    </button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                <Clock className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="font-bold text-slate-900 mb-2">Response Time</h3>
-                <p className="text-sm text-slate-600">We typically respond within 24 hours</p>
-              </div>
-
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-200">
-                <Users className="w-8 h-8 text-emerald-600 mb-3" />
-                <h3 className="font-bold text-slate-900 mb-2">Expert Team</h3>
-                <p className="text-sm text-slate-600">Healthcare professionals and software experts</p>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
-                <Zap className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="font-bold text-slate-900 mb-2">Free Consultation</h3>
-                <p className="text-sm text-slate-600">Get personalized plugin recommendations</p>
-              </div>
-            </div>
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="space-y-4">
+              {[
+                { icon: Clock, title: 'Response Time', desc: 'We typically respond within 24 hours', gradient: 'from-blue-500 to-cyan-400' },
+                { icon: Users, title: 'Expert Team', desc: 'Healthcare professionals and software experts', gradient: 'from-emerald-500 to-teal-400' },
+                { icon: Zap, title: 'Free Consultation', desc: 'Get personalized plugin recommendations', gradient: 'from-purple-500 to-pink-400' }
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <Card key={i} className="border-border hover:border-blue-500/50 transition-all duration-300">
+                    <CardContent className="p-6">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white mb-3`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </motion.div>
           </div>
         </div>
       </section>
