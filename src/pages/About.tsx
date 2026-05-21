@@ -1,176 +1,306 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle2, Users, Zap, Code, Globe, Award } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowRight, Play, Sparkles, Calendar, CreditCard, BarChart3, Users, MessageSquare, Bell, Package, FileText, Star } from 'lucide-react';
+import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { CTASection } from '../components/CTASection';
+import { TestimonialsColumn } from '../components/ui/testimonials-columns-1';
+
+const testimonials = [
+  { text: "ClinicGo transformed how we manage appointments, patient records, and clinic workflows. Everything feels faster, cleaner, and more professional now.", image: "/images/client/varunbj.png", name: "Dr. Varun Bajaj", role: "Founder, Vibrant Looks Medspa", country: "🇨🇦" },
+  { text: "The automated booking and follow-up system helped us reduce manual work significantly while improving the patient experience.", image: "https://randomuser.me/api/portraits/women/44.jpg", name: "Anisha", role: "Senior Nurse Injector", country: "🇨🇦" },
+  { text: "From consultations to billing and treatment management, Clinic Go gives our healthcare team everything in one beautifully designed dashboard.", image: "/images/client/arunkr.png", name: "Dr. Arun Kumar", role: "Ayurvedic Specialist", country: "🇮🇳" },
+  { text: "The inventory and invoice modules are incredibly useful for our daily operations. The interface feels modern, premium, and easy to manage.", image: "https://randomuser.me/api/portraits/men/54.jpg", name: "Michael Carter", role: "Clinic Operations Manager", country: "🇺🇸" },
+  { text: "Managing multiple staff members with role-based access is now effortless. Clinic Go helped us organize our entire clinic system.", image: "https://randomuser.me/api/portraits/women/63.jpg", name: "Dr. Emily Johnson", role: "Dermatologist", country: "🇦🇺" },
+  { text: "The clean dashboard and real-time appointment tracking made a huge difference for our front desk and support staff.", image: "https://randomuser.me/api/portraits/women/8.jpg", name: "Dr. Sarah Mitchell", role: "Clinic Director", country: "🇬🇧" },
+  { text: "ClinicGo transformed how we manage appointments, patient records, and clinic workflows. Everything feels faster, cleaner, and more professional now.", image: "/images/client/varunbj.png", name: "Dr. Varun Bajaj", role: "Founder, Vibrant Looks Medspa", country: "🇨🇦" },
+  { text: "The automated booking and follow-up system helped us reduce manual work significantly while improving the patient experience.", image: "https://randomuser.me/api/portraits/women/44.jpg", name: "Anisha", role: "Senior Nurse Injector", country: "🇨🇦" },
+  { text: "From consultations to billing and treatment management, Clinic Go gives our healthcare team everything in one beautifully designed dashboard.", image: "/images/client/arunkr.png", name: "Dr. Arun Kumar", role: "Ayurvedic Specialist", country: "🇮🇳" },
+];
+
+const firstColumn = testimonials.slice(0, 3);
+const secondColumn = testimonials.slice(3, 6);
+const thirdColumn = testimonials.slice(6, 9);
+
+// Animated Counter
+const AnimatedCounter = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+};
 
 export default function About() {
   return (
-    <main className="bg-background pt-20">
-      {/* HERO */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-50 via-cyan-50 to-green-50 dark:from-blue-950/20 dark:via-cyan-950/20 dark:to-green-950/20" />
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
+    <main className="bg-background">
+      {/* ==================== HERO SECTION ==================== */}
+      <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-cyan-50 to-green-50 dark:from-blue-950/20 dark:via-cyan-950/20 dark:to-green-950/20" />
 
-        <div className="max-w-6xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Badge variant="outline" className="mb-4">About Us</Badge>
-            <h1 className="text-5xl sm:text-6xl font-bold text-foreground mb-6">
-              Building the Future of
-              <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-green-500 bg-clip-text text-transparent"> Clinic Management</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We create powerful, flexible plugins that help clinics operate smarter. Our mission is to provide tools that adapt to your workflow, not the other way around.
-            </p>
-          </motion.div>
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ scale: [1.2, 1, 1.2], rotate: [90, 0, 90] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-cyan-400/20 to-green-400/20 rounded-full blur-3xl"
+          />
         </div>
-      </section>
 
-      {/* OUR PHILOSOPHY */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Philosophy</Badge>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Our Plugin Philosophy</h2>
-            <p className="text-xl text-muted-foreground">Why we build the way we do</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Code, title: 'Modular Design', desc: "Each plugin is independent. Use what you need, skip what you don't. Mix and match to build your perfect clinic system." },
-              { icon: Zap, title: 'Performance First', desc: "Lightweight, fast, and optimized. Our plugins load instantly and don't slow down your clinic operations." },
-              { icon: Globe, title: 'Seamless Integration', desc: 'Plugins work together beautifully. Data flows seamlessly between scheduling, payments, analytics, and more.' }
-            ].map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
-                  <Card className="h-full border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg">
-                    <CardHeader>
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white mb-3">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <CardTitle>{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">{item.desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* PLUGIN ECOSYSTEM */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Ecosystem</Badge>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Our Plugin Ecosystem</h2>
-            <p className="text-xl text-muted-foreground">50+ plugins across 6 major categories</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: '📅', name: 'Scheduling', count: '8 plugins', desc: 'Smart scheduling, conflict detection, resource allocation' },
-              { icon: '📱', name: 'Notifications', count: '6 plugins', desc: 'SMS, Email, WhatsApp reminders and follow-ups' },
-              { icon: '📊', name: 'Analytics', count: '5 plugins', desc: 'Revenue tracking, patient insights, custom reports' },
-              { icon: '💳', name: 'Payments', count: '4 plugins', desc: 'Stripe, PayPal, invoicing, subscription management' },
-              { icon: '👥', name: 'Patient Tools', count: '7 plugins', desc: 'Self-service portal, document upload, history tracking' },
-              { icon: '🔗', name: 'Integrations', count: '9 plugins', desc: 'Google Calendar, Outlook, EHR systems, webhooks' }
-            ].map((cat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -4 }}>
-                <Card className="h-full border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg">
-                  <CardHeader>
-                    <div className="text-4xl mb-2">{cat.icon}</div>
-                    <CardTitle>{cat.name}</CardTitle>
-                    <p className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">{cat.count}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{cat.desc}</p>
-                  </CardContent>
-                </Card>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center lg:text-left"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center space-x-2 bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-full mb-6"
+              >
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-600">Trusted by Modern Clinics Worldwide</span>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* TEAM & STATS */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Our Team</Badge>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Built by Experts</h2>
-            <p className="text-xl text-muted-foreground">Healthcare professionals and software engineers</p>
-          </motion.div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                Built to Help Clinics{' '}
+                <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-green-500 bg-clip-text text-transparent">
+                  Scale Smarter
+                </span>{' '}
+                &{' '}
+                <span className="bg-gradient-to-r from-green-500 via-cyan-500 to-blue-600 bg-clip-text text-transparent">
+                  Heal Better
+                </span>
+              </h1>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-4">
-              {[
-                { title: 'Healthcare Experience', desc: 'Our team includes doctors, clinic managers, and healthcare IT specialists who understand your challenges firsthand.' },
-                { title: 'Software Excellence', desc: 'Experienced developers with 15+ years building scalable, secure healthcare software.' },
-                { title: 'Customer-Centric', desc: 'We listen to feedback and continuously improve our plugins based on real user needs.' },
-                { title: 'Security First', desc: 'HIPAA compliant, SOC 2 certified, with military-grade encryption for patient data.' }
-              ].map((item, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <Card className="border-border hover:border-blue-500/50 transition-all duration-300">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+              <p className="text-lg text-muted-foreground mb-8 max-w-xl">
+                ClinicGo helps clinics, doctors, wellness centers, medspas, and healthcare businesses manage appointments, billing, patients, staff, follow-ups, WhatsApp automation, and growth — all from one modern dashboard.
+              </p>
 
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
-              <Card className="border-border bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30">
-                <CardContent className="p-12 space-y-8">
-                  {[
-                    { value: '50+', label: 'Plugins Developed' },
-                    { value: '10K+', label: 'Active Users' },
-                    { value: '4.8★', label: 'Average Rating' },
-                    { value: '99.9%', label: 'Uptime SLA' }
-                  ].map((stat, i) => (
-                    <div key={i} className="text-center">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent mb-1">{stat.value}</div>
-                      <p className="text-muted-foreground text-sm">{stat.label}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button href="/signup" size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white cursor-pointer text-lg px-8">
+                  Start Free Trial <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+                <Button href="/contact" size="lg" variant="outline" className="text-lg px-8 cursor-pointer">
+                  <Play className="mr-2 w-5 h-5" /> Watch Live Demo
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-4 mt-6 justify-center lg:justify-start text-sm text-muted-foreground">
+                {['Easy Setup', 'No Coding Required', 'WhatsApp Ready', 'Billing & Inventory Included'].map((item) => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <span className="text-green-500">✔</span> {item}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Right Visual — Floating Dashboard */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
+            >
+              {/* Main Dashboard */}
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden border border-border/50">
+                {/* Mac browser bar */}
+                <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2.5 flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                  <div className="flex-1 mx-4 bg-white dark:bg-gray-400 rounded-md px-3 py-1 text-xs text-muted-foreground text-center">
+                    {/* wordpress listing */}
+                    https://www.wordpress.org/plugins/clinicgo/
+                  </div>
+                </div>
+                <img src="/images/about-dashboard.png" alt="ClinicGo Dashboard" className="w-full h-auto" />
+              </div>
+
+              {/* Floating Cards */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-3 border border-border/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-600">Appointments</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-3 border border-border/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <CreditCard className="w-5 h-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">Payments</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                className="absolute top-1/3 -left-8 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-3 border border-border/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5 text-cyan-600" />
+                  <span className="text-sm font-medium text-cyan-600">Revenue</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, delay: 1.5 }}
+                className="absolute top-1/2 -right-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-3 border border-border/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <MessageSquare className="w-5 h-5 text-emerald-600" />
+                  <span className="text-sm font-medium text-emerald-600">WhatsApp</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+                className="absolute -bottom-6 right-12 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-3 border border-border/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <Users className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm font-medium text-purple-600">Staff</span>
+                </div>
+              </motion.div>
+
+              {/* Glow */}
+              <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-cyan-400/20 rounded-full blur-3xl" />
+              <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-green-500/20 to-teal-400/20 rounded-full blur-3xl" />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE US */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Why Us</Badge>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose Our Plugins</h2>
+      {/* ==================== OUR STORY ==================== */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Our Story</Badge>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+                Why We Built{' '}
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                  ClinicGo
+                </span>
+              </h2>
+              <p className="text-muted-foreground mb-6 text-lg">
+                Most clinic management systems are expensive, complicated, old-fashioned, and not made for modern healthcare businesses.
+              </p>
+              <p className="text-muted-foreground mb-8">
+                ClinicGo was built to change that — providing a modern UI, fast workflows, automation, simplicity, growth tools, and a complete clinic ecosystem that just works.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {['Modern UI', 'Fast Workflow', 'Automation', 'Simplicity', 'Growth Tools', 'Complete Ecosystem'].map((item, i) => (
+                  <motion.div
+                    key={item}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-2 text-sm font-medium"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" />
+                    {item}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="rounded-2xl overflow-hidden border border-border shadow-2xl">
+                <img src="/images/my-clinic.png" alt="ClinicGo Dashboard" className="w-full h-auto" />
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-cyan-400/20 rounded-full blur-2xl" />
+              <div className="absolute -top-6 -left-6 w-24 h-24 bg-gradient-to-br from-green-500/20 to-teal-400/20 rounded-full blur-2xl" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== WHAT MAKES CLINICGO DIFFERENT ==================== */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <Badge variant="outline" className="mb-4">Features</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+              What Makes ClinicGo{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Different
+              </span>
+            </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: 'Easy Installation', desc: 'Install any plugin in minutes. No coding required.' },
-              { title: 'Regular Updates', desc: 'New features and security patches every month.' },
-              { title: 'Expert Support', desc: '24/7 support team ready to help you succeed.' },
-              { title: 'Flexible Pricing', desc: 'Pay only for what you use. Scale as you grow.' },
-              { title: 'Data Privacy', desc: 'Your data is yours. We never sell or share it.' },
-              { title: 'Community', desc: 'Join 10K+ clinic owners using our plugins.' }
-            ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex gap-4">
-                <CheckCircle2 className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.desc}</p>
+              { icon: <Calendar className="w-6 h-6" />, title: 'Appointment Booking', desc: 'Smart scheduling with conflict detection & auto-reminders', gradient: 'from-blue-500 to-indigo-500' },
+              { icon: <FileText className="w-6 h-6" />, title: 'Billing & Invoices', desc: 'Auto-generate invoices, track payments & partial billing', gradient: 'from-cyan-500 to-teal-500' },
+              { icon: <MessageSquare className="w-6 h-6" />, title: 'WhatsApp Automation', desc: 'Automated reminders, follow-ups & patient communication', gradient: 'from-green-500 to-emerald-500' },
+              { icon: <Users className="w-6 h-6" />, title: 'Staff Access Control', desc: 'Role-based permissions for doctors, staff & admins', gradient: 'from-purple-500 to-violet-500' },
+              { icon: <Star className="w-6 h-6" />, title: 'Patient Management', desc: 'Complete patient records, history & document uploads', gradient: 'from-orange-500 to-amber-500' },
+              { icon: <Bell className="w-6 h-6" />, title: 'Follow-ups & Reminders', desc: 'Never miss a follow-up with smart notification system', gradient: 'from-pink-500 to-rose-500' },
+              { icon: <Package className="w-6 h-6" />, title: 'Inventory Management', desc: 'Track stock, suppliers, expiry dates & low-stock alerts', gradient: 'from-teal-500 to-cyan-500' },
+              { icon: <BarChart3 className="w-6 h-6" />, title: 'Reports & Analytics', desc: 'Revenue insights, patient trends & custom reports', gradient: 'from-indigo-500 to-blue-500' },
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                whileHover={{ y: -6 }}
+                className="group"
+              >
+                <div className="h-full p-6 rounded-2xl border border-border bg-card hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}>
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-bold text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -178,37 +308,110 @@ export default function About() {
         </div>
       </section>
 
-      {/* TRUST INDICATORS */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Trusted by Healthcare Professionals</h2>
+      {/* ==================== TRUST & STATS ==================== */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <Badge variant="outline" className="mb-4">Trust & Impact</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold">
+              Numbers That{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Speak
+              </span>
+            </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Award, title: 'HIPAA Compliant', desc: 'Full compliance with healthcare privacy regulations' },
-              { icon: CheckCircle2, title: 'SOC 2 Certified', desc: 'Security and availability audited annually' },
-              { icon: Zap, title: '99.9% Uptime', desc: 'Enterprise-grade infrastructure and redundancy' }
-            ].map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }}>
-                  <Card className="text-center border-border hover:border-emerald-500/50 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20">
-                    <CardContent className="p-8">
-                      <Icon className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-                      <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground">{item.desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+              { value: 500, suffix: '+', label: 'Clinics' },
+              { value: 10, suffix: 'K+', label: 'Appointments' },
+              { value: 99.9, suffix: '%', label: 'Uptime' },
+              { value: 24, suffix: '/7', label: 'Support' },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -4 }}
+                className="relative p-8 rounded-2xl border border-border bg-card text-center overflow-hidden group hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <div className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent mb-2">
+                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <p className="text-muted-foreground font-medium">{stat.label}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ==================== OUR MISSION ==================== */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-cyan-50 to-green-50 dark:from-blue-950/20 dark:via-cyan-950/20 dark:to-green-950/20" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl" />
+
+        <div className="container mx-auto max-w-4xl relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Badge variant="outline" className="mb-6">Our Mission</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+              Our Mission is to{' '}
+              <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-green-500 bg-clip-text text-transparent">
+                Simplify Healthcare Operations
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Healthcare professionals should focus on patients — not messy software, paperwork, or complicated workflows. We build tools that get out of your way and let you do what you do best.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ==================== TESTIMONIALS ==================== */}
+      <section className="bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10 py-24 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
+          >
+            <Badge variant="outline" className="mb-4">Testimonials</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter mt-2 text-center">
+              Loved by{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Healthcare Professionals
+              </span>
+            </h2>
+            <p className="text-center mt-5 opacity-75">
+              See what clinics and doctors have to say about ClinicGo.
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+            <TestimonialsColumn testimonials={firstColumn} duration={15} />
+            <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
+            <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== FINAL CTA ==================== */}
       <CTASection />
     </main>
   );

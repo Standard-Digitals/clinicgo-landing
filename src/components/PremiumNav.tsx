@@ -54,8 +54,8 @@ export const PremiumNav = () => {
         <div className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-700">
           {[
             { label: 'Home', href: '/' },
-            { label: 'Pricing', href: '/pricing' },
             { label: 'About', href: '/about' },
+            { label: 'Pricing', href: '/pricing' },
             { label: 'Contact', href: '/contact' }
           ].map((item) => {
             const isActive = item.href === '/' ? location.pathname === '/' : location.pathname.startsWith(item.href);
