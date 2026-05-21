@@ -196,6 +196,8 @@ const PatientBookingSection: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('18');
   const [selectedTime, setSelectedTime] = useState('');
   const [paused, setPaused] = useState(false);
+  const [bookingTab, setBookingTab] = useState<'new' | 'existing'>('new');
+  const [existingMethod, setExistingMethod] = useState<'id' | 'phone'>('id');
 
   // Auto-cycle through steps
   useEffect(() => {
@@ -451,16 +453,81 @@ const PatientBookingSection: React.FC = () => {
           >
             {/* Header Tabs */}
             <div className="flex">
-              <div className="flex-1 py-3.5 text-center text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-center gap-2">
-                <span className="bg-white/20 text-[10px] px-1.5 py-0.5 rounded font-bold">NEW</span>
+              <button
+                onClick={() => setBookingTab('new')}
+                className={`flex-1 py-3.5 text-center text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
+                  bookingTab === 'new'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${bookingTab === 'new' ? 'bg-white/20' : 'bg-muted-foreground/20'}`}>NEW</span>
                 New Booking
-              </div>
-              <div className="flex-1 py-3.5 text-center text-sm font-medium bg-muted/50 text-muted-foreground flex items-center justify-center gap-2">
+              </button>
+              <button
+                onClick={() => setBookingTab('existing')}
+                className={`flex-1 py-3.5 text-center text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
+                  bookingTab === 'existing'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
                 <Users className="w-4 h-4" />
                 Existing Patient
-              </div>
+              </button>
             </div>
 
+            {bookingTab === 'existing' ? (
+              /* Existing Patient Content */
+              <div className="px-6 py-8">
+                <h3 className="text-2xl font-bold text-foreground mb-2">Existing Patient Booking</h3>
+                <p className="text-sm text-muted-foreground mb-6">Enter your Patient ID to auto-fill your details and book quickly.</p>
+
+                {/* Toggle: Patient ID / Phone */}
+                <div className="flex rounded-xl overflow-hidden border border-border mb-6">
+                  <button
+                    onClick={() => setExistingMethod('id')}
+                    className={`flex-1 py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
+                      existingMethod === 'id'
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                        : 'bg-card text-muted-foreground hover:bg-muted'
+                    }`}
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    Patient ID
+                  </button>
+                  <button
+                    onClick={() => setExistingMethod('phone')}
+                    className={`flex-1 py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
+                      existingMethod === 'phone'
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                        : 'bg-card text-muted-foreground hover:bg-muted'
+                    }`}
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    Phone Number
+                  </button>
+                </div>
+
+                {/* Input */}
+                <div>
+                  <label className="text-sm font-semibold text-foreground mb-2 block">
+                    {existingMethod === 'id' ? 'Patient ID' : 'Phone Number'}
+                  </label>
+                  <div className="flex gap-3">
+                    <input
+                      className="flex-1 px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/60"
+                      placeholder={existingMethod === 'id' ? 'E.G. PT-20240316-AB12' : '+91 98765 43210'}
+                      readOnly
+                    />
+                    <button className="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md">
+                      Fetch →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+            <>
             {/* Step Indicators */}
             <div className="px-6 pt-6 pb-4">
               <div className="flex items-center justify-between relative">
@@ -518,6 +585,8 @@ const PatientBookingSection: React.FC = () => {
                 {activeStep === 7 ? 'Book Another →' : 'Next →'}
               </button>
             </div>
+            </>
+            )}
           </div>
         </motion.div>
       </div>
