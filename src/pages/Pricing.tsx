@@ -42,7 +42,7 @@ export default function Pricing() {
       {/* Pricing Calculator */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto mb-16 sm:mb-24">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <Card className="overflow-hidden border-border shadow-2xl">
+          <Card className="border-border shadow-2xl">
             <div className="flex flex-col lg:flex-row">
               {/* Left Side: Calculator */}
               <div className="p-6 sm:p-8 lg:p-12 lg:w-3/5 border-b lg:border-b-0 lg:border-r border-border bg-muted/30">
@@ -54,13 +54,13 @@ export default function Pricing() {
                 {/* Toggle */}
                 <div className="bg-card p-1.5 sm:p-2 rounded-2xl border border-border shadow-sm mb-8 sm:mb-10 flex">
                   <button 
-                    onClick={() => setIsYearly(true)}
+                    onClick={() => setIsYearly(false)}
                     className={`flex-1 py-2.5 sm:py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 ${!isYearly ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Monthly Billing
                   </button>
                   <button 
-                    onClick={() => setIsYearly(false)}
+                    onClick={() => setIsYearly(true)}
                     className={`flex-1 py-2.5 sm:py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 ${isYearly ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     <span>Yearly Billing</span>
@@ -87,7 +87,8 @@ export default function Pricing() {
                     max="50" 
                     value={doctors} 
                     onChange={(e) => setDoctors(parseInt(e.target.value))}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-blue-600"
+                    className="w-full h-2 rounded-lg cursor-pointer accent-blue-600"
+                    style={{ background: `linear-gradient(to right, #2563eb ${((doctors - 1) / 49) * 100}%, #e2e8f0 ${((doctors - 1) / 49) * 100}%)` }}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground mt-2 font-medium">
                     <span>1</span>

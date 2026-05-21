@@ -99,10 +99,10 @@ export default function About() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button href="/signup" size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white cursor-pointer text-lg px-8">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white cursor-pointer text-lg px-8" onClick={() => window.open('/signup')}>
                   Start Free Trial <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button href="/contact" size="lg" variant="outline" className="text-lg px-8 cursor-pointer">
+                <Button size="lg" variant="outline" className="text-lg px-8 cursor-pointer" onClick={() => window.open('/contact')}>
                   <Play className="mr-2 w-5 h-5" /> Watch Live Demo
                 </Button>
               </div>
