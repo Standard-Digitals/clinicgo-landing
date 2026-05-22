@@ -21,7 +21,7 @@ const features = [
 
 export const SecuritySection: React.FC = () => {
   return (
-    <section className="relative py-28 overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950">
+    <section className="relative py-28 overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950 selection:bg-blue-400/30 selection:text-white">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]" />
@@ -131,7 +131,7 @@ export const SecuritySection: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.3 }}
             >
-              <p className="text-base text-blue-100/60 leading-relaxed mb-8">
+              <p className="text-base text-blue-100/80 leading-relaxed mb-8">
                 ClinicGo does not store, access, or manage any customer or clinic data on our servers. Once installed on your WordPress website, all appointments, patient records, invoices, staff details, and operational data remain securely stored on your own hosting server.
               </p>
 
@@ -150,7 +150,7 @@ export const SecuritySection: React.FC = () => {
                     <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center text-blue-400">
                       {feature.icon}
                     </div>
-                    <span className="text-sm text-blue-100/80 font-medium">{feature.label}</span>
+                    <span className="text-sm text-blue-100 font-medium">{feature.label}</span>
                   </motion.div>
                 ))}
               </div>
