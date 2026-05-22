@@ -195,6 +195,13 @@ export const PremiumFooter = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Powered By */}
+        <div className="border-t border-slate-700 py-4">
+          <p className="text-center text-sm text-slate-500">
+            Powered by <a href="https://standarddigitals.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400 transition-colors font-medium">Standard Digitals</a>
+          </p>
+        </div>
       </div>
     </footer>
   );

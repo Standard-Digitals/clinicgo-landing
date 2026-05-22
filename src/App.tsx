@@ -16,6 +16,7 @@ import SetupGuide from './pages/SetupGuide';
 import AIChatSupport from './components/AIChatSupport';
 import { PremiumNav } from './components/PremiumNav';
 import { PremiumFooter } from './components/PremiumFooter';
+import { AnnouncementTicker } from './components/AnnouncementTicker';
 
 function ScrollToHash() {
   const { hash, pathname } = useLocation();
@@ -42,9 +43,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-200 flex flex-col">
+      {!isAuthPage && <AnnouncementTicker />}
       <PremiumNav />
 
-      <div className={`flex-1 ${!isAuthPage ? 'pt-16' : ''}`}>
+      <div className={`flex-1 ${!isAuthPage ? 'pt-[106px]' : ''}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

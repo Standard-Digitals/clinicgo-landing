@@ -107,7 +107,7 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-24 h-screen bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
+    <section className="py-16 md:py-24 min-h-screen bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -116,7 +116,7 @@ const FeaturesSection: React.FC = () => {
           className="text-center mb-16"
         >
           <Badge variant='outline' className="mb-4">Features</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Everything for a{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Modern Clinic
@@ -124,7 +124,7 @@ const FeaturesSection: React.FC = () => {
           </h2>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Feature illustration */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -404,7 +404,7 @@ const PatientBookingSection: React.FC = () => {
           className="text-center mb-16"
         >
           <Badge variant='outline' className="mb-4">Patient Experience</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Seamless Booking for{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Your Patients
@@ -644,7 +644,7 @@ const VideoShowcase: React.FC = () => {
           className="text-center mb-12"
         >
           <Badge variant='outline' className="mb-4">See It In Action</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Watch How{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               ClinicGo Works
@@ -720,11 +720,11 @@ const VideoShowcase: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="absolute bottom-16 left-6 z-10"
+                  className="absolute bottom-16 left-4 sm:left-6 z-10"
                 >
-                  <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Step {currentScene + 1} of {scenes.length}</p>
-                  <h3 className="text-white text-xl font-bold">{scenes[currentScene].title}</h3>
-                  <p className="text-white/70 text-sm">{scenes[currentScene].subtitle}</p>
+                  <p className="text-white/60 text-[10px] sm:text-xs font-medium uppercase tracking-wider mb-1">Step {currentScene + 1} of {scenes.length}</p>
+                  <h3 className="text-white text-base sm:text-xl font-bold">{scenes[currentScene].title}</h3>
+                  <p className="text-white/70 text-xs sm:text-sm">{scenes[currentScene].subtitle}</p>
                 </motion.div>
               )}
 
@@ -846,7 +846,7 @@ const HowItWorksSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-background h-[80vh]">
+    <section className="py-16 md:py-24 bg-background min-h-[60vh] lg:min-h-[80vh]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -855,7 +855,7 @@ const HowItWorksSection: React.FC = () => {
           className="text-center mb-20"
         >
           <Badge variant='outline' className="mb-4">How It Works</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Ready in{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               3 Steps
@@ -863,7 +863,7 @@ const HowItWorksSection: React.FC = () => {
           </h2>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-16">
           {howItWorksSteps.map((step, index) => {
             const isActive = activeStep === index;
             const isCompleted = completedSteps.includes(index);
@@ -1048,7 +1048,7 @@ const DashboardShowcase: React.FC = () => {
           className="text-center mb-16"
         >
           <Badge variant='outline' className="mb-4">Dashboard</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Built For Modern{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Clinics
@@ -1062,19 +1062,19 @@ const DashboardShowcase: React.FC = () => {
           onMouseLeave={() => setPaused(false)}
         >
           {/* Left Tabs */}
-          <div className="flex lg:flex-col gap-2 lg:w-56 shrink-0">
+          <div className="flex lg:flex-col gap-2 lg:w-56 shrink-0 overflow-x-auto pb-2 lg:pb-0">
             {dashboardTabs.map((tab, index) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(index)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-300 w-full ${
+                className={`flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 rounded-xl text-left transition-all duration-300 whitespace-nowrap min-w-fit lg:w-full ${
                   activeTab === index
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-card border border-border hover:bg-muted text-foreground'
                 }`}
               >
                 {tab.icon}
-                <span className="font-medium text-sm lg:text-base">{tab.title}</span>
+                <span className="font-medium text-xs sm:text-sm lg:text-base">{tab.title}</span>
               </button>
             ))}
           </div>
@@ -1143,12 +1143,12 @@ const DashboardShowcase: React.FC = () => {
             </AnimatePresence>
 
             {/* Bottom thumbnail indicators */}
-            <div className="flex gap-3 mt-6 justify-center">
+            <div className="flex gap-2 sm:gap-3 mt-6 justify-start sm:justify-center overflow-x-auto pb-2">
               {dashboardTabs.map((tab, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveTab(index)}
-                  className={`rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                  className={`rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 ${
                     activeTab === index
                       ? 'border-blue-600 shadow-lg scale-105'
                       : 'border-border opacity-60 hover:opacity-100'
@@ -1157,7 +1157,7 @@ const DashboardShowcase: React.FC = () => {
                   <img
                     src={tab.image}
                     alt={tab.title}
-                    className="w-24 h-16 object-cover object-left-top"
+                    className="w-16 h-10 sm:w-24 sm:h-16 object-cover object-left-top"
                   />
                 </button>
               ))}
@@ -1261,7 +1261,7 @@ const TestimonialsSection: React.FC = () => {
           className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
         >
           <Badge variant='outline' className="mb-4">Testimonials</Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter mt-2 text-center">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter mt-2 text-center">
             Loved by{' '}
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Healthcare Professionals
