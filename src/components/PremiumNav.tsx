@@ -10,11 +10,17 @@ export const PremiumNav = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
+  const [tickerVisible, setTickerVisible] = useState(true);
+
   useEffect(() => {
+    let lastY = window.scrollY;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentY = window.scrollY;
+      setScrolled(currentY > 20);
+      setTickerVisible(currentY <= 10 || currentY < lastY);
+      lastY = currentY;
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -39,7 +45,9 @@ export const PremiumNav = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-[42px] left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+        tickerVisible ? 'top-[42px]' : 'top-0'
+      } ${
         scrolled
           ? 'bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-lg'
           : 'bg-white/40 backdrop-blur-xl border-b border-white/20'
