@@ -584,8 +584,56 @@ const PatientBookingSection: React.FC = () => {
   );
 };
 
-// Video Showcase Section
+// Video Showcase Section — Animated Dashboard Walkthrough
 const VideoShowcase: React.FC = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentScene, setCurrentScene] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  const scenes = [
+    { title: 'Dashboard Overview', subtitle: 'Total bookings, revenue & quick stats at a glance', image: '/images/dashboard.png' },
+    { title: 'My Clinic', subtitle: 'Manage your clinic profile, settings & users', image: '/images/my-clinic.png' },
+    { title: 'Practice Management', subtitle: 'Patient records, bookings & fee collection', image: '/images/practice.png' },
+    { title: 'Invoice System', subtitle: 'Create, track & manage all clinic invoices', image: '/images/invoice.png' },
+    { title: 'Inventory Control', subtitle: 'Stock management, suppliers & expiry tracking', image: '/images/inventory.png' },
+    { title: 'Integrations', subtitle: 'Google Calendar, WhatsApp & more connected', image: '/images/integrations.png' },
+    { title: 'Payment Processing', subtitle: 'Secure payments with multiple gateways', image: '/images/payments.png' },
+  ];
+
+  const SCENE_DURATION = 4000;
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCurrentScene((s) => {
+            const next = s + 1;
+            if (next >= scenes.length) { setIsPlaying(false); return 0; }
+            return next;
+          });
+          return 0;
+        }
+        return prev + (100 / (SCENE_DURATION / 50));
+      });
+    }, 50);
+    return () => clearInterval(progressInterval);
+  }, [isPlaying, scenes.length]);
+
+  const togglePlay = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+      if (currentScene >= scenes.length - 1 && progress >= 100) {
+        setCurrentScene(0);
+        setProgress(0);
+      }
+    } else {
+      setIsPlaying(false);
+    }
+  };
+
+  const totalProgress = ((currentScene * 100) + progress) / scenes.length;
+
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -608,24 +656,121 @@ const VideoShowcase: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto"
+          className="max-w-5xl mx-auto"
         >
-          <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl aspect-video bg-gradient-to-br from-blue-900 to-cyan-900 flex items-center justify-center group cursor-pointer">
-            {/* Video thumbnail / placeholder */}
-            <img
-              src="/images/practice.png"
-              alt="ClinicGo Demo"
-              className="absolute inset-0 w-full h-full object-cover opacity-20"
-            />
-            {/* Play button overlay */}
-            <div className="relative z-10 w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-              <Play className="w-8 h-8 text-blue-600 ml-1" />
+          <div className="relative rounded-3xl overflow-hidden border border-border shadow-2xl bg-gray-900">
+            {/* Browser Top Bar */}
+            <div className="bg-gray-800 px-4 py-2.5 flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-400" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400" />
+              <div className="w-3 h-3 rounded-full bg-green-400" />
+              <div className="flex-1 mx-4 bg-gray-700 rounded-md px-3 py-1 text-xs text-gray-400 text-center">
+                                    https://www.wordpress.org/plugins/clinicgo/
+              </div>
             </div>
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+            {/* Video Content Area */}
+            <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
+              {/* Scene Image */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentScene}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0"
+                >
+                  <img
+                    src={scenes[currentScene].image}
+                    alt={scenes[currentScene].title}
+                    className={`w-full h-full object-cover object-top transition-all duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-40'}`}
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Overlay gradient */}
+              <div className={`absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-gray-900/20 transition-opacity duration-500 ${isPlaying ? 'opacity-60' : 'opacity-80'}`} />
+
+              {/* Play/Pause Button */}
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <motion.button
+                  onClick={togglePlay}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-20 h-20 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 ${
+                    isPlaying
+                      ? 'bg-white/20 backdrop-blur-sm border border-white/30 opacity-0 hover:opacity-100'
+                      : 'bg-white/90 shadow-blue-500/20'
+                  }`}
+                >
+                  {isPlaying ? (
+                    <div className="flex gap-1.5">
+                      <div className="w-1.5 h-6 bg-white rounded-full" />
+                      <div className="w-1.5 h-6 bg-white rounded-full" />
+                    </div>
+                  ) : (
+                    <Play className="w-8 h-8 text-blue-600 ml-1" />
+                  )}
+                </motion.button>
+              </div>
+
+              {/* Scene Info Overlay */}
+              {isPlaying && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute bottom-16 left-6 z-10"
+                >
+                  <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Step {currentScene + 1} of {scenes.length}</p>
+                  <h3 className="text-white text-xl font-bold">{scenes[currentScene].title}</h3>
+                  <p className="text-white/70 text-sm">{scenes[currentScene].subtitle}</p>
+                </motion.div>
+              )}
+
+              {/* Bottom Controls */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+                {/* Progress Bar */}
+                <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden mb-3">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full"
+                    style={{ width: `${totalProgress}%` }}
+                    transition={{ duration: 0.05 }}
+                  />
+                </div>
+
+                {/* Scene Dots */}
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2">
+                    {scenes.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => { setCurrentScene(i); setProgress(0); }}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          i === currentScene ? 'bg-blue-400 w-6' : i < currentScene ? 'bg-blue-400/60' : 'bg-white/30'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button onClick={togglePlay} className="text-white/70 hover:text-white transition-colors">
+                      {isPlaying ? (
+                        <div className="flex gap-0.5"><div className="w-1 h-4 bg-current rounded-sm" /><div className="w-1 h-4 bg-current rounded-sm" /></div>
+                      ) : (
+                        <Play className="w-4 h-4 fill-current" />
+                      )}
+                    </button>
+                    <span className="text-white/50 text-xs font-medium">
+                      {Math.floor((currentScene * SCENE_DURATION + (progress / 100) * SCENE_DURATION) / 1000)}s / {Math.floor(scenes.length * SCENE_DURATION / 1000)}s
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <p className="text-center text-muted-foreground mt-4 text-sm">
-            2-minute overview of the complete clinic management workflow
+            Interactive walkthrough of the complete clinic management workflow
           </p>
         </motion.div>
       </div>
