@@ -189,11 +189,13 @@ const bookingSteps = [
 
 const PatientBookingSection: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [activeTab, setActiveTab] = useState<'new' | 'existing'>('new');
   const [selectedDept, setSelectedDept] = useState('All Services');
   const [selectedService, setSelectedService] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [existingLookup, setExistingLookup] = useState<'id' | 'phone'>('id');
 
   // Auto-cycle through steps
   useEffect(() => {
@@ -226,8 +228,8 @@ const PatientBookingSection: React.FC = () => {
                   onClick={() => setSelectedDept(dept)}
                   className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
                     selectedDept === dept
-                      ? 'border-green-500 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
-                      : 'border-border bg-card text-foreground hover:border-green-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
                   }`}
                 >
                   {dept}
@@ -248,8 +250,8 @@ const PatientBookingSection: React.FC = () => {
                   onClick={() => setSelectedService(svc)}
                   className={`w-full p-3 rounded-xl border text-sm font-medium text-left transition-all duration-200 ${
                     selectedService === svc
-                      ? 'border-green-500 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
-                      : 'border-border bg-card text-foreground hover:border-green-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
                   }`}
                 >
                   {svc}
@@ -270,8 +272,8 @@ const PatientBookingSection: React.FC = () => {
                   onClick={() => setSelectedDoctor(doc.name)}
                   className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-all duration-200 ${
                     selectedDoctor === doc.name
-                      ? 'border-green-500 bg-green-50 dark:bg-green-950/30'
-                      : 'border-border bg-card hover:border-green-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
+                      : 'border-border bg-card hover:border-blue-300'
                   }`}
                 >
                   <span className="text-2xl">{doc.avatar}</span>
@@ -301,8 +303,8 @@ const PatientBookingSection: React.FC = () => {
                   onClick={() => setSelectedDate(String(day))}
                   className={`py-2 rounded-lg text-xs font-medium transition-all ${
                     selectedDate === String(day)
-                      ? 'bg-green-500 text-white'
-                      : day % 7 === 0 ? 'text-muted-foreground/50' : 'text-foreground hover:bg-green-100 dark:hover:bg-green-950/30'
+                      ? 'bg-blue-600 text-white'
+                      : day % 7 === 0 ? 'text-muted-foreground/50' : 'text-foreground hover:bg-blue-100 dark:hover:bg-blue-950/30'
                   }`}
                 >
                   {day}
@@ -323,8 +325,8 @@ const PatientBookingSection: React.FC = () => {
                   onClick={() => setSelectedTime(time)}
                   className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
                     selectedTime === time
-                      ? 'border-green-500 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
-                      : 'border-border bg-card text-foreground hover:border-green-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400'
+                      : 'border-border bg-card text-foreground hover:border-blue-300'
                   }`}
                 >
                   {time}
@@ -351,9 +353,9 @@ const PatientBookingSection: React.FC = () => {
             <h3 className="text-lg font-bold text-foreground mb-1">Payment</h3>
             <p className="text-sm text-muted-foreground mb-4">Choose payment method</p>
             <div className="space-y-3">
-              <div className="p-4 rounded-xl border border-green-500 bg-green-50 dark:bg-green-950/30">
+              <div className="p-4 rounded-xl border border-blue-500 bg-blue-50 dark:bg-blue-950/30">
                 <div className="flex items-center gap-3">
-                  <CreditCard className="w-5 h-5 text-green-600" />
+                  <CreditCard className="w-5 h-5 text-blue-600" />
                   <div>
                     <p className="font-semibold text-sm text-foreground">Pay Online</p>
                     <p className="text-xs text-muted-foreground">UPI, Card, Net Banking</p>
@@ -375,8 +377,8 @@ const PatientBookingSection: React.FC = () => {
       case 7:
         return (
           <div className="text-center py-4">
-            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-950/30 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-950/30 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-blue-600" />
             </div>
             <h3 className="text-lg font-bold text-foreground mb-1">Booking Confirmed!</h3>
             <p className="text-sm text-muted-foreground mb-4">Your appointment has been booked successfully</p>
@@ -393,7 +395,7 @@ const PatientBookingSection: React.FC = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-green-50/30 dark:to-green-950/10">
+    <section className="py-24 bg-gradient-to-b from-background to-blue-50/30 dark:to-blue-950/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -404,7 +406,7 @@ const PatientBookingSection: React.FC = () => {
           <Badge variant='outline' className="mb-4">Patient Experience</Badge>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">
             Seamless Booking for{' '}
-            <span className="bg-gradient-to-r from-green-600 to-cyan-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               Your Patients
             </span>
           </h2>
@@ -421,39 +423,126 @@ const PatientBookingSection: React.FC = () => {
           className="max-w-2xl mx-auto relative"
         >
           {/* Floating accents */}
-          <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-br from-green-500/20 to-cyan-400/20 rounded-full blur-3xl" />
-          <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-teal-400/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-cyan-400/20 rounded-full blur-3xl" />
+          <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-indigo-500/20 to-blue-400/20 rounded-full blur-3xl" />
 
           <div className="relative rounded-3xl border border-border shadow-2xl bg-card overflow-hidden">
             {/* Header Tabs */}
             <div className="flex">
-              <div className="flex-1 py-3 text-center text-sm font-bold bg-gradient-to-r from-green-600 to-emerald-500 text-white">
+              <button
+                onClick={() => setActiveTab('new')}
+                className={`flex-1 py-3 text-center text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'new'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
+              >
                 🆕 New Booking
-              </div>
-              <div className="flex-1 py-3 text-center text-sm font-medium bg-muted text-muted-foreground">
+              </button>
+              <button
+                onClick={() => setActiveTab('existing')}
+                className={`flex-1 py-3 text-center text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'existing'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
+              >
                 👤 Existing Patient
-              </div>
+              </button>
             </div>
+
+            {activeTab === 'existing' ? (
+              /* Existing Patient Tab */
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-foreground mb-1">Existing Patient Booking</h3>
+                <p className="text-sm text-muted-foreground mb-6">Enter your Patient ID or Phone to auto-fill your details and book quickly.</p>
+                
+                {/* Lookup Toggle */}
+                <div className="flex rounded-xl overflow-hidden border border-border mb-6">
+                  <button
+                    onClick={() => setExistingLookup('id')}
+                    className={`flex-1 py-2.5 text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                      existingLookup === 'id'
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                        : 'bg-card text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    🪪 Patient ID
+                  </button>
+                  <button
+                    onClick={() => setExistingLookup('phone')}
+                    className={`flex-1 py-2.5 text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                      existingLookup === 'phone'
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white'
+                        : 'bg-card text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    📱 Phone Number
+                  </button>
+                </div>
+
+                {/* Input */}
+                <div className="mb-4">
+                  <label className="text-sm font-semibold text-foreground mb-2 block">
+                    {existingLookup === 'id' ? 'Patient ID' : 'Phone Number'}
+                  </label>
+                  <div className="flex gap-3">
+                    <input
+                      className="flex-1 px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={existingLookup === 'id' ? 'E.G. PT-20240316-AB12' : '+91 98765 43210'}
+                      readOnly
+                    />
+                    <button className="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md">
+                      Fetch →
+                    </button>
+                  </div>
+                </div>
+
+                {/* Demo fetched result */}
+                <div className="mt-6 p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white text-sm font-bold">RS</div>
+                    <div>
+                      <p className="font-semibold text-sm text-foreground">Rahul Sharma</p>
+                      <p className="text-xs text-muted-foreground">PT-20240316-AB12 • +91 98765 43210</p>
+                    </div>
+                  </div>
+                  <button className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md">
+                    Continue Booking →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* New Booking Tab */
+              <>
 
             {/* Step Indicators */}
             <div className="px-6 pt-6 pb-4">
               <div className="flex items-center justify-between">
                 {bookingSteps.map((step, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1">
+                  <div key={i} className="flex flex-col items-center gap-1.5 relative">
+                    {/* Connector line */}
+                    {i < bookingSteps.length - 1 && (
+                      <div className="absolute top-4 left-[calc(50%+16px)] w-[calc(100%-8px)] h-0.5 hidden sm:block">
+                        <div className={`h-full rounded-full transition-all duration-500 ${
+                          i < activeStep ? 'bg-gradient-to-r from-blue-500 to-cyan-400' : 'bg-muted'
+                        }`} />
+                      </div>
+                    )}
                     <div
                       onClick={() => setActiveStep(i)}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer transition-all duration-300 ${
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer transition-all duration-300 relative z-10 ${
                         i === activeStep
-                          ? 'bg-green-600 text-white scale-110 shadow-lg shadow-green-500/30'
+                          ? 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white scale-110 shadow-lg shadow-blue-500/30 ring-4 ring-blue-100 dark:ring-blue-900/30'
                           : i < activeStep
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                          ? 'bg-blue-600 text-white'
                           : 'bg-muted text-muted-foreground'
                       }`}
                     >
-                      {step.num}
+                      {i < activeStep ? '✓' : step.num}
                     </div>
-                    <span className={`text-[10px] font-medium hidden sm:block ${
-                      i === activeStep ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                    <span className={`text-[10px] font-semibold hidden sm:block ${
+                      i === activeStep ? 'text-blue-600 dark:text-blue-400' : i < activeStep ? 'text-blue-500' : 'text-muted-foreground'
                     }`}>
                       {step.label}
                     </span>
@@ -481,11 +570,13 @@ const PatientBookingSection: React.FC = () => {
             <div className="px-6 pb-6">
               <button
                 onClick={() => setActiveStep((prev) => (prev + 1) % bookingSteps.length)}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-sm hover:from-green-700 hover:to-emerald-600 transition-all shadow-lg"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg"
               >
                 {activeStep === 7 ? 'Book Another →' : 'Next →'}
               </button>
             </div>
+              </>
+            )}
           </div>
         </motion.div>
       </div>
