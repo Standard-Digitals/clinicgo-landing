@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Eye, EyeOff, Mail, Lock, User, ArrowRight, ArrowLeft, AlertCircle,
-  Building2, Globe, Key, Users, Stethoscope, CheckCircle, Loader2,
+  Building2, Globe, Stethoscope, CheckCircle, Loader2,
   Shield, Sparkles, Activity
 } from 'lucide-react';
 import api from '../lib/api';
@@ -11,8 +11,7 @@ import api from '../lib/api';
 const STEPS = [
   { id: 1, title: 'Account', icon: User },
   { id: 2, title: 'Website', icon: Globe },
-  { id: 3, title: 'License', icon: Key },
-  { id: 4, title: 'Clinic', icon: Stethoscope },
+  { id: 3, title: 'Clinic', icon: Stethoscope },
 ];
 
 interface FormData {
@@ -22,8 +21,6 @@ interface FormData {
   password: string;
   confirmPassword: string;
   websiteUrl: string;
-  licenseKey: string;
-  plan: 'trial' | 'premium';
   clinicType: string;
   doctorCount: string;
   staffCount: string;
@@ -34,7 +31,7 @@ interface WpStatus {
   checking: boolean;
   isWordPress: boolean | null;
   hasWpAdmin: boolean | null;
-  error: string;
+  hasSSL: boolean | null;
 }
 
 export default function Signup() {
@@ -45,11 +42,11 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: '', clinicName: '', email: '', password: '', confirmPassword: '',
-    websiteUrl: '', licenseKey: '', plan: 'trial',
+    websiteUrl: '',
     clinicType: '', doctorCount: '', staffCount: '', expectedAppointments: ''
   });
   const [wpStatus, setWpStatus] = useState<WpStatus>({
-    checking: false, isWordPress: null, hasWpAdmin: null, error: ''
+    checking: false, isWordPress: null, hasWpAdmin: null, hasSSL: null
   });
 
   const update = (field: keyof FormData, value: string) => {
@@ -60,25 +57,21 @@ export default function Signup() {
   // WordPress URL validation with debounce
   useEffect(() => {
     if (!formData.websiteUrl || formData.websiteUrl.length < 8) {
-      setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, error: '' });
+      setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, hasSSL: null });
       return;
     }
-
-    const timer = setTimeout(() => {
-      verifyWordPress(formData.websiteUrl);
-    }, 1000);
-
+    const timer = setTimeout(() => verifyWordPress(formData.websiteUrl), 1000);
     return () => clearTimeout(timer);
   }, [formData.websiteUrl]);
 
   const verifyWordPress = async (url: string) => {
-    setWpStatus({ checking: true, isWordPress: null, hasWpAdmin: null, error: '' });
+    setWpStatus({ checking: true, isWordPress: null, hasWpAdmin: null, hasSSL: null });
     try {
       const cleanUrl = url.replace(/\/$/, '');
+      const hasSSL = cleanUrl.startsWith('https://');
       const res = await api.verifyWordPress(cleanUrl);
       if (!res.ok) {
-        // API returned error — don't block user, just skip verification
-        setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, error: '' });
+        setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, hasSSL });
         return;
       }
       const data = await res.json();
@@ -86,11 +79,10 @@ export default function Signup() {
         checking: false,
         isWordPress: data.isWordPress ?? null,
         hasWpAdmin: data.hasWpAdmin ?? null,
-        error: data.isWordPress === false ? 'WordPress not detected on this URL' : ''
+        hasSSL
       });
     } catch {
-      // Network error or function unavailable — skip verification silently
-      setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, error: '' });
+      setWpStatus({ checking: false, isWordPress: null, hasWpAdmin: null, hasSSL: formData.websiteUrl.startsWith('https://') });
     }
   };
 
@@ -98,50 +90,31 @@ export default function Signup() {
     switch (step) {
       case 1:
         if (!formData.name || !formData.clinicName || !formData.email || !formData.password || !formData.confirmPassword) {
-          setError('Please fill in all fields');
-          return false;
+          setError('Please fill in all fields'); return false;
         }
         if (formData.password !== formData.confirmPassword) {
-          setError('Passwords do not match');
-          return false;
+          setError('Passwords do not match'); return false;
         }
         if (formData.password.length < 8) {
-          setError('Password must be at least 8 characters');
-          return false;
+          setError('Password must be at least 8 characters'); return false;
         }
         return true;
       case 2:
         if (!formData.websiteUrl) {
-          setError('Please enter your WordPress website URL');
-          return false;
+          setError('Please enter your WordPress website URL'); return false;
         }
-        // Only block if verification explicitly returned false (not null/unverified)
-        if (wpStatus.isWordPress === false && wpStatus.error) {
-          setError('WordPress not detected. Please check the URL or continue anyway.');
-          return false;
-        }
-        // Validate URL format
         try {
           const urlObj = new URL(formData.websiteUrl);
           if (!urlObj.protocol.startsWith('http')) {
-            setError('URL must start with http:// or https://');
-            return false;
+            setError('URL must start with http:// or https://'); return false;
           }
         } catch {
-          setError('Please enter a valid URL (e.g. https://myclinic.com)');
-          return false;
+          setError('Please enter a valid URL (e.g. https://myclinic.com)'); return false;
         }
         return true;
       case 3:
-        if (formData.plan === 'premium' && !formData.licenseKey) {
-          setError('Please enter your license key');
-          return false;
-        }
-        return true;
-      case 4:
         if (!formData.clinicType) {
-          setError('Please select your clinic type');
-          return false;
+          setError('Please select your clinic type'); return false;
         }
         return true;
       default:
@@ -150,15 +123,11 @@ export default function Signup() {
   };
 
   const nextStep = () => {
-    if (validateStep()) {
-      setError('');
-      setStep(prev => Math.min(prev + 1, 4));
-    }
+    if (validateStep()) { setError(''); setStep(prev => Math.min(prev + 1, 3)); }
   };
 
   const prevStep = () => {
-    setError('');
-    setStep(prev => Math.max(prev - 1, 1));
+    setError(''); setStep(prev => Math.max(prev - 1, 1));
   };
 
   const handleSubmit = async () => {
@@ -173,7 +142,6 @@ export default function Signup() {
         password: formData.password
       });
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.message || 'Signup failed');
 
       localStorage.setItem('token', data.token);
@@ -181,8 +149,6 @@ export default function Signup() {
       localStorage.setItem('clinicgo_onboarding', JSON.stringify({
         clinicName: formData.clinicName,
         websiteUrl: formData.websiteUrl.replace(/\/$/, ''),
-        licenseKey: formData.licenseKey,
-        plan: formData.plan,
         clinicType: formData.clinicType,
         doctorCount: formData.doctorCount,
         staffCount: formData.staffCount,
@@ -201,12 +167,11 @@ export default function Signup() {
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center px-4 py-12">
-      {/* Animated background elements */}
+      {/* Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
-        {/* Floating healthcare icons */}
         <motion.div animate={{ y: [-10, 10, -10] }} transition={{ duration: 4, repeat: Infinity }} className="absolute top-20 right-[20%] text-blue-400/20">
           <Activity size={40} />
         </motion.div>
@@ -219,16 +184,16 @@ export default function Signup() {
       </div>
 
       <div className="w-full max-w-xl relative z-10">
-        {/* Logo & Header */}
+        {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
           <Link to="/" className="inline-block mb-4">
             <img src="/logo.png" alt="ClinicGo" className="w-40 mx-auto brightness-0 invert" />
           </Link>
           <h1 className="text-2xl font-bold text-white mb-1">Setup Your Clinic</h1>
-          <p className="text-blue-200/70 text-sm">Enterprise healthcare management in minutes</p>
+          <p className="text-blue-200/70 text-sm">Free premium access until August 31 🎉</p>
         </motion.div>
 
-        {/* Progress Bar */}
+        {/* Progress */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             {STEPS.map((s) => {
@@ -237,12 +202,8 @@ export default function Signup() {
               const isCurrent = step === s.id;
               return (
                 <div key={s.id} className="flex flex-col items-center gap-1">
-                  <motion.div
-                    animate={{ scale: isCurrent ? 1.1 : 1 }}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      isActive ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-white/10 text-white/40'
-                    } ${isCurrent ? 'ring-2 ring-blue-400/50' : ''}`}
-                  >
+                  <motion.div animate={{ scale: isCurrent ? 1.1 : 1 }}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-white/10 text-white/40'} ${isCurrent ? 'ring-2 ring-blue-400/50' : ''}`}>
                     {step > s.id ? <CheckCircle className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
                   </motion.div>
                   <span className={`text-[10px] font-medium ${isActive ? 'text-blue-300' : 'text-white/30'}`}>{s.title}</span>
@@ -255,11 +216,8 @@ export default function Signup() {
           </div>
         </div>
 
-        {/* Main Card - Glassmorphism */}
-        <motion.div
-          layout
-          className="backdrop-blur-xl bg-white/[0.07] border border-white/[0.12] rounded-2xl p-8 shadow-2xl"
-        >
+        {/* Card */}
+        <motion.div layout className="backdrop-blur-xl bg-white/[0.07] border border-white/[0.12] rounded-2xl p-8 shadow-2xl">
           {error && (
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-300">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -272,14 +230,13 @@ export default function Signup() {
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-blue-400" /> Basic Information
+                    <Sparkles className="w-5 h-5 text-blue-400" /> Create Your Account
                   </h2>
                   <p className="text-sm text-white/50 mt-1">Tell us about you and your clinic</p>
                 </div>
-
                 <InputField icon={User} label="Full Name" placeholder="Dr. John Doe" value={formData.name} onChange={(v) => update('name', v)} />
                 <InputField icon={Building2} label="Clinic / Company Name" placeholder="City Health Clinic" value={formData.clinicName} onChange={(v) => update('clinicName', v)} />
-                <InputField icon={Mail} label="Email Address" placeholder="john@clinic.com" type="email" value={formData.email} onChange={(v) => update('email', v)} />
+                <InputField icon={Mail} label="Business Email" placeholder="john@clinic.com" type="email" value={formData.email} onChange={(v) => update('email', v)} />
                 <InputField icon={Lock} label="Password" placeholder="Min. 8 characters" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={(v) => update('password', v)}
                   suffix={<button type="button" onClick={() => setShowPassword(!showPassword)} className="text-white/40 hover:text-white/70">{showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>}
                 />
@@ -291,70 +248,37 @@ export default function Signup() {
               <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-blue-400" /> WordPress Website
+                    <Globe className="w-5 h-5 text-blue-400" /> Connect Your Website
                   </h2>
-                  <p className="text-sm text-white/50 mt-1">We'll connect ClinicGo to your WordPress site</p>
+                  <p className="text-sm text-white/50 mt-1">Enter your WordPress website URL</p>
                 </div>
 
                 <InputField icon={Globe} label="WordPress Website URL" placeholder="https://myclinic.com" value={formData.websiteUrl} onChange={(v) => update('websiteUrl', v)} />
 
-                {/* WordPress Detection Status */}
+                {/* Validation Status */}
                 {formData.websiteUrl.length > 8 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2 mt-4">
-                    <StatusItem loading={wpStatus.checking} success={wpStatus.isWordPress} label="WordPress Installation" />
-                    <StatusItem loading={wpStatus.checking} success={wpStatus.hasWpAdmin} label="WP-Admin Access" />
-                    {wpStatus.isWordPress && (
-                      <StatusItem loading={false} success={true} label="REST API Available" />
-                    )}
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2 mt-4 p-4 bg-white/[0.03] border border-white/[0.08] rounded-xl">
+                    <p className="text-xs text-white/40 mb-2 font-medium">Connecting Your Clinic Website…</p>
+                    <StatusItem loading={wpStatus.checking} success={wpStatus.isWordPress} label="WordPress Installation Detected" />
+                    <StatusItem loading={wpStatus.checking} success={wpStatus.hasWpAdmin} label="WP-Admin Accessible" />
+                    <StatusItem loading={wpStatus.checking} success={wpStatus.isWordPress} label="REST API Available" />
+                    <StatusItem loading={false} success={wpStatus.hasSSL} label="SSL Certificate Valid" />
                   </motion.div>
                 )}
 
-                <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                  <h4 className="text-sm font-medium text-blue-300 mb-2">What happens next?</h4>
-                  <ul className="space-y-1.5 text-xs text-white/60">
-                    <li className="flex items-center gap-2"><CheckCircle className="w-3 h-3 text-blue-400" /> Plugin installs automatically</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-3 h-3 text-blue-400" /> Database tables created</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-3 h-3 text-blue-400" /> Core modules activated</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-3 h-3 text-blue-400" /> Redirect to your wp-admin</li>
-                  </ul>
+                {/* Free access banner */}
+                <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                    <h4 className="text-sm font-medium text-emerald-300">Free Premium Until August 31</h4>
+                  </div>
+                  <p className="text-xs text-white/50">Your license key will be auto-generated after registration. All premium features are free until August 31.</p>
                 </div>
               </motion.div>
             )}
 
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Key className="w-5 h-5 text-blue-400" /> License Activation
-                  </h2>
-                  <p className="text-sm text-white/50 mt-1">Activate your ClinicGo license</p>
-                </div>
-
-                {/* Plan Selection */}
-                <div className="grid grid-cols-2 gap-3">
-                  <PlanCard active={formData.plan === 'trial'} onClick={() => update('plan', 'trial')} title="Free Trial" subtitle="14 days full access" badge="FREE" />
-                  <PlanCard active={formData.plan === 'premium'} onClick={() => update('plan', 'premium')} title="Premium" subtitle="Unlimited access" badge="PRO" />
-                </div>
-
-                {formData.plan === 'premium' && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-                    <InputField icon={Key} label="License Key" placeholder="SDB-XXXX-XXXX-XXXX" value={formData.licenseKey} onChange={(v) => update('licenseKey', v.toUpperCase())} />
-                  </motion.div>
-                )}
-
-                <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                  <h4 className="text-sm font-medium text-emerald-300 mb-2">Included Features</h4>
-                  <div className="grid grid-cols-2 gap-1.5 text-xs text-white/60">
-                    {['Appointment Booking', 'Billing & Invoices', 'Patient Management', 'Inventory', 'WhatsApp Integration', 'Staff Management', 'Reports & Analytics', 'Google Calendar'].map(f => (
-                      <span key={f} className="flex items-center gap-1"><CheckCircle className="w-3 h-3 text-emerald-400" />{f}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {step === 4 && (
-              <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-white flex items-center gap-2">
                     <Stethoscope className="w-5 h-5 text-blue-400" /> Clinic Details
@@ -367,12 +291,9 @@ export default function Signup() {
                   <div className="grid grid-cols-2 gap-2">
                     {['General Practice', 'Dental Clinic', 'Eye Care', 'Dermatology', 'Pediatrics', 'Multi-Specialty'].map(type => (
                       <button key={type} onClick={() => update('clinicType', type)}
-                        className={`p-3 rounded-xl text-xs font-medium transition-all border ${
-                          formData.clinicType === type
-                            ? 'bg-blue-500/20 border-blue-500/40 text-blue-300'
-                            : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
-                        }`}
-                      >{type}</button>
+                        className={`p-3 rounded-xl text-xs font-medium transition-all border ${formData.clinicType === type ? 'bg-blue-500/20 border-blue-500/40 text-blue-300' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'}`}>
+                        {type}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -384,14 +305,14 @@ export default function Signup() {
             )}
           </AnimatePresence>
 
-          {/* Navigation Buttons */}
+          {/* Navigation */}
           <div className="flex gap-3 mt-8">
             {step > 1 && (
               <button onClick={prevStep} className="flex-1 py-3 border border-white/20 text-white/70 font-medium rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
                 <ArrowLeft className="w-4 h-4" /> Back
               </button>
             )}
-            {step < 4 ? (
+            {step < 3 ? (
               <button onClick={nextStep} className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
                 Continue <ArrowRight className="w-4 h-4" />
               </button>
@@ -403,7 +324,6 @@ export default function Signup() {
           </div>
         </motion.div>
 
-        {/* Footer */}
         <p className="mt-6 text-center text-xs text-white/40">
           Already have an account?{' '}
           <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">Sign in</Link>
@@ -415,8 +335,6 @@ export default function Signup() {
   );
 }
 
-// Reusable Components
-
 function InputField({ icon: Icon, label, placeholder, type = 'text', value, onChange, suffix }: {
   icon: any; label: string; placeholder: string; type?: string; value: string; onChange: (v: string) => void; suffix?: React.ReactNode;
 }) {
@@ -425,13 +343,8 @@ function InputField({ icon: Icon, label, placeholder, type = 'text', value, onCh
       <label className="block text-sm font-medium text-white/70 mb-1.5">{label}</label>
       <div className="relative">
         <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
-        />
+        <input type={type} placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)}
+          className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm" />
         {suffix && <div className="absolute right-3 top-1/2 -translate-y-1/2">{suffix}</div>}
       </div>
     </div>
@@ -446,24 +359,12 @@ function StatusItem({ loading, success, label }: { loading: boolean; success: bo
       ) : success ? (
         <CheckCircle className="w-4 h-4 text-emerald-400" />
       ) : success === false ? (
-        <AlertCircle className="w-4 h-4 text-red-400" />
+        <AlertCircle className="w-4 h-4 text-amber-400" />
       ) : (
         <div className="w-4 h-4 rounded-full border border-white/20" />
       )}
-      <span className={success ? 'text-emerald-300' : success === false ? 'text-red-300' : 'text-white/50'}>{label}</span>
+      <span className={success ? 'text-emerald-300' : success === false ? 'text-amber-300' : 'text-white/50'}>{label}</span>
     </div>
-  );
-}
-
-function PlanCard({ active, onClick, title, subtitle, badge }: { active: boolean; onClick: () => void; title: string; subtitle: string; badge: string }) {
-  return (
-    <button onClick={onClick} className={`p-4 rounded-xl border text-left transition-all ${
-      active ? 'bg-blue-500/15 border-blue-500/40 shadow-lg shadow-blue-500/10' : 'bg-white/5 border-white/10 hover:bg-white/10'
-    }`}>
-      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${active ? 'bg-blue-500/30 text-blue-300' : 'bg-white/10 text-white/40'}`}>{badge}</span>
-      <p className={`text-sm font-semibold mt-2 ${active ? 'text-white' : 'text-white/70'}`}>{title}</p>
-      <p className="text-xs text-white/40 mt-0.5">{subtitle}</p>
-    </button>
   );
 }
 

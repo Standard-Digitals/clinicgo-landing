@@ -1,4 +1,16 @@
-const { loadData, comparePassword, createToken, findUserByEmail, response } = require('./shared');
+const { loadData, saveData, comparePassword, createToken, findUserByEmail, generateId, response } = require('./shared');
+
+function generateClinicGoLicense() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let key = 'CGO-';
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 4; j++) {
+      key += chars[Math.floor(Math.random() * chars.length)];
+    }
+    if (i < 2) key += '-';
+  }
+  return key;
+}
 
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return response(200, { ok: true });
@@ -23,6 +35,18 @@ exports.handler = async function(event) {
       return response(401, { message: 'Invalid email or password' });
     }
 
+    // Auto-generate license key for existing users who don't have one
+    if (!user.licenseKey) {
+      const licenseKey = generateClinicGoLicense();
+      user.licenseKey = licenseKey;
+      user.plan = 'premium';
+      user.subscriptionStatus = 'active';
+      user.subscriptionEndsAt = '2025-08-31T23:59:59.000Z';
+      user.freeUntil = '2025-08-31T23:59:59.000Z';
+      data.licenses[licenseKey] = { userId: user.id, domain: '', status: 'active', expiresAt: '2025-08-31T23:59:59.000Z' };
+      saveData(data);
+    }
+
     const token = createToken(user.id, user.email);
 
     return response(200, {
@@ -35,6 +59,8 @@ exports.handler = async function(event) {
         subscriptionStatus: user.subscriptionStatus,
         licenseKey: user.licenseKey,
         trialEndsAt: user.trialEndsAt,
+        subscriptionEndsAt: user.subscriptionEndsAt,
+        freeUntil: user.freeUntil || user.subscriptionEndsAt,
         onboardingComplete: user.onboardingComplete
       }
     });

@@ -20,6 +20,26 @@
       "licensedDomains": [],
       "onboardingComplete": false,
       "createdAt": "2026-05-23T13:05:27.946Z"
+    },
+    "4a6dc5ca596ddaff4f7d66d33841002d": {
+      "id": "4a6dc5ca596ddaff4f7d66d33841002d",
+      "email": "gfgjjf@gmail.com",
+      "password": "$2b$10$mDbwL0LcE9T0lAXgGRkGQ.w7muPGvyvUjvQZOJSaEHiWQUbGVG77G",
+      "name": "hgjghj",
+      "plan": "monthly",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-05-23T15:34:41.344Z"
+    },
+    "c6856bf9ea13e9e06c8a2cd8994ca4be": {
+      "id": "c6856bf9ea13e9e06c8a2cd8994ca4be",
+      "email": "ffgfg@gmail.com",
+      "password": "$2b$10$bNuGUOtvATZ0gvfhVNrXbOU4.ys9fKk93E9gOmaX/Gq.GPZ8EytkS",
+      "name": "ghghgh",
+      "plan": "monthly",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-05-23T15:50:30.585Z"
     }
   },
   "subscriptions": {

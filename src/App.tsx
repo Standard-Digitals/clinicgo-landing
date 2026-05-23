@@ -40,7 +40,7 @@ function ScrollToHash() {
 function App() {
   const location = useLocation();
   const isAuthPage = ['/signup', '/login', '/onboarding', '/account', '/billing', '/download', '/setup-guide'].includes(location.pathname);
-  const isFullScreenAuth = ['/signup', '/login', '/onboarding'].includes(location.pathname);
+  const isFullScreenAuth = ['/signup', '/login', '/onboarding', '/account', '/billing', '/download', '/setup-guide'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-200 flex flex-col">

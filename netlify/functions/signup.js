@@ -1,5 +1,17 @@
 const { loadData, saveData, generateId, hashPassword, createToken, findUserByEmail, response } = require('./shared');
 
+function generateClinicGoLicense() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let key = 'CGO-';
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 4; j++) {
+      key += chars[Math.floor(Math.random() * chars.length)];
+    }
+    if (i < 2) key += '-';
+  }
+  return key;
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return response(200, { ok: true });
   if (event.httpMethod !== 'POST') return response(405, { message: 'Method not allowed' });
@@ -17,31 +29,36 @@ exports.handler = async function(event) {
 
     const data = loadData();
 
-    // Check duplicate email
     if (findUserByEmail(data, email)) {
       return response(400, { message: 'Email already registered' });
     }
 
     const id = generateId();
     const hashedPassword = await hashPassword(password);
+    const licenseKey = generateClinicGoLicense();
+
+    // Free premium until August 31
+    const freeUntil = '2025-08-31T23:59:59.000Z';
 
     const user = {
       id,
       email,
       password: hashedPassword,
       name,
-      plan: undefined,
-      subscriptionStatus: undefined,
-      licenseKey: undefined,
+      plan: 'premium',
+      subscriptionStatus: 'active',
+      licenseKey,
       licensedDomains: [],
       onboardingComplete: false,
       createdAt: new Date().toISOString(),
       trialEndsAt: undefined,
-      subscriptionId: undefined,
-      subscriptionEndsAt: undefined
+      subscriptionId: generateId(),
+      subscriptionEndsAt: freeUntil,
+      freeUntil
     };
 
     data.users[id] = user;
+    data.licenses[licenseKey] = { userId: id, domain: '', status: 'active', expiresAt: freeUntil };
     saveData(data);
 
     const token = createToken(id, email);
@@ -55,6 +72,8 @@ exports.handler = async function(event) {
         plan: user.plan,
         subscriptionStatus: user.subscriptionStatus,
         licenseKey: user.licenseKey,
+        subscriptionEndsAt: user.subscriptionEndsAt,
+        freeUntil: user.freeUntil,
         onboardingComplete: user.onboardingComplete
       }
     });

@@ -67,7 +67,7 @@ loadData();
 
 function generateLicenseKey(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let key = "SDB-";
+  let key = "CGO-";
   for (let i = 0; i < 4; i++) {
     key += chars[Math.floor(Math.random() * chars.length)];
   }
@@ -144,25 +144,29 @@ async function startServer() {
 
     const id = generateId();
     const hashedPassword = await bcrypt.hash(password, 10);
+    const licenseKey = generateLicenseKey();
+    const freeUntil = '2025-08-31T23:59:59.000Z';
+
     const user: User = {
       id,
       email,
       password: hashedPassword,
       name,
-      plan: undefined,
-      subscriptionStatus: undefined,
-      licenseKey: undefined,
+      plan: 'premium' as any,
+      subscriptionStatus: 'active',
+      licenseKey,
       licensedDomains: [],
       onboardingComplete: false,
       createdAt: new Date().toISOString(),
+      subscriptionEndsAt: freeUntil,
     };
 
     data.users[id] = user;
+    data.licenses[licenseKey] = { userId: id, domain: '' };
     saveData();
 
     const token = createToken(id, email);
-
-    console.log("Signup successful:", email);
+    console.log("Signup successful:", email, "License:", licenseKey);
 
     res.json({
       token,
@@ -173,6 +177,8 @@ async function startServer() {
         plan: user.plan,
         subscriptionStatus: user.subscriptionStatus,
         licenseKey: user.licenseKey,
+        subscriptionEndsAt: user.subscriptionEndsAt,
+        freeUntil,
         onboardingComplete: user.onboardingComplete,
       },
     });
@@ -202,6 +208,18 @@ async function startServer() {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    // Auto-generate license key for existing users who don't have one
+    if (!foundUser.licenseKey) {
+      const licenseKey = generateLicenseKey();
+      foundUser.licenseKey = licenseKey;
+      foundUser.plan = 'premium' as any;
+      foundUser.subscriptionStatus = 'active';
+      foundUser.subscriptionEndsAt = '2025-08-31T23:59:59.000Z';
+      data.licenses[licenseKey] = { userId: foundUser.id, domain: '' };
+      saveData();
+      console.log('Auto-generated license for existing user:', email, licenseKey);
+    }
+
     const token = createToken(foundUser.id, foundUser.email);
 
     res.json({
@@ -214,6 +232,8 @@ async function startServer() {
         subscriptionStatus: foundUser.subscriptionStatus,
         licenseKey: foundUser.licenseKey,
         trialEndsAt: foundUser.trialEndsAt,
+        subscriptionEndsAt: foundUser.subscriptionEndsAt,
+        freeUntil: (foundUser as any).freeUntil || foundUser.subscriptionEndsAt,
         onboardingComplete: foundUser.onboardingComplete,
       },
     });
