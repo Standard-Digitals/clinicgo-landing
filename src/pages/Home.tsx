@@ -36,12 +36,26 @@ interface Feature {
 
 // Trusted By Section
 const TrustedBySection: React.FC = () => {
-  const logos = [
-    'Mayo Clinic', 'Cleveland Clinic', 'Johns Hopkins Medicine',
-    'Kaiser Permanente', 'Apollo Hospitals', 'Fortis Healthcare',
-    'Manipal Hospitals', 'Max Healthcare', 'Narayana Health',
-    'Medanta', 'AIIMS', 'Aster Hospitals',
-  ];
+ const logos = [
+  'Manhattan Care Clinic',
+  'Brooklyn Medical Center',
+  'New York Wellness Group',
+
+  'Sydney Prime Health',
+  'Melbourne Care Hospital',
+  'Aurora Health Australia',
+
+  'Berlin MedCare Center',
+  'Berlin Family Health',
+  'VitalHaus Clinic',
+
+  'London Bridge Medical',
+  'Royal Thames Clinic',
+  'Westminster Health Hub',
+
+  'The Vedavibe - Canada',
+  'Vibrant Looks Medspa - India',
+];
 
   return (
     <section className="py-12 bg-background">

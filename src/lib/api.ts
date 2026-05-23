@@ -22,7 +22,7 @@ export const api = {
       body: JSON.stringify(data)
     }),
 
-  startTrial: (token: string, plan: string) =>
+  startTrial: (token: string, plan?: string) =>
     fetch(getApiUrl('start-trial'), {
       method: 'POST',
       headers: { 
@@ -32,7 +32,7 @@ export const api = {
       body: JSON.stringify({ plan })
     }),
 
-  createSubscription: (token: string, plan: string, paymentId: string) =>
+  createSubscription: (token: string, plan?: string, paymentId?: string) =>
     fetch(getApiUrl('create-subscription'), {
       method: 'POST',
       headers: { 
@@ -42,7 +42,7 @@ export const api = {
       body: JSON.stringify({ plan, paymentId })
     }),
 
-  razorpayCreateOrder: (token: string, plan: string) =>
+  razorpayCreateOrder: (token: string, plan?: string) =>
     fetch(getApiUrl('razorpay-create-order'), {
       method: 'POST',
       headers: { 
@@ -84,7 +84,26 @@ export const api = {
   downloadPlugin: (token: string) =>
     fetch(getApiUrl('plugin-download'), {
       headers: { 'Authorization': `Bearer ${token}` }
-    })
+    }),
+
+  // New: WordPress verification
+  verifyWordPress: (url: string) =>
+    fetch(getApiUrl('wp-verify'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    }),
+
+  // New: Remote plugin installation
+  installPlugin: (token: string, websiteUrl: string) =>
+    fetch(getApiUrl('wp-install-plugin'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ websiteUrl })
+    }),
 };
 
 export default api;

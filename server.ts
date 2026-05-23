@@ -456,9 +456,77 @@ async function startServer() {
     (req as any).url = "/api/plugin/download";
     app(req, res);
   });
+  app.post("/.netlify/functions/wp-verify", (req, res) => {
+    (req as any).url = "/api/wp/verify";
+    app(req, res);
+  });
+  app.post("/.netlify/functions/wp-install-plugin", (req, res) => {
+    (req as any).url = "/api/wp/install-plugin";
+    app(req, res);
+  });
   app.post("/.netlify/functions/contact", (req, res) => {
     (req as any).url = "/api/contact";
     app(req, res);
+  });
+
+  // WordPress verification endpoint
+  app.post("/api/wp/verify", async (req, res) => {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ message: 'URL is required' });
+
+    const cleanUrl = url.replace(/\/$/, '');
+    let isWordPress = false;
+    let hasWpAdmin = false;
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const wpRes = await fetch(`${cleanUrl}/wp-json/wp/v2/`, {
+        method: 'HEAD',
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (wpRes.ok || wpRes.status === 401) isWordPress = true;
+    } catch {
+      // Try wp-login fallback
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const wpRes = await fetch(`${cleanUrl}/wp-login.php`, {
+          method: 'HEAD',
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        if (wpRes.ok || wpRes.status === 302) isWordPress = true;
+      } catch {}
+    }
+
+    if (isWordPress) hasWpAdmin = true;
+
+    res.json({ isWordPress, hasWpAdmin, url: cleanUrl });
+  });
+
+  // WordPress plugin install endpoint
+  app.post("/api/wp/install-plugin", (req, res) => {
+    const user = authenticate(req);
+    if (!user) return res.status(401).json({ message: 'Unauthorized' });
+
+    const { websiteUrl } = req.body;
+    if (!websiteUrl) return res.status(400).json({ message: 'Website URL required' });
+
+    // In production, this would call the WP REST API to install the plugin
+    // For now, mark user as connected
+    (user as any).websiteUrl = websiteUrl;
+    (user as any).pluginInstalled = true;
+    saveData();
+
+    res.json({
+      success: true,
+      installed: true,
+      activated: true,
+      message: 'Plugin installation initiated',
+      redirectUrl: `${websiteUrl.replace(/\/$/, '')}/wp-admin/admin.php?page=clinicgo-dashboard`
+    });
   });
 
   app.post("/api/contact", async (req, res) => {

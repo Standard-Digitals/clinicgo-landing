@@ -40,11 +40,12 @@ function ScrollToHash() {
 function App() {
   const location = useLocation();
   const isAuthPage = ['/signup', '/login', '/onboarding', '/account', '/billing', '/download', '/setup-guide'].includes(location.pathname);
+  const isFullScreenAuth = ['/signup', '/login', '/onboarding'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-200 flex flex-col">
       {!isAuthPage && <AnnouncementTicker />}
-      <PremiumNav />
+      {!isFullScreenAuth && <PremiumNav />}
 
       <div className={`flex-1 ${!isAuthPage ? 'pt-[106px]' : ''}`}>
         <Routes>

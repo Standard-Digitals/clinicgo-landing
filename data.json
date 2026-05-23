@@ -11,6 +11,15 @@
       "onboardingComplete": false,
       "createdAt": "2026-05-18T16:06:29.519Z",
       "trialEndsAt": "2026-06-02T07:47:17.134Z"
+    },
+    "f12928c8eeffad469dbcb3dd4288d2dd": {
+      "id": "f12928c8eeffad469dbcb3dd4288d2dd",
+      "email": "ranjitkairi.personal@gmail.com",
+      "password": "$2b$10$SgSWnNoe5Gpa1m63uThKB.Svx9mX2zpLbv7isw2eMxKCUKVSwY0Ry",
+      "name": "Rahul Sen",
+      "licensedDomains": [],
+      "onboardingComplete": false,
+      "createdAt": "2026-05-23T13:05:27.946Z"
     }
   },
   "subscriptions": {
