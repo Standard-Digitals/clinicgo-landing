@@ -37,24 +37,25 @@ interface Feature {
 // Trusted By Section
 const TrustedBySection: React.FC = () => {
  const logos = [
-  'Manhattan Care Clinic',
-  'Brooklyn Medical Center',
-  'New York Wellness Group',
+  'Ayurveda Clinic',
+  'Dental Care',
+  'Physiotherapy Center',
 
-  'Sydney Prime Health',
-  'Melbourne Care Hospital',
-  'Aurora Health Australia',
+  'General Physician',
+  'Laser Studio',
+  'Medspa Clinic',
 
-  'Berlin MedCare Center',
-  'Berlin Family Health',
-  'VitalHaus Clinic',
+  'Skin Care Clinic',
+  'Gastro Specialist',
+  'Urology Center',
 
-  'London Bridge Medical',
-  'Royal Thames Clinic',
-  'Westminster Health Hub',
+  'Orthopedic Clinic',
+  'Pediatric Care',
+  'Neurology Center',
 
-  'The Vedavibe - Canada',
-  'Vibrant Looks Medspa - India',
+  'ENT Specialist',
+  'Cardiology Clinic',
+  'Gynecology Care',
 ];
 
   return (

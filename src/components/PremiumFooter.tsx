@@ -11,10 +11,10 @@ export const PremiumFooter = () => {
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '#' },
+        { label: 'Features', href: '/about' },
         { label: 'Pricing', href: '/pricing' },
-        { label: 'Security', href: '#' },
-        { label: 'Roadmap', href: '#' }
+        { label: 'Security', href: '/privacy' },
+        { label: 'Roadmap', href: '/setup-guide' }
       ]
     },
     {
@@ -22,27 +22,30 @@ export const PremiumFooter = () => {
       links: [
         { label: 'About', href: '/about' },
         { label: 'Blog', href: '#' },
-        { label: 'Careers', href: '#' },
+        { label: 'Careers', href: '/contact' },
         { label: 'Contact', href: '/contact' }
       ]
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Documentation', href: '#' },
-        { label: 'API Docs', href: '#' },
-        { label: 'Support', href: '#' },
+        { label: 'Documentation', href: '/setup-guide' },
+        // { label: 'API Docs', href: '#' },
+        { label: 'Support', href: '/contact' },
         { label: 'Community', href: '#' }
       ]
     },
     {
       title: 'Legal',
       links: [
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '#' },
-        { label: 'Cookie Policy', href: '#' },
-        { label: 'HIPAA', href: '#' }
-      ]
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '#' },
+  { label: 'Cookie Policy', href: '#' },
+  { label: 'Secure & Reliable', href: '#' },
+  { label: 'Easy to Use', href: '#' },
+  { label: 'Dedicated Support', href: '#' },
+  { label: 'GDPR Compliant', href: '#' }
+]
     }
   ];
 
@@ -179,7 +182,7 @@ export const PremiumFooter = () => {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-wrap justify-center gap-8 items-center">
-              {['HIPAA Certified', 'ISO 27001', 'SOC 2 Type II', 'GDPR Compliant'].map((badge, i) => (
+              {['Secure & Reliable', 'Easy to Use', 'Dedicated Support', 'GDPR Compliant'].map((badge, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0.9 }}
