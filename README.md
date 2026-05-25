@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="/logo.png" />
+<img width="1200" height="475" alt="GHBanner" src="/images/logo.png" />
 </div>
 
 # ClinicGo — A Modern Clinic Management and Booking SaaS Platform
