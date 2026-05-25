@@ -21,6 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Badge } from '../components/ui/badge';
 import { CTASection } from '../components/CTASection';
 import { HeroSection } from '../components/HeroSection';
+import { MarketingEcosystem } from '../components/MarketingEcosystem';
 import { Marquee } from '../components/ui/marquee';
 import { TestimonialsColumn } from '../components/ui/testimonials-columns-1';
 import { FaqSection } from '../components/FaqSection';
@@ -1354,6 +1355,7 @@ const ClinicGoWebsite: React.FC = () => {
       <HowItWorksSection />
       <SecuritySection />
       <DashboardShowcase />
+      <MarketingEcosystem />
       <TestimonialsSection />
       <GlobalTimezoneSection />
       <FaqSection />
