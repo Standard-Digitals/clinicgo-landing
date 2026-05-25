@@ -17,12 +17,15 @@ A modern clinic management and booking SaaS platform built with React, Vite, and
 ## Features
 
 - 🏥 Clinic dashboard & practice management
-- 📅 Booking widget for appointments
+- 📅 Booking widget for appointments (New & Existing Patient)
 - 💳 Subscription plans with Razorpay integration
 - 🔑 License activation & verification
-- 🤖 AI Chat Support
-- 📦 Plugin download system
+- 🤖 AI Chat Support (Gemini-powered)
+- 📦 Plugin download & WordPress installation system
 - 🚀 Trial & onboarding flow
+- 📧 Contact form with email notifications
+- 🔐 User authentication (Login/Signup)
+- 📊 Account & billing management
 
 ## Run Locally
 
@@ -46,7 +49,7 @@ A modern clinic management and booking SaaS platform built with React, Vite, and
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
+| `npm run dev` | Start development server (Express + Vite) |
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
 | `npm run lint` | Type-check with TypeScript |
@@ -55,17 +58,47 @@ A modern clinic management and booking SaaS platform built with React, Vite, and
 ## Project Structure
 
 ```
-├── netlify/functions/    # Serverless API functions
-├── public/               # Static assets & images
+├── netlify/functions/        # Serverless API functions
+│   ├── cancel-subscription.js
+│   ├── change-plan.js
+│   ├── contact.js
+│   ├── create-subscription.js
+│   ├── license-activate.js
+│   ├── license-verify.js
+│   ├── login.js
+│   ├── plugin-download.js
+│   ├── razorpay-create-order.js
+│   ├── signup.js
+│   ├── start-trial.js
+│   ├── wp-install-plugin.js
+│   └── wp-verify.js
+├── public/                   # Static assets & images
 ├── src/
-│   ├── components/       # UI components
-│   ├── lib/              # Utilities & API helpers
-│   ├── pages/            # Route pages
-│   ├── App.tsx           # App root with routing
-│   └── main.tsx          # Entry point
-├── server.ts             # Express dev server
-├── netlify.toml          # Netlify config
-└── vite.config.ts        # Vite config
+│   ├── components/           # UI components
+│   │   ├── ui/               # Reusable UI primitives
+│   │   ├── AIChatSupport.tsx
+│   │   ├── BookingWidget.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── FeaturesSection.tsx
+│   │   ├── PricingSection.tsx
+│   │   └── ...
+│   ├── lib/                  # Utilities & API helpers
+│   ├── pages/                # Route pages
+│   │   ├── Home.tsx
+│   │   ├── Pricing.tsx
+│   │   ├── Login.tsx
+│   │   ├── Signup.tsx
+│   │   ├── Account.tsx
+│   │   ├── Billing.tsx
+│   │   ├── Download.tsx
+│   │   ├── Onboarding.tsx
+│   │   └── ...
+│   ├── App.tsx               # App root with routing
+│   └── main.tsx              # Entry point
+├── server.ts                 # Express dev server
+├── netlify.toml              # Netlify config
+├── tailwind.config.js        # Tailwind config
+└── vite.config.ts            # Vite config
 ```
 
 ## Deployment
