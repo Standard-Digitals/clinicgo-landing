@@ -139,7 +139,10 @@ export default function Signup() {
       const res = await api.signup({
         name: formData.name,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        clinicName: formData.clinicName,
+        websiteUrl: formData.websiteUrl.replace(/\/$/, ''),
+        clinicType: formData.clinicType
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Signup failed');

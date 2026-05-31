@@ -117,7 +117,7 @@ export default function Contact() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2">
               <Card className="border-border shadow-xl">
                 <CardContent className="p-8">
-                  <form name="contact" onSubmit={handleSubmit} data-netlify="true" netlify-honeypot="bot-field" className="space-y-6">
+                  <form name="contact" onSubmit={handleSubmit} className="space-y-6">
                     <input type="hidden" name="form-name" value="contact" />
                     <p className="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
                     <div>

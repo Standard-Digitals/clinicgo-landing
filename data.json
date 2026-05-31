@@ -40,6 +40,25 @@
       "licensedDomains": [],
       "onboardingComplete": false,
       "createdAt": "2026-05-23T15:50:30.585Z"
+    },
+    "3ae198493205daa19271401015809c13": {
+      "id": "3ae198493205daa19271401015809c13",
+      "email": "rahulkr@gmail.com",
+      "password": "$2b$10$qJhcBSeLbxYzDDuHqc6Ze.K368N6QvENshFKi7Vl2y.ajl7UNKLHm",
+      "name": "Rahul Kr",
+      "clinicName": "Rahul Care Center",
+      "websiteUrl": "https://standarddigitals.com",
+      "clinicType": "Eye Care",
+      "plan": "premium",
+      "subscriptionStatus": "active",
+      "licenseKey": "CGO-KP6Z-I4XQ-DZIS",
+      "licensedDomains": [
+        "https://standarddigitals.com"
+      ],
+      "onboardingComplete": false,
+      "createdAt": "2026-05-29T12:28:29.707Z",
+      "subscriptionEndsAt": "2025-08-31T23:59:59.000Z",
+      "pluginInstalled": true
     }
   },
   "subscriptions": {
@@ -54,5 +73,10 @@
       "currentPeriodEnd": "2026-06-02T07:47:17.134Z"
     }
   },
-  "licenses": {}
+  "licenses": {
+    "CGO-KP6Z-I4XQ-DZIS": {
+      "userId": "3ae198493205daa19271401015809c13",
+      "domain": "https://standarddigitals.com"
+    }
+  }
 }
