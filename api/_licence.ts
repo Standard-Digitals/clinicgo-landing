@@ -1,13 +1,13 @@
 import crypto from 'crypto';
-import { createPool } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 import { parse as parseQS } from 'querystring';
 
 const CG_LICENCE_SECRET = process.env.CG_LICENCE_SECRET || 'cg-licence-hmac-secret-change-in-production';
 
-function getPool() {
-  return createPool({
-    connectionString: process.env.POSTGRES_URL,
-  });
+function getSQL() {
+  const url = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+  if (!url) throw new Error('Missing POSTGRES_URL or DATABASE_URL env var');
+  return neon(url);
 }
 
 // ── Interfaces ──
@@ -52,16 +52,13 @@ export function normalizeDomain(domain: string): string {
 export function parseLicenceBody(req: any): { licence_key: string; domain: string; wp_version: string; plugin_ver: string } {
   let body = req.body;
 
-  // Vercel doesn't auto-parse form-encoded — handle raw string/buffer
   if (Buffer.isBuffer(body)) {
     body = body.toString('utf-8');
   }
   if (typeof body === 'string') {
-    // Try JSON first
     try {
       body = JSON.parse(body);
     } catch {
-      // Form-encoded
       body = parseQS(body);
     }
   }
@@ -80,37 +77,37 @@ export function parseLicenceBody(req: any): { licence_key: string; domain: strin
 // ── Database Queries ──
 
 export async function findLicence(licenceKey: string): Promise<LicenceRecord | null> {
-  const pool = getPool();
-  const result = await pool.sql`
+  const sql = getSQL();
+  const rows = await sql`
     SELECT id, licence_key, email, name, plan, status,
            TO_CHAR(expiry_date, 'YYYY-MM-DD') as expiry_date,
            max_activations, created_at
     FROM cg_licences WHERE licence_key = ${licenceKey} LIMIT 1
   `;
-  if (!result.rows.length) return null;
-  return result.rows[0] as LicenceRecord;
+  if (!rows.length) return null;
+  return rows[0] as LicenceRecord;
 }
 
 export async function getActiveDomainCount(licenceId: number): Promise<number> {
-  const pool = getPool();
-  const result = await pool.sql`
+  const sql = getSQL();
+  const rows = await sql`
     SELECT COUNT(*) as count FROM cg_activations WHERE licence_id = ${licenceId} AND active = true
   `;
-  return parseInt(result.rows[0]?.count || '0');
+  return parseInt(rows[0]?.count || '0');
 }
 
 export async function findActivation(licenceId: number, domain: string): Promise<Activation | null> {
-  const pool = getPool();
-  const result = await pool.sql`
+  const sql = getSQL();
+  const rows = await sql`
     SELECT * FROM cg_activations WHERE licence_id = ${licenceId} AND domain = ${domain} LIMIT 1
   `;
-  if (!result.rows.length) return null;
-  return result.rows[0] as Activation;
+  if (!rows.length) return null;
+  return rows[0] as Activation;
 }
 
 export async function activateDomain(licenceId: number, domain: string, wpVersion?: string, pluginVersion?: string): Promise<void> {
-  const pool = getPool();
-  await pool.sql`
+  const sql = getSQL();
+  await sql`
     INSERT INTO cg_activations (licence_id, domain, wp_version, plugin_version, active, activated_at)
     VALUES (${licenceId}, ${domain}, ${wpVersion || null}, ${pluginVersion || null}, true, NOW())
     ON CONFLICT (licence_id, domain)
@@ -119,16 +116,16 @@ export async function activateDomain(licenceId: number, domain: string, wpVersio
 }
 
 export async function deactivateDomain(licenceId: number, domain: string): Promise<void> {
-  const pool = getPool();
-  await pool.sql`
+  const sql = getSQL();
+  await sql`
     UPDATE cg_activations SET active = false, deactivated_at = NOW()
     WHERE licence_id = ${licenceId} AND domain = ${domain}
   `;
 }
 
 export async function updateLastVerified(licenceId: number, domain: string, pluginVersion?: string): Promise<void> {
-  const pool = getPool();
-  await pool.sql`
+  const sql = getSQL();
+  await sql`
     UPDATE cg_activations SET last_verified = NOW(), plugin_version = COALESCE(${pluginVersion || null}, plugin_version)
     WHERE licence_id = ${licenceId} AND domain = ${domain} AND active = true
   `;
