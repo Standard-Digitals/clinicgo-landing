@@ -1,8 +1,14 @@
 import crypto from 'crypto';
-import { sql } from '@vercel/postgres';
+import { createPool } from '@vercel/postgres';
 import { parse as parseQS } from 'querystring';
 
 const CG_LICENCE_SECRET = process.env.CG_LICENCE_SECRET || 'cg-licence-hmac-secret-change-in-production';
+
+function getPool() {
+  return createPool({
+    connectionString: process.env.POSTGRES_URL,
+  });
+}
 
 // ── Interfaces ──
 
@@ -74,7 +80,8 @@ export function parseLicenceBody(req: any): { licence_key: string; domain: strin
 // ── Database Queries ──
 
 export async function findLicence(licenceKey: string): Promise<LicenceRecord | null> {
-  const result = await sql`
+  const pool = getPool();
+  const result = await pool.sql`
     SELECT id, licence_key, email, name, plan, status,
            TO_CHAR(expiry_date, 'YYYY-MM-DD') as expiry_date,
            max_activations, created_at
@@ -85,14 +92,16 @@ export async function findLicence(licenceKey: string): Promise<LicenceRecord | n
 }
 
 export async function getActiveDomainCount(licenceId: number): Promise<number> {
-  const result = await sql`
+  const pool = getPool();
+  const result = await pool.sql`
     SELECT COUNT(*) as count FROM cg_activations WHERE licence_id = ${licenceId} AND active = true
   `;
   return parseInt(result.rows[0]?.count || '0');
 }
 
 export async function findActivation(licenceId: number, domain: string): Promise<Activation | null> {
-  const result = await sql`
+  const pool = getPool();
+  const result = await pool.sql`
     SELECT * FROM cg_activations WHERE licence_id = ${licenceId} AND domain = ${domain} LIMIT 1
   `;
   if (!result.rows.length) return null;
@@ -100,7 +109,8 @@ export async function findActivation(licenceId: number, domain: string): Promise
 }
 
 export async function activateDomain(licenceId: number, domain: string, wpVersion?: string, pluginVersion?: string): Promise<void> {
-  await sql`
+  const pool = getPool();
+  await pool.sql`
     INSERT INTO cg_activations (licence_id, domain, wp_version, plugin_version, active, activated_at)
     VALUES (${licenceId}, ${domain}, ${wpVersion || null}, ${pluginVersion || null}, true, NOW())
     ON CONFLICT (licence_id, domain)
@@ -109,14 +119,16 @@ export async function activateDomain(licenceId: number, domain: string, wpVersio
 }
 
 export async function deactivateDomain(licenceId: number, domain: string): Promise<void> {
-  await sql`
+  const pool = getPool();
+  await pool.sql`
     UPDATE cg_activations SET active = false, deactivated_at = NOW()
     WHERE licence_id = ${licenceId} AND domain = ${domain}
   `;
 }
 
 export async function updateLastVerified(licenceId: number, domain: string, pluginVersion?: string): Promise<void> {
-  await sql`
+  const pool = getPool();
+  await pool.sql`
     UPDATE cg_activations SET last_verified = NOW(), plugin_version = COALESCE(${pluginVersion || null}, plugin_version)
     WHERE licence_id = ${licenceId} AND domain = ${domain} AND active = true
   `;
