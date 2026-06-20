@@ -2,8 +2,11 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import { neon } from '@neondatabase/serverless';
+import { parse as parseQS } from 'querystring';
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'clinicgo-secret-key-change-in-production';
+const CG_LICENCE_SECRET = process.env.CG_LICENCE_SECRET || 'cg-licence-hmac-secret-change-in-production';
 const DATA_FILE = path.join(process.cwd(), 'data.json');
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -95,21 +98,14 @@ export function authenticate(authHeader: string | undefined): User | null {
 export { bcrypt };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// LICENCE SYSTEM — Neon Postgres (used by license-activate/verify/deactivate)
+// LICENCE SYSTEM — Neon Postgres
 // ═══════════════════════════════════════════════════════════════════════════
-
-import { neon } from '@neondatabase/serverless';
-import { parse as parseQS } from 'querystring';
-
-const CG_LICENCE_SECRET = process.env.CG_LICENCE_SECRET || 'cg-licence-hmac-secret-change-in-production';
 
 function getSQL() {
   const url = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
   if (!url) throw new Error('Missing POSTGRES_URL or DATABASE_URL env var');
   return neon(url);
 }
-
-// ── Interfaces ──
 
 export interface LicenceRecord {
   id: number;
@@ -135,8 +131,6 @@ export interface Activation {
   last_verified: string | null;
 }
 
-// ── Domain Normalization ──
-
 export function normalizeDomain(domain: string): string {
   if (!domain) return '';
   let d = domain.toLowerCase().trim();
@@ -146,8 +140,6 @@ export function normalizeDomain(domain: string): string {
   return d;
 }
 
-// ── Body Parser ──
-
 export function parseLicenceBody(req: any): { licence_key: string; domain: string; wp_version: string; plugin_ver: string } {
   let body = req.body;
   if (Buffer.isBuffer(body)) body = body.toString('utf-8');
@@ -155,7 +147,6 @@ export function parseLicenceBody(req: any): { licence_key: string; domain: strin
     try { body = JSON.parse(body); } catch { body = parseQS(body); }
   }
   if (!body || typeof body !== 'object') body = {};
-
   return {
     licence_key: (body.licence_key || body.licenseKey || body.license_key || '').toString().toUpperCase().trim(),
     domain: normalizeDomain((body.domain || '').toString()),
@@ -163,8 +154,6 @@ export function parseLicenceBody(req: any): { licence_key: string; domain: strin
     plugin_ver: (body.plugin_ver || '').toString(),
   };
 }
-
-// ── Database Queries ──
 
 export async function findLicence(licenceKey: string): Promise<LicenceRecord | null> {
   const sql = getSQL();
@@ -221,8 +210,6 @@ export async function updateLastVerified(licenceId: number, domain: string, plug
   `;
 }
 
-// ── Status Calculator ──
-
 export function getLicenceStatus(licence: LicenceRecord): string {
   if (licence.status === 'suspended') return 'suspended';
   const now = Math.floor(Date.now() / 1000);
@@ -233,8 +220,6 @@ export function getLicenceStatus(licence: LicenceRecord): string {
   return 'expired';
 }
 
-// ── Features ──
-
 export function getFeaturesForPlan(plan: string) {
   return {
     inventory: true, invoices: true, whatsapp: true, sms: true,
@@ -242,8 +227,6 @@ export function getFeaturesForPlan(plan: string) {
     reports: true, max_bookings_per_month: 9999,
   };
 }
-
-// ── Response Builder ──
 
 export function buildLicenceResponse(licence: LicenceRecord, status: string): any {
   const expiryTs = Math.floor(new Date(licence.expiry_date + 'T23:59:59Z').getTime() / 1000);
@@ -257,8 +240,6 @@ export function buildLicenceResponse(licence: LicenceRecord, status: string): an
   if (status === 'grace') response.grace_ends_ts = expiryTs + (7 * 86400);
   return response;
 }
-
-// ── HMAC Signing ──
 
 export function signResponse(data: object): string {
   return crypto.createHmac('sha256', CG_LICENCE_SECRET).update(JSON.stringify(data)).digest('hex');
