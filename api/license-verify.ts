@@ -3,7 +3,7 @@ import {
   parseLicenceBody, findLicence, getLicenceStatus,
   findActivation, updateLastVerified,
   buildLicenceResponse, signResponse
-} from './_lib';
+} from './_licence';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json(response);
   } catch (err: any) {
-    console.error('license-verify error:', err.message);
+    console.error('license-verify error:', err.message, err.stack);
     return res.status(500).json({ success: false, error: 'server_error', message: 'Internal server error.' });
   }
 }

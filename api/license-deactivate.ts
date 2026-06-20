@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { parseLicenceBody, findLicence, findActivation, deactivateDomain } from './_lib';
+import { parseLicenceBody, findLicence, findActivation, deactivateDomain } from './_licence';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json({ success: true, message: 'Domain deactivated.' });
   } catch (err: any) {
-    console.error('license-deactivate error:', err.message);
+    console.error('license-deactivate error:', err.message, err.stack);
     return res.status(500).json({ success: false, error: 'server_error', message: 'Internal server error.' });
   }
 }
