@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { loadData, saveData, generateId, generateLicenseKey, createToken, bcrypt } from '../helpers/lib';
+import { loadData, saveData, generateId, generateLicenseKey, createToken, bcrypt } from './lib';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
