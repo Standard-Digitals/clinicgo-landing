@@ -3,7 +3,7 @@ import {
   parseLicenceBody, findLicence, getLicenceStatus,
   findActivation, updateLastVerified,
   buildLicenceResponse, signResponse
-} from './_lib';
+} from '../helpers/lib';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });

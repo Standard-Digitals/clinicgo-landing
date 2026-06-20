@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { parseLicenceBody, findLicence, findActivation, deactivateDomain } from './_lib';
+import { parseLicenceBody, findLicence, findActivation, deactivateDomain } from '../helpers/lib';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
