@@ -2,6 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/licence-api/activate.php", "destination": "/api/license-activate" },
+    { "source": "/licence-api/verify.php", "destination": "/api/license-verify" },
+    { "source": "/licence-api/deactivate.php", "destination": "/api/license-deactivate" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

@@ -78,5 +78,27 @@
       "userId": "3ae198493205daa19271401015809c13",
       "domain": "https://standarddigitals.com"
     }
+  },
+  "licences": {
+    "CGO-KP6Z-I4XQ-DZIS": {
+      "licence_key": "CGO-KP6Z-I4XQ-DZIS",
+      "userId": "3ae198493205daa19271401015809c13",
+      "plan": "professional",
+      "status": "active",
+      "expiry_date": "2025-08-31",
+      "max_domains": 1,
+      "max_users": 5,
+      "customer_name": "Rahul Kr",
+      "customer_email": "rahulkr@gmail.com",
+      "activated_domains": [
+        {
+          "domain": "standarddigitals.com",
+          "activated_at": "2026-05-29T12:28:29.707Z",
+          "active": true
+        }
+      ],
+      "grace_period_days": 7,
+      "created_at": "2026-05-29T12:28:29.707Z"
+    }
   }
 }

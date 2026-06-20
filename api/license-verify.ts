@@ -1,15 +1,44 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { loadData } from './_lib';
+import {
+  parseLicenceBody, findLicence, getLicenceStatus,
+  findActivation, updateLastVerified,
+  buildLicenceResponse, signResponse
+} from './_lib';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'GET') return res.status(405).json({ message: 'Method not allowed' });
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
 
-  const { licenseKey, domain } = req.query as { licenseKey?: string; domain?: string };
-  if (!licenseKey || !domain) return res.status(400).json({ message: 'License key and domain required' });
+  const { licence_key, domain, plugin_ver } = parseLicenceBody(req);
 
-  const data = loadData();
-  const license = data.licenses[licenseKey];
-  if (!license || license.domain !== domain) return res.status(400).json({ valid: false, message: 'Invalid or expired license' });
+  if (!licence_key || !domain) {
+    return res.json({ success: false, status: 'expired', message: 'Missing parameters.' });
+  }
 
-  res.json({ valid: true, message: 'License is valid' });
+  try {
+    const licence = await findLicence(licence_key);
+    if (!licence) {
+      return res.json({ success: false, status: 'expired', message: 'Invalid licence.' });
+    }
+
+    // Check domain is activated
+    const activation = await findActivation(licence.id, domain);
+    if (!activation || !activation.active) {
+      return res.json({ success: false, status: 'domain_mismatch', message: 'Licence not activated for this domain.' });
+    }
+
+    // Calculate status
+    const status = getLicenceStatus(licence);
+
+    // Update last_verified
+    await updateLastVerified(licence.id, domain, plugin_ver || undefined);
+
+    // Build signed response
+    const response = buildLicenceResponse(licence, status);
+    response._sig = signResponse(response);
+
+    return res.json(response);
+  } catch (err: any) {
+    console.error('license-verify error:', err.message);
+    return res.status(500).json({ success: false, error: 'server_error', message: 'Internal server error.' });
+  }
 }

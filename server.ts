@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 async function start() {
   const app = express();
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Dynamically load API handlers
   const apiModules: Record<string, string> = {
@@ -17,6 +18,9 @@ async function start() {
     'wp-install-plugin': './api/wp-install-plugin.ts',
     'license-activate': './api/license-activate.ts',
     'license-verify': './api/license-verify.ts',
+    'license-deactivate': './api/license-deactivate.ts',
+    'license-generate': './api/license-generate.ts',
+    'setup-db': './api/setup-db.ts',
     'start-trial': './api/start-trial.ts',
     'create-subscription': './api/create-subscription.ts',
     'razorpay-create-order': './api/razorpay-create-order.ts',
