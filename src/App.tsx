@@ -12,7 +12,7 @@ import Account from './pages/Account';
 import Billing from './pages/Billing';
 import Download from './pages/Download';
 import SetupGuide from './pages/SetupGuide';
-
+// Components
 import AIChatSupport from './components/AIChatSupport';
 import { PremiumNav } from './components/PremiumNav';
 import { PremiumFooter } from './components/PremiumFooter';
