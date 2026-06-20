@@ -1,6 +1,11 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@3"
+    }
+  },
   "rewrites": [
     { "source": "/licence-api/activate.php", "destination": "/api/license-activate" },
     { "source": "/licence-api/verify.php", "destination": "/api/license-verify" },
